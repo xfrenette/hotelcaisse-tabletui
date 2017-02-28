@@ -6,6 +6,8 @@ Colors:
 - blue1: #33b5e6;
 - bordure: #e1e1e1;
 - couleur input: #2b94bb;
+- green: #31c544;
+- green sidebar #38e450
  */
 
 body {
@@ -148,12 +150,19 @@ select {
 	padding: 0 12px;
 	border-radius: 2px;
 	line-height: 36px;
+	display: inline-block;
 }
 
 .btn-grey {
 	background-color: #e1e1e1;
 	color: #555;
 	font-size: 14px;
+}
+
+.btn-xs {
+	line-height: 16px;
+	font-size: 11px;
+	padding: 0 6px;
 }
 
 .btn-main {
@@ -226,4 +235,9 @@ select {
 .Sidebar-title {
 	font-weight: bold;
 	margin: 48px 0;
+}
+
+.Sidebar-subtitle {
+	font-weight: bold;
+	margin: 24px 0;
 }

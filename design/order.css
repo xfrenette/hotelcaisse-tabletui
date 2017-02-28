@@ -179,3 +179,68 @@
 	margin-left: -50px;
 	margin-right: -50px;
 }
+
+.OrderTotal-table {
+	width: 100%;
+	border-collapse: collapse;
+	color: #ddd;
+	font-size: 14px;
+}
+
+.OrderTotal-table td {
+	line-height: 23px;
+	padding: 0;
+}
+
+.OrderTotal-amount {
+	text-align: right;
+}
+
+.OrderTotal-amount .fa {
+	margin-right: -20px;
+	padding-left: 10px;
+}
+
+.OrderTotal-section td {
+	border-top: 1px solid #777;
+}
+
+.OrderTotal-section:first-child td {
+	border-top: none;
+}
+
+.OrderTotal-item td:first-child {
+	font-style: italic;
+	padding-left: 15px;
+}
+
+.OrderTotal-item .btn-xs {
+	vertical-align: middle;
+	margin-left: 24px;
+	background-color: #bbb;
+}
+
+.OrderTotal-em {
+	font-weight: bold;
+}
+
+.OrderTotal-toPay {
+	color: #38e450;
+	margin: 48px 0;
+}
+
+.OrderTotal-toPay small {
+	font-size: 16px;
+	display: block;
+}
+
+.OrderTotal-toPay p {
+	font-weight: bold;
+	font-size: 48px;
+	line-height: 48px;
+	margin-left: -5px;
+}
+
+.OrderTotal-toPay .btn-main {
+	width: 100%;
+}
