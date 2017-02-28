@@ -1,0 +1,24 @@
+.vertical-rythme {
+    position: relative;
+}
+
+.vertical-rythme::after {
+    position: absolute;
+    width: auto;
+    height: auto;
+    z-index: 9999;
+    content: "";
+    display: block;
+    pointer-events: none;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+.vertical-rythme::after {
+    background: linear-gradient(rgb(204, 204, 204) 1px, transparent 1px) left top / 1px 24px;
+}
+
+.vertical-rythme::after {
+    top: 0px;
+}

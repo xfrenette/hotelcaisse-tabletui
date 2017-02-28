@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Tablet UI</title>
+		<link rel="stylesheet" href="tablet.css">
+		<link rel="stylesheet" href="base.css">
+		<link rel="stylesheet" href="order.css">
+		<link rel="stylesheet" href="vertical-rythme.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	</head>
+	<body class="vertical-rythme2">
+		<div class="Tablet">
+			<div class="App">
+				<div class="TopBar">
+					<div class="TopBar-home"><i class="fa fa-home" aria-hidden="true"></i></div>
+				</div>
+				<div class="Main">
+					<div class="OrderCreation">
+						<div class="OrderCreation-main">
+							<h1>Nouvelle fiche</h1>
+							<div>
+								<table class="table OrderTable">
+									<thead>
+										<tr>
+											<th></th>
+											<th></th>
+											<th class="OrderTable-price">$ / unité</th>
+											<th class="OrderTable-quantity">Qté / nb nuits</th>
+											<th class="OrderTable-subtotal">Sous-total</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="OrderTable-name">
+												<strong>Chambre privée</strong>
+												<div>
+													<small>1 ou 2 adultes</small>
+												</div>
+											</td>
+											<td class="OrderTable-variant">
+												<div class="select">
+													<span>Prix membre</span>
+													<i class="fa fa-chevron-down" aria-hidden="true"></i>
+												</div>
+											</td>
+											<td class="OrderTable-price">61,00 $</td>
+											<td class="OrderTable-quantity">
+												<div class="QuantityInput">
+													<input type="text" class="" value="2">
+													<span class="QuantityInput-more"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
+													<span class="QuantityInput-less"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+												</div>
+											</td>
+											<td class="OrderTable-subtotal">122,00 $</td>
+											<td class="OrderTable-actions">
+												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</td>
+										</tr>
+										<tr>
+											<td class="OrderTable-name">
+												<strong>Dortoir</strong>
+											</td>
+											<td class="OrderTable-variant">
+												<div class="select">
+													<span>Prix non-membre</span>
+													<i class="fa fa-chevron-down" aria-hidden="true"></i>
+												</div>
+											</td>
+											<td class="OrderTable-price">29,00 $</td>
+											<td class="OrderTable-quantity">
+												<div class="QuantityInput">
+													<input type="text" class="" value="1">
+													<span class="QuantityInput-more"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
+													<span class="QuantityInput-less"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+												</div>
+											</td>
+											<td class="OrderTable-subtotal">29,00 $</td>
+											<td class="OrderTable-actions">
+												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</td>
+										</tr>
+										<tr class="last">
+											<td class="OrderTable-name">
+												<strong>Carte de membre</strong>
+											</td>
+											<td class="OrderTable-variant">
+											</td>
+											<td class="OrderTable-price">35,00 $</td>
+											<td class="OrderTable-quantity">
+												<div class="QuantityInput">
+													<input type="text" class="" value="1">
+													<span class="QuantityInput-more"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
+													<span class="QuantityInput-less"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+												</div>
+											</td>
+											<td class="OrderTable-subtotal">35,00 $</td>
+											<td class="OrderTable-actions">
+												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</td>
+										</tr>
+										<tr class="OrderTable-section">
+											<td colspan="6">Dépôts</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<label>Description :</label>
+												<input type="text" value="3458765-37827">
+											</td>
+											<td class="OrderTable-price"></td>
+											<td class="OrderTable-quantity"></td>
+											<td class="OrderTable-subtotal">
+												<div class="input-price">
+													<input type="text" class="" value="3,29">
+													<div class="label">$</div>
+												</div>
+											</td>
+											<td class="OrderTable-actions">
+												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</td>
+										</tr>
+										<tr class="last">
+											<td colspan="6">
+												<button class="button btn-grey">Ajouter un dépôt</button>
+											</td>
+										</tr>
+										<tr class="OrderTable-section">
+											<td colspan="6">Notes</td>
+										</tr>
+										<tr class="last">
+											<td colspan="7">
+												<textarea rows="5" style="height: 131px">Lorem ipsum dolor sit amet.</textarea>
+												<p>Les notes sont pour usage interne seulement et n'apparaîtront pas sur la facture.</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="Sidebar OrderCreation-categories">
+							<p class="Sidebar-title">Chambres et produits</p>
+							<div class="Categories">
+								<div class="Categories-item"><div class="Categories-itemContent">Chambre privée</div></div>
+								<div class="Categories-item"><div class="Categories-itemContent">Chambre familiale</div></div>
+								<div class="Categories-item"><div class="Categories-itemContent">Dortoir</div></div>
+								<div class="Categories-item more">
+									<div class="Categories-itemContent">
+										Personne additionnelle
+										<div class="dots">...</div>
+									</div>
+								</div>
+								<div class="Categories-item more">
+									<div class="Categories-itemContent">
+										Autres items
+										<div class="dots">...</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="BottomBar">
+					<a href="#"><i class="fa fa-angle-left" aria-hidden="true" style="padding-right:10px;"></i>Annuler</a>
+					<button class="button btn-main BottomBar-mainAction">
+						Suivant
+						<i class="fa fa-chevron-right" aria-hidden="true" style="padding-left:10px;vertical-align: text-bottom;margin-right: -25px;"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
