@@ -22,10 +22,21 @@ a {
 }
 
 h1 {
-	margin: 48px 0 24px;
+	margin: 48px 0;
 	font-size: 18px;
 	line-height: 24px;
 	font-weight: bold;
+}
+
+h1 + .table-container {
+	margin-top: -24px;
+}
+
+h2 {
+	margin: 24px 0 12px;
+	font-size: 18px;
+	line-height: 24px;
+	font-weight: normal;
 }
 
 p {
@@ -52,13 +63,20 @@ select,
 textarea {
 	box-sizing: border-box;
 	border: 1px solid #33b5e6;
-	height: 47px;
+	height: 48px;
 	font-family: 'Open Sans', sans-serif;
 	padding: 5px 15px;
 	border-radius: 2px;
 	font-size: 16px;
 	color: #2b94bb;
 	box-shadow: inset 0px 1px 1px 0px rgba(0, 101, 140, 0.28);
+}
+table
+table input[type="text"],
+table select,
+table .select,
+table textarea {
+	height: 47px;
 }
 
 textarea {
@@ -98,6 +116,27 @@ select {
 	right: 15px;
 	font-size: 18px;
 	color: #2b94bb;
+}
+
+.input-group {
+	display: flex;
+}
+
+.input-group input {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.input-group-addon {
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+	border: 1px solid #33b5e6;
+	border-right: none;
+	color: #2b94bb;
+	background-color: rgba(51, 181, 230, 0.08);
+	white-space: nowrap;
+	line-height: 46px;
+	padding: 0 12px;
 }
 
 .QuantityInput {
