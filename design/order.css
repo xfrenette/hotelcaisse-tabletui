@@ -19,43 +19,6 @@
 	overflow: auto;
 }
 
-.OrderTable {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.OrderTable strong {
-	display: inline-block;
-	vertical-align: top;
-}
-
-.OrderTable thead th {
-	line-height: 23px;
-}
-
-.OrderTable tbody td {
-	height: 47px; /* (2*24 - 1) */
-}
-
-.OrderTable td,
-.OrderTable th {
-	border-bottom: 1px solid #e1e1e1;
-	padding: 12px 10px;
-}
-
-.OrderTable tr.last td,
-.OrderTable tr.last th {
-	border-bottom: 0;
-}
-
-.OrderTable tr > *:first-child {
-	padding-left: 0;
-}
-
-.OrderTable tr > *:last-child {
-	padding-right: 0;
-}
-
 .OrderTable-name small {
 	vertical-align: top;
 }
@@ -86,12 +49,6 @@
 .OrderTable-subtotal {
 	text-align: right;
 	width: 15%;
-}
-
-.OrderTable-actions {
-	text-align: right;
-	width: 5%;
-	color: #900;
 }
 
 .OrderTable .OrderTable-section td {

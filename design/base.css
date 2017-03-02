@@ -39,6 +39,17 @@ h2 {
 	font-weight: normal;
 }
 
+h3 {
+	border-bottom: 2px solid #33b5e6;
+	color: #33b5e6;
+	font-size: 15px;
+	font-weight: bold;
+	text-transform: uppercase;
+	vertical-align: bottom;
+	margin: 22px 0 24px;
+	line-height: 24px;
+}
+
 p {
 	margin: 0 0 24px;
 }
@@ -68,7 +79,7 @@ textarea {
 	padding: 5px 15px;
 	border-radius: 2px;
 	font-size: 16px;
-	color: #2b94bb;
+	color: #555;
 	box-shadow: inset 0px 1px 1px 0px rgba(0, 101, 140, 0.28);
 }
 table
@@ -89,6 +100,7 @@ textarea {
 .select,
 select {
 	box-shadow: none;
+	color: #2b94bb;
 }
 
 .select {
@@ -115,7 +127,7 @@ select {
 	top: 0;
 	right: 15px;
 	font-size: 18px;
-	color: #2b94bb;
+	color: #555;
 }
 
 .input-group {
@@ -233,6 +245,10 @@ select {
 	font-size: 24px;
 }
 
+.TopBar-title {
+	font-size: 18px;
+}
+
 .BottomBar {
 	height: 71px;
 	border-top: 1px solid #e1e1e1;
@@ -279,4 +295,87 @@ select {
 .Sidebar-subtitle {
 	font-weight: bold;
 	margin: 24px 0;
+}
+
+.DataTable {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 24px;
+}
+
+.DataTable strong {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.DataTable thead th {
+	line-height: 23px;
+}
+
+.DataTable tbody td {
+	height: 47px; /* (2*24 - 1) */
+}
+
+.DataTable td,
+.DataTable th {
+	border-bottom: 1px solid #e1e1e1;
+	padding: 12px 10px;
+}
+
+.DataTable tr.last td,
+.DataTable tr.last th {
+	border-bottom: 0;
+}
+
+.DataTable tr > *:first-child {
+	padding-left: 0;
+}
+
+.DataTable tr > *:last-child {
+	padding-right: 0;
+}
+
+.DataTable-actions {
+	text-align: right;
+	width: 5%;
+	color: #900;
+}
+
+.Message {
+	padding: 0 12px;
+	font-size: 14px;
+	color: #33b5e6;
+	border-left: 2px solid #33b5e6;
+	margin: 36px 25px;
+	position: relative;
+}
+
+.Message .fa {
+	font-size: 16px;
+	position: absolute;
+	top: 3px;
+	left: -28px;
+}
+
+.cols-line {
+	display: flex;
+	justify-content: space-between;
+}
+
+.cols-line .col-50 {
+	width: calc(50% - 24px);
+	padding-left: 24px;
+}
+
+.cols-line .col-50:first-child {
+	border-right: 1px solid #e1e1e1;
+	padding-right: 24px;
+	padding-left: 0;
+}
+
+.inline-message {
+	color: #888;
+	text-align: center;
+	font-style: italic;
+	font-size: 14px;
 }
