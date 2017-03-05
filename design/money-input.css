@@ -10,12 +10,12 @@
 }
 
 .MoneyInput-input input {
-	width: 100%;
+	/*width: 100%;*/
 }
 
 .MoneyInput-input .input-group-addon {
 	width: 100px;
-	text-align: center;
+	text-align: right;
 }
 
 .MoneyInput-total {
