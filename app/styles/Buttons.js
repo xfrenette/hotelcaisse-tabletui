@@ -1,5 +1,4 @@
 import vars from './variables';
-import { StyleSheet } from 'react-native';
 
 export default {
 	buttons: {

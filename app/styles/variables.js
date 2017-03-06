@@ -3,7 +3,7 @@ const baseFontSize = 16;
 const horizontalRhythm = 24;
 
 const sidePadding = horizontalRhythm;
-const mainContentPadding = 2 * horizontalRhythm;
+const mainContentSidePadding = 2 * horizontalRhythm;
 const baseLineHeight = verticalRhythm;
 
 const colors = {
@@ -24,7 +24,7 @@ const variables = {
 	baseLineHeight,
 	horizontalRhythm,
 	sidePadding,
-	mainContentPadding,
+	mainContentSidePadding,
 	colors,
 	mainTextColor: colors.darkGrey1,
 	rem(value) {

@@ -2,6 +2,7 @@ import vars from './variables';
 
 export default {
 	MainContent: {
-		paddingHorizontal: vars.mainContentPadding,
+		paddingHorizontal: vars.mainContentSidePadding,
+		paddingVertical: 2 * vars.horizontalRhythm,
 	},
 };

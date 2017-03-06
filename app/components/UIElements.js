@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView } from 'react-native';
+import { View, Image, ScrollView } from 'react-native';
 import TopBar from './layout/TopBar';
 import BottomBar from './layout/BottomBar';
 import MainContent from './layout/MainContent';
 import Button from './elements/Button';
+import Text from './elements/Text';
 import styles from '../styles';
 
 class UIElements extends Component {
@@ -11,9 +12,9 @@ class UIElements extends Component {
 		return (
 			<View style={{ flex: 1 }}>
 				<TopBar title="Titréé" />
-				<ScrollView contentContainerStyle={{ padding:24, flexDirection: 'row' }}>
+				<ScrollView>
 					<MainContent>
-						<Button title="Bouton test" layout={[styles.buttons.primary, styles.buttons.big]} />
+						<Text>Bonjour !</Text>
 					</MainContent>
 				</ScrollView>
 				<BottomBar>
