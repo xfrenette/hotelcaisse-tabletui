@@ -1,8 +1,9 @@
-import { StyleSheet } from 'react-native';
 import TopBar from './TopBar';
 import Buttons from './Buttons';
+import BottomBar from './BottomBar';
 
-export default StyleSheet.create({
+export default {
 	...TopBar,
 	...Buttons,
-});
+	...BottomBar,
+};

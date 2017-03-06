@@ -1,33 +1,81 @@
 import React, { Component } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
 	View,
 	Text,
 	TouchableNativeFeedback,
+	TouchableOpacity,
  } from 'react-native';
 import styles from '../styles';
-import styleVars from '../styles/variables';
 
 class Button extends Component {
 	render() {
+		const buttonStyles = [styles.buttons.default.button];
+		const textStyles = [styles.buttons.default.text];
+		let rippleColor = [styles.buttons.default.rippleColor];
+		const touchableProps = {};
+		let Touchable;
+		let preIcon;
+		let postIcon;
+
+		if (this.props.touchEffect === 'feedback') {
+			Touchable = TouchableNativeFeedback;
+			touchableProps.background = TouchableNativeFeedback.Ripple(rippleColor);
+		} else {
+			Touchable = TouchableOpacity;
+		}
+
+		if (this.props.layout) {
+			const layouts = Array.isArray(this.props.layout) ? this.props.layout : [this.props.layout];
+
+			layouts.forEach((layout) => {
+				if (layout.button) {
+					buttonStyles.push(layout.button);
+				}
+
+				if (layout.text) {
+					textStyles.push(layout.text);
+				}
+
+				if (layout.rippleColor) {
+					rippleColor = layout.rippleColor;
+				}
+			});
+		}
+
+		if (this.props.type === 'back') {
+			preIcon = (
+				<Icon name="angle-left" style={[textStyles, { lineHeight: 18, fontSize: 18, paddingRight: 7 }]} />
+			);
+		}
+
 		return (
-			<TouchableNativeFeedback
+			<Touchable
 				onPress={this.props.onPress}
-				background={TouchableNativeFeedback.Ripple(styleVars.button.rippleColor)}
 			>
-				<View style={styles.button}>
-					<Text style={styles.buttonText}>{ this.props.title }</Text>
+				<View style={[buttonStyles, { flexDirection: 'row', alignItems: 'center' }]}>
+					{ preIcon }
+					<Text style={textStyles}>{ this.props.title }</Text>
+					{ postIcon }
 				</View>
-			</TouchableNativeFeedback>
+			</Touchable>
 		);
 	}
 }
 
 Button.propTypes = {
 	title: React.PropTypes.string.isRequired,
+	type: React.PropTypes.string,
+	touchEffect: React.PropTypes.string,
+	layout: React.PropTypes.oneOfType([
+		React.PropTypes.object,
+		React.PropTypes.array,
+	]),
 	onPress: React.PropTypes.func,
 };
 
 Button.defaultProps = {
+	touchEffect: 'feedback',
 };
 
 export default Button;

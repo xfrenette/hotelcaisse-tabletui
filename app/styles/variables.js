@@ -3,6 +3,7 @@ const baseFontSize = 16;
 const horizontalRhythm = 24;
 
 const sidePadding = horizontalRhythm;
+const baseLineHeight = verticalRhythm;
 
 const colors = {
 	blue1: '#33b5e6',
@@ -11,13 +12,18 @@ const colors = {
 	darkGrey1: '#555555',
 	grey1: '#e1e1e1',
 	grey2: '#aaaaaa',
+	lightGrey1: '#fafafa',
+	green1: '#31c544',
+	green2: '#279b36',
 };
 
 const variables = {
 	verticalRhythm,
 	baseFontSize,
+	baseLineHeight,
 	horizontalRhythm,
 	sidePadding,
+	colors,
 	mainTextColor: colors.darkGrey1,
 	rem(value) {
 		return value * baseFontSize;
@@ -26,14 +32,6 @@ const variables = {
 		mainColor: colors.blue1,
 		lighter: colors.blue2,
 		overlayColor: colors.white1,
-	},
-	button: {
-		fontSize: baseFontSize,
-		backgroundColor: colors.grey1,
-		color: colors.darkGrey1,
-		sidePadding: 16,
-		rippleColor: colors.grey2,
-		borderRadius: 2,
 	},
 };
 
