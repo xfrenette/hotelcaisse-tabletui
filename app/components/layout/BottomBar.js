@@ -3,7 +3,7 @@ import {
 	View,
 	Text,
  } from 'react-native';
-import styles from '../styles';
+import styles from '../../styles';
 
 class BottomBar extends Component {
 	render() {
