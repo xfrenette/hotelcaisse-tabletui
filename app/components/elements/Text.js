@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import { Text as NativeText } from 'react-native';
-import styles from '../../styles';
+import styleVars from '../../styles/variables';
+
+const styles = {
+	Text: {
+		fontSize: styleVars.baseFontSize,
+		color: styleVars.mainTextColor,
+		lineHeight: styleVars.verticalRhythm,
+		includeFontPadding: false,
+		textAlignVertical: 'center',
+	}
+}
 
 class Text extends Component {
 	render() {

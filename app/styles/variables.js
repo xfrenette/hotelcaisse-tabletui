@@ -5,6 +5,7 @@ const horizontalRhythm = 24;
 const sidePadding = horizontalRhythm;
 const mainContentSidePadding = 2 * horizontalRhythm;
 const baseLineHeight = verticalRhythm;
+const baseBlockMargin = verticalRhythm;
 
 const colors = {
 	blue1: '#33b5e6',
@@ -25,6 +26,7 @@ const variables = {
 	horizontalRhythm,
 	sidePadding,
 	mainContentSidePadding,
+	baseBlockMargin,
 	colors,
 	mainTextColor: colors.darkGrey1,
 	rem(value) {
