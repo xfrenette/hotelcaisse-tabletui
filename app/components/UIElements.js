@@ -6,6 +6,7 @@ import MainContent from './layout/MainContent';
 import Button from './elements/Button';
 import Text from './elements/Text';
 import TextInput from './elements/TextInput';
+import NumberInput from './elements/NumberInput';
 import Message from './elements/Message';
 import styles from '../styles';
 
@@ -32,7 +33,7 @@ class UIElements extends Component {
 				<TopBar title="Titréé" />
 				<ScrollView>
 					<MainContent>
-						<TextInput defaultValue="Bonjour toi" />
+						<NumberInput defaultValue="3" />
 					</MainContent>
 				</ScrollView>
 				<BottomBar>

@@ -6,7 +6,7 @@ const styles = {
 	TextInputContainer: {
 		borderWidth: 1,
 		borderColor: styleVars.theme.mainColor,
-		borderRadius: styleVars.inputBorderRadius,
+		borderRadius: styleVars.input.borderRadius,
 		backgroundColor: styleVars.theme.shadow,
 	},
 	TextInputText: {
@@ -14,12 +14,12 @@ const styles = {
 		color: styleVars.mainTextColor,
 		lineHeight: styleVars.verticalRhythm,
 		borderWidth: 0,
-		height: 2 * styleVars.verticalRhythm - 3,
+		height: styleVars.input.height - 3,
 		includeFontPadding: false,
 		textAlignVertical: 'center',
 		backgroundColor: styleVars.colors.white1,
 		marginTop: 1,
-		borderRadius: styleVars.inputBorderRadius,
+		borderRadius: styleVars.input.borderRadius,
 		paddingHorizontal: styleVars.horizontalRhythm / 2,
 	}
 }

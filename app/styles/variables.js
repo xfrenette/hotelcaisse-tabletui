@@ -33,13 +33,17 @@ const variables = {
 	rem(value) {
 		return value * baseFontSize;
 	},
-	inputBorderRadius: 3,
+	input: {
+		borderRadius: 3,
+		height: 2 * verticalRhythm,
+	},
 	theme: {
 		backgroundColor: colors.white2,
 		mainColor: colors.blue1,
 		lighter: colors.blue2,
 		overlayColor: colors.white1,
 		shadow: colors.grey1,
+		lineColor: colors.grey1,
 	},
 };
 
