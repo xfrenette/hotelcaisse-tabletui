@@ -33,7 +33,7 @@ class UIElements extends Component {
 				<TopBar title="Titréé" />
 				<ScrollView>
 					<MainContent>
-						<TextInput label="Label avant" defaultValue="Allo" />
+						<TextInput keyboardType="twitter" />
 					</MainContent>
 				</ScrollView>
 				<BottomBar>

@@ -38,6 +38,7 @@ const variables = {
 	input: {
 		borderRadius: 3,
 		height: 2 * verticalRhythm,
+		sidePadding: horizontalRhythm / 2,
 	},
 	theme: {
 		backgroundColor: colors.white2,

@@ -30,7 +30,10 @@ class Text extends Component {
 }
 
 Text.propTypes = {
-	style: React.PropTypes.object,
+	style: React.PropTypes.oneOfType([
+		React.PropTypes.object,
+		React.PropTypes.array,
+	]),
 };
 
 Text.defaultProps = {

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { View, TextInput as NativeTextInput } from 'react-native';
+import {
+	View,
+	TextInput as NativeTextInput,
+	Text as NativeText
+} from 'react-native';
 import Text from './Text';
 import styleVars from '../../styles/variables';
 
@@ -15,23 +19,38 @@ const styles = {
 		backgroundColor: styleVars.theme.shadow,
 		flex: 1,
 	},
-	TextInputText: {
-		fontSize: styleVars.baseFontSize,
-		color: styleVars.mainTextColor,
-		lineHeight: styleVars.verticalRhythm,
-		borderWidth: 0,
+	TextInput: {
 		height: styleVars.input.height - 3,
-		includeFontPadding: false,
-		textAlignVertical: 'center',
 		backgroundColor: styleVars.colors.white1,
 		marginTop: 1,
 		borderRadius: styleVars.input.borderRadius,
-		paddingHorizontal: styleVars.horizontalRhythm / 2,
+		paddingHorizontal: styleVars.input.sidePadding,
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	TextInputText: {
+		fontSize: styleVars.baseFontSize,
+		color: styleVars.mainTextColor,
+		lineHeight: styleVars.verticalRhythm - 2,
+		borderWidth: 0,
+		includeFontPadding: false,
+		textAlignVertical: 'center',
+		flex: 1,
+		padding: 0,
 	},
 	TextInputLabel: {
 		paddingRight: 10,
-	}
-}
+	},
+	TextInputSideText: {
+
+	},
+	TextInputPreText: {
+		paddingRight: styleVars.input.sidePadding,
+	},
+	TextInputPostText: {
+		paddingLeft: styleVars.input.sidePadding,
+	},
+};
 
 class TextInput extends Component {
 	renderLabel() {
@@ -44,6 +63,8 @@ class TextInput extends Component {
 
 	render() {
 		let textStyle = [styles.TextInputText];
+		let preText;
+		let postText;
 		const label = this.renderLabel();
 
 		if (Array.isArray(this.props.style)) {
@@ -55,15 +76,35 @@ class TextInput extends Component {
 			textStyle.push(this.props.style);
 		}
 
+		if (this.props.preText) {
+			preText = (
+				<Text style={[styles.TextInputSideText, styles.TextInputPreText]}>
+					{ this.props.preText }
+				</Text>
+			);
+		}
+
+		if (this.props.postText) {
+			postText = (
+				<Text style={[styles.TextInputSideText, styles.TextInputPostText]}>
+					{ this.props.postText }
+				</Text>
+			);
+		}
+
 		return (
 			<View style={styles.TextInputGroup}>
 				{ label }
 				<View style={styles.TextInputContainer}>
-					<NativeTextInput
-						{...this.props}
-						underlineColorAndroid={'transparent'}
-						style={textStyle}
-					/>
+					<View style={styles.TextInput}>
+						{ preText }
+						<NativeTextInput
+							{...this.props}
+							underlineColorAndroid={'transparent'}
+							style={textStyle}
+						/>
+						{ postText }
+					</View>
 				</View>
 			</View>
 		);
@@ -71,8 +112,13 @@ class TextInput extends Component {
 }
 
 TextInput.propTypes = {
-	style: React.PropTypes.object,
+	style: React.PropTypes.oneOfType([
+		React.PropTypes.object,
+		React.PropTypes.array,
+	]),
 	label: React.PropTypes.string,
+	preText: React.PropTypes.string,
+	postText: React.PropTypes.string,
 };
 
 TextInput.defaultProps = {
