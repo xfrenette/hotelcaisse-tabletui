@@ -5,6 +5,7 @@ import BottomBar from './layout/BottomBar';
 import MainContent from './layout/MainContent';
 import Button from './elements/Button';
 import Text from './elements/Text';
+import TextInput from './elements/TextInput';
 import Message from './elements/Message';
 import styles from '../styles';
 
@@ -26,14 +27,12 @@ class UIElements extends Component {
 		}
 
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={{ flex: 1, backgroundColor: '#fcfcfc' }}>
 				{verticalRhythmImg}
 				<TopBar title="Titréé" />
 				<ScrollView>
 					<MainContent>
-						<Message>Bonjour 2 hdjas fhjkah kjdh hf fjh fjk jkfdfhjksdha k fsdhf hd hfjk fhjkh fjkf hjkh fjk jfk hfdjkahjkf hdjksfh djk !</Message>
-						<Text>Bonjout !</Text>
-						<Text>Bonjout !</Text>
+						<TextInput defaultValue="Bonjour toi" />
 					</MainContent>
 				</ScrollView>
 				<BottomBar>

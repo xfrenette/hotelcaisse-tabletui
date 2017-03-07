@@ -11,6 +11,7 @@ const colors = {
 	blue1: '#33b5e6',
 	blue2: '#46ccfb',
 	white1: '#ffffff',
+	white2: '#fbfbfb',
 	darkGrey1: '#555555',
 	grey1: '#e1e1e1',
 	grey2: '#aaaaaa',
@@ -32,10 +33,13 @@ const variables = {
 	rem(value) {
 		return value * baseFontSize;
 	},
+	inputBorderRadius: 3,
 	theme: {
+		backgroundColor: colors.white2,
 		mainColor: colors.blue1,
 		lighter: colors.blue2,
 		overlayColor: colors.white1,
+		shadow: colors.grey1,
 	},
 };
 
