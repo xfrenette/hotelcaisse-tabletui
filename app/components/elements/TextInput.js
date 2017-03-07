@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { View, TextInput as NativeTextInput } from 'react-native';
+import Text from './Text';
 import styleVars from '../../styles/variables';
 
 const styles = {
+	TextInputGroup: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
 	TextInputContainer: {
 		borderWidth: 1,
 		borderColor: styleVars.theme.mainColor,
 		borderRadius: styleVars.input.borderRadius,
 		backgroundColor: styleVars.theme.shadow,
+		flex: 1,
 	},
 	TextInputText: {
 		fontSize: styleVars.baseFontSize,
@@ -21,12 +27,24 @@ const styles = {
 		marginTop: 1,
 		borderRadius: styleVars.input.borderRadius,
 		paddingHorizontal: styleVars.horizontalRhythm / 2,
+	},
+	TextInputLabel: {
+		paddingRight: 10,
 	}
 }
 
 class TextInput extends Component {
+	renderLabel() {
+		if (this.props.label) {
+			return <Text style={styles.TextInputLabel}>{ this.props.label }</Text>;
+		}
+
+		return null;
+	}
+
 	render() {
 		let textStyle = [styles.TextInputText];
+		const label = this.renderLabel();
 
 		if (Array.isArray(this.props.style)) {
 			textStyle = [
@@ -38,12 +56,15 @@ class TextInput extends Component {
 		}
 
 		return (
-			<View style={styles.TextInputContainer}>
-				<NativeTextInput
-					{...this.props}
-					underlineColorAndroid={'transparent'}
-					style={textStyle}
-				/>
+			<View style={styles.TextInputGroup}>
+				{ label }
+				<View style={styles.TextInputContainer}>
+					<NativeTextInput
+						{...this.props}
+						underlineColorAndroid={'transparent'}
+						style={textStyle}
+					/>
+				</View>
 			</View>
 		);
 	}
@@ -51,6 +72,7 @@ class TextInput extends Component {
 
 TextInput.propTypes = {
 	style: React.PropTypes.object,
+	label: React.PropTypes.string,
 };
 
 TextInput.defaultProps = {

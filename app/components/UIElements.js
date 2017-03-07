@@ -33,7 +33,7 @@ class UIElements extends Component {
 				<TopBar title="Titréé" />
 				<ScrollView>
 					<MainContent>
-						<NumberInput defaultValue="3" />
+						<TextInput label="Label avant" defaultValue="Allo" />
 					</MainContent>
 				</ScrollView>
 				<BottomBar>
