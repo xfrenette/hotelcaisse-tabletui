@@ -14,14 +14,14 @@ const styles = {
 	},
 	TextInputContainer: {
 		borderWidth: 1,
-		borderColor: styleVars.theme.mainColor,
+		borderColor: styleVars.input.borderColor,
 		borderRadius: styleVars.input.borderRadius,
 		backgroundColor: styleVars.theme.shadow,
 		flex: 1,
 	},
 	TextInput: {
 		height: styleVars.input.height - 3,
-		backgroundColor: styleVars.colors.white1,
+		backgroundColor: styleVars.input.backgroundColor,
 		marginTop: 1,
 		borderRadius: styleVars.input.borderRadius,
 		paddingHorizontal: styleVars.input.sidePadding,

@@ -5,10 +5,13 @@ import BottomBar from './layout/BottomBar';
 import MainContent from './layout/MainContent';
 import Button from './elements/Button';
 import Text from './elements/Text';
+import Dropdown from './elements/Dropdown';
 import TextInput from './elements/TextInput';
 import NumberInput from './elements/NumberInput';
 import Message from './elements/Message';
 import styles from '../styles';
+
+const Option = Dropdown.Option;
 
 class UIElements extends Component {
 	renderVerticalRhythm() {
@@ -20,7 +23,7 @@ class UIElements extends Component {
 	}
 
 	render() {
-		let verticalRhythm = false;
+		let verticalRhythm = true;
 		let verticalRhythmImg;
 
 		if (verticalRhythm) {
@@ -33,7 +36,18 @@ class UIElements extends Component {
 				<TopBar title="Titréé" />
 				<ScrollView>
 					<MainContent>
-						<TextInput keyboardType="twitter" />
+						<Dropdown>
+							<Option label="Premier" value="1" style={{fontSize:8}} />
+							<Option label="Deuxième" value="2" />
+							<Option label="Deuxième" value="2" />
+							<Option label="Deuxième" value="2" />
+							<Option label="Deuxième" value="2" />
+							<Option label="Deuxième" value="2" />
+							<Option label="Deuxième" value="2" />
+							<Option label="Deuxième" value="2" />
+							<Option label="Deuxième" value="2" />
+						</Dropdown>
+						<TextInput />
 					</MainContent>
 				</ScrollView>
 				<BottomBar>

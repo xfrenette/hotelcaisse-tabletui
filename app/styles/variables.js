@@ -36,9 +36,11 @@ const variables = {
 		return value * baseFontSize;
 	},
 	input: {
+		borderColor: colors.blue1,
 		borderRadius: 3,
 		height: 2 * verticalRhythm,
 		sidePadding: horizontalRhythm / 2,
+		backgroundColor: colors.white1,
 	},
 	theme: {
 		backgroundColor: colors.white2,
