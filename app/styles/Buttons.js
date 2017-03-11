@@ -6,7 +6,7 @@ export default {
 		default: {
 			button: {
 				height: 2 * vars.verticalRhythm,
-				backgroundColor: vars.colors.grey1,
+				backgroundColor: vars.button.backgroundColor,
 				paddingLeft: 16,
 				paddingRight: 16,
 				borderRadius: 2,

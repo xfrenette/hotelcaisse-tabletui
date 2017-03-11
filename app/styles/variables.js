@@ -35,12 +35,20 @@ const variables = {
 	rem(value) {
 		return value * baseFontSize;
 	},
+	button: {
+		backgroundColor: colors.grey1,
+	},
+	fontSize: {
+		big: 1.2 * baseFontSize,
+	},
+
 	input: {
 		borderColor: colors.blue1,
 		borderRadius: 3,
 		height: 2 * verticalRhythm,
 		sidePadding: horizontalRhythm / 2,
 		backgroundColor: colors.white1,
+		placeholderColor: colors.grey2,
 	},
 	theme: {
 		backgroundColor: colors.white2,
