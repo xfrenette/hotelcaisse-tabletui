@@ -9,6 +9,7 @@ import Dropdown from './elements/Dropdown';
 import TextInput from './elements/TextInput';
 import NumberInput from './elements/NumberInput';
 import Message from './elements/Message';
+import Title from './elements/Title';
 import styles from '../styles';
 
 const Option = Dropdown.Option;
@@ -36,18 +37,7 @@ class UIElements extends Component {
 				<TopBar title="Titréé" />
 				<ScrollView>
 					<MainContent>
-						<Dropdown>
-							<Option label="Premier" value="1" style={{fontSize:8}} />
-							<Option label="Deuxième" value="2" />
-							<Option label="Deuxième" value="2" />
-							<Option label="Deuxième" value="2" />
-							<Option label="Deuxième" value="2" />
-							<Option label="Deuxième" value="2" />
-							<Option label="Deuxième" value="2" />
-							<Option label="Deuxième" value="2" />
-							<Option label="Deuxième" value="2" />
-						</Dropdown>
-						<TextInput />
+						<Title>Bonjour</Title>
 					</MainContent>
 				</ScrollView>
 				<BottomBar>
