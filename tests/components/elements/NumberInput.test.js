@@ -2,16 +2,6 @@ import 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import NumberInput from 'components/elements/NumberInput';
 
-/*
-Tests qui marchent pas:
-	- Rajouter un chiffre en plein milieu quand il y a déjà une espace.
-	  Ex: la valeur actuelle du champ est '5 123' et, avec le curseur, je veux
-	  rajouter un '4' après le '1', donc ça devient '5 1423', mais le parseNumber
-	  ne fonctionne pas.
-	- Aussi, ça "glitch" quand on écrit une valeur qui ne se peut pas
-	- Quand j'ai '1,2' et que j'efface le '2', la virgule disparaît aussi
- */
-
 let numberInput;
 const localizer = new Localizer('fr-CA');
 const baseValue = 5;
