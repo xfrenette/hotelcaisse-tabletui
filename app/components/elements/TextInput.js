@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
 	View,
 	TextInput as NativeTextInput,
-	Text as NativeText
 } from 'react-native';
 import Text from './Text';
 import styleVars from '../../styles/variables';
@@ -55,26 +54,18 @@ const styles = {
 class TextInput extends Component {
 	renderLabel() {
 		if (this.props.label) {
-			return <Text style={styles.TextInputLabel}>{ this.props.label }</Text>;
+			const style = [styles.TextInputLabel, this.props.labelStyle];
+			return <Text style={style}>{ this.props.label }</Text>;
 		}
 
 		return null;
 	}
 
 	render() {
-		let textStyle = [styles.TextInputText];
+		const textStyle = [styles.TextInputText, this.props.style];
 		let preText;
 		let postText;
 		const label = this.renderLabel();
-
-		if (Array.isArray(this.props.style)) {
-			textStyle = [
-				...textStyle,
-				...this.props.style,
-			];
-		} else if (this.props.style) {
-			textStyle.push(this.props.style);
-		}
 
 		if (this.props.preText) {
 			preText = (
@@ -112,16 +103,19 @@ class TextInput extends Component {
 }
 
 TextInput.propTypes = {
-	style: React.PropTypes.oneOfType([
-		React.PropTypes.object,
-		React.PropTypes.array,
-	]),
+	style: NativeTextInput.propTypes.style,
+	labelStyle: Text.propTypes.style,
 	label: React.PropTypes.string,
 	preText: React.PropTypes.string,
 	postText: React.PropTypes.string,
 };
 
 TextInput.defaultProps = {
+	style: null,
+	labelStyle: null,
+	label: null,
+	preText: null,
+	postText: null,
 };
 
 export default TextInput;
