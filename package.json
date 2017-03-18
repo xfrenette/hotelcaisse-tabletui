@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "hotelcaisse-app": "file:///C:\\Users\\Xavier\\Travail\\dev\\XavierFrenette\\HotelCaisse\\js-app",
     "react": "15.4.2",
     "react-native": "0.42.0",
     "react-native-vector-icons": "^4.0.0"
@@ -18,6 +19,10 @@
     "react-test-renderer": "15.4.2"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "modulePaths": [
+      "<rootDir>/app/"
+    ],
+    "testRegex": "(\\.(test|spec))\\.js$"
   }
 }
