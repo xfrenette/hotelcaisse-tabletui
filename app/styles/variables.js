@@ -40,6 +40,8 @@ const variables = {
 	},
 	fontSize: {
 		big: 1.2 * baseFontSize,
+		super: 2 * baseFontSize,
+		small: 0.8 * baseFontSize,
 	},
 
 	input: {
