@@ -18,7 +18,7 @@ class UI extends Component {
 		return (
 			<Provider {...stores}>
 				<Router history={history}>
-					<View>
+					<View style={{ flex: 1 }}>
 						{routes.map(
 							(route, i) => <RouteWithSubRoutes key={i} route={route} />
 						)}

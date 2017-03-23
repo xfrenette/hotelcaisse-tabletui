@@ -8,14 +8,20 @@ const propTypes = {
 
 class RouteWithSubRoutes extends Component {
 	render() {
-		const { routes, component, ...routeProps } = this.props.route;
+		const { routes, component, type, ...routeProps } = this.props.route;
 
 		if (component) {
-			const RouteComponent = component;
-			routeProps.render = (props) => <RouteComponent {...props} routes={routes} />;
+			const RenderedComponent = component;
+			routeProps.render = (props) => <RenderedComponent {...props} routes={routes} />;
 		}
 
-		return <Route {...routeProps} />;
+		const RouteComponent = type || Route;
+
+		if (type) {
+			routeProps.routes = routes;
+		}
+
+		return <RouteComponent {...routeProps} />;
 	}
 }
 

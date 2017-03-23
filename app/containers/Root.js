@@ -9,7 +9,7 @@ const propTypes = {
 class Root extends Component {
 	render() {
 		return (
-			<View>
+			<View style={{ flex: 1 }}>
 				{this.props.routes.map(
 					(route, i) => <RouteWithSubRoutes key={i} route={route} />
 				)}
