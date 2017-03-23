@@ -16,7 +16,6 @@ const propTypes = {
 @observer
 class LoadedRoute extends Component {
 	render() {
-		console.log(this.props.loadingComponent);
 		if (this.props.ui.state !== UI_STATES.READY) {
 			const LoadingComponent = this.props.loadingComponent;
 			return <LoadingComponent />;
