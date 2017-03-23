@@ -3,5 +3,5 @@ import TestLoader from '../../tests/lib/TestLoader';
 
 export default {
 	routes: createRoutes(),
-	//loader: new TestLoader(false),
+	loader: new TestLoader(3000),
 };
