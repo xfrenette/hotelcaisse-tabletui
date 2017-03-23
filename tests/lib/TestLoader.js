@@ -11,6 +11,12 @@ class TestLoader extends EventEmitter {
 		if (this.opts === true) {
 			this.emit('load');
 		}
+
+		if (typeof this.opts === 'number') {
+			setTimeout(() => {
+				this.emit('load');
+			}, this.opts);
+		}
 	}
 }
 
