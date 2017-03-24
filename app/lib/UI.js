@@ -1,5 +1,6 @@
 import { observable } from 'mobx';
 import { createMemoryHistory } from 'history';
+import DefaultAuth from 'hotelcaisse-app/dist/auth/Auth';
 import { RouterStore, syncHistoryWithStore } from './mobx-react-router';
 
 /**
@@ -43,6 +44,12 @@ class UI {
 	 * @type {history}
 	 */
 	history = null;
+	/**
+	 * Authentication class. By default, a "never authenticated" class is used
+	 *
+	 * @type {Auth}
+	 */
+	auth = new DefaultAuth();
 
 	/**
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI
@@ -53,7 +60,7 @@ class UI {
 	 * @param {Object} settings
 	 */
 	constructor(settings = {}) {
-		['routes', 'loader'].forEach((setting) => {
+		['routes', 'loader', 'auth'].forEach((setting) => {
 			if (settings[setting]) {
 				this[setting] = settings[setting];
 			}
@@ -102,6 +109,7 @@ class UI {
 	 * Returns a list of stores that containers can use:
 	 * - ui : this instance
 	 * - router : the router instance (has methods to "navigate" like push, goBack, ...)
+	 * - auth : the auth class instance
 	 *
 	 * @return {Object}
 	 */
@@ -109,7 +117,18 @@ class UI {
 		return {
 			ui: this,
 			router: this.router,
+			auth: this.auth,
 		};
+	}
+
+	/**
+	 * Returns the device's UUID
+	 *
+	 * @todo
+	 * @return {string}
+	 */
+	getDeviceUUID() {
+		return 'device-uuid-todo';
 	}
 }
 

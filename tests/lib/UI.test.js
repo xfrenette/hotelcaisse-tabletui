@@ -1,6 +1,7 @@
 import { autorun } from 'mobx';
 import UI, { STATES } from 'lib/UI';
-import TestLoader from './TestLoader';
+import TestLoader from '../mock/TestLoader';
+import TestAuth from '../mock/TestAuth';
 
 let ui;
 let disposer;
@@ -29,6 +30,12 @@ describe('constructor()', () => {
 		const loader = new TestLoader();
 		ui = new UI({ loader });
 		expect(ui.loader).toBe(loader);
+	});
+
+	test('sets auth if present', () => {
+		const auth = new TestAuth();
+		ui = new UI({ auth });
+		expect(ui.auth).toBe(auth);
 	});
 });
 
@@ -84,5 +91,10 @@ describe('getStores()', () => {
 	test('contains router', () => {
 		ui.initRouter();
 		expect(ui.getStores().router).toBe(ui.router);
+	});
+
+	test('contains auth', () => {
+		ui.initRouter();
+		expect(ui.getStores().auth).toBe(ui.auth);
 	});
 });

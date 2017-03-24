@@ -1,7 +1,9 @@
 import Root from '../../app/containers/Root';
 import LoadedRoute from '../../app/containers/routes/LoadedRoute';
+import AuthenticatedRoute from '../../app/containers/routes/AuthenticatedRoute';
 import Home from '../../app/containers/screens/Home';
 import Loading from '../../app/components/screens/Loading';
+import Authentication from '../../app/components/screens/Authentication';
 import OpenRegister from '../../app/containers/screens/OpenRegister';
 
 export default () => ([
@@ -12,7 +14,13 @@ export default () => ([
 				type: LoadedRoute,
 				loadingComponent: Loading,
 				routes: [
-					{ component: Home, path: '/', exact: true },
+					{
+						type: AuthenticatedRoute,
+						authenticationComponent: Authentication,
+						routes: [
+							{ component: Home, path: '/', exact: true },
+						],
+					},
 				],
 			},
 		],
