@@ -1,7 +1,7 @@
-import createRoutes from '../../app/config/routes';
+import createRoutes from './routes';
 import TestLoader from '../../tests/lib/TestLoader';
 
-export default {
+module.exports = {
 	routes: createRoutes(),
 	loader: new TestLoader(3000),
 };
