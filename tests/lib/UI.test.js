@@ -37,6 +37,14 @@ describe('constructor()', () => {
 		ui = new UI({ auth });
 		expect(ui.auth).toBe(auth);
 	});
+
+	test('sets Localizer', () => {
+		const locale = 'fr-CA';
+		const strings = { 'fr-CA': { a: 'b' } };
+		ui = new UI({ locale, strings });
+		expect(ui.localizer.locale).toBe(locale);
+		expect(ui.localizer.t('a')).toBe('b');
+	});
 });
 
 describe('state', () => {
@@ -96,5 +104,9 @@ describe('getStores()', () => {
 	test('contains auth', () => {
 		ui.initRouter();
 		expect(ui.getStores().auth).toBe(ui.auth);
+	});
+
+	test('contains localizer', () => {
+		expect(ui.getStores().localizer).toBe(ui.localizer);
 	});
 });

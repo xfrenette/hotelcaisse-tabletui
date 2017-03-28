@@ -2,6 +2,7 @@ import { observable } from 'mobx';
 import { createMemoryHistory } from 'history';
 import DefaultAuth from 'hotelcaisse-app/dist/auth/Auth';
 import { RouterStore, syncHistoryWithStore } from './mobx-react-router';
+import Localizer from './Localizer';
 
 /**
  * Different states the UI can be.
@@ -13,6 +14,29 @@ const STATES = {
 	LOADING: 1,
 	READY: 2,
 };
+
+/**
+ * Returns a Localizer instance initiated with the supplied locale and strings.
+ *
+ * @param {String} (Optional) locale
+ * @param {Object} (Optional) strings
+ * @return {Localizer}
+ */
+function createLocalizer(locale, strings) {
+	const localizer = new Localizer();
+
+	if (strings) {
+		Object.entries(strings).forEach(([stringsLocale, stringsData]) => {
+			localizer.setStrings(stringsLocale, stringsData);
+		});
+	}
+
+	if (locale) {
+		localizer.locale = locale;
+	}
+
+	return localizer;
+}
 
 /**
  * Main class representing the user interface.
@@ -56,6 +80,9 @@ class UI {
 	 * params (all optional):
 	 * - routes
 	 * - loader
+	 * - auth
+	 * - locale (string)
+	 * - strings (object for Localizer)
 	 *
 	 * @param {Object} settings
 	 */
@@ -65,6 +92,7 @@ class UI {
 				this[setting] = settings[setting];
 			}
 		});
+		this.localizer = createLocalizer(settings.locale, settings.strings);
 	}
 
 	/**
@@ -118,6 +146,7 @@ class UI {
 			ui: this,
 			router: this.router,
 			auth: this.auth,
+			localizer: this.localizer,
 		};
 	}
 
