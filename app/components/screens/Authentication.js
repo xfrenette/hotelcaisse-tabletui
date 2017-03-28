@@ -3,7 +3,8 @@ import {
 	View,
 	Text,
  } from 'react-native';
- import Button from '../elements/Button';
+import { inject } from 'mobx-react/native';
+import Button from '../elements/Button';
 
 const propTypes = {
 	status: React.PropTypes.string,
@@ -26,6 +27,7 @@ const styles = {
 	}
 };
 
+@inject('localizer')
 class Authentication extends Component {
 	doFail() {
 		this.authenticate('4567');
@@ -47,8 +49,16 @@ class Authentication extends Component {
 		}
 	}
 
+	t(path) {
+		if (this.props.localizer) {
+			return this.props.localizer.t(path);
+		}
+
+		return path;
+	}
+
 	render() {
-		let message = 'Veuillez vous authentifier';
+		let message = this.t('auth.please');
 		let buttons = [];
 
 		if (this.props.status !== 'success' && this.props.status !== 'authenticating') {

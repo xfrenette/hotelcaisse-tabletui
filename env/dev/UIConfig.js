@@ -1,6 +1,7 @@
 import createRoutes from './routes';
 import TestLoader from '../../tests/mock/TestLoader';
 import TestAuth from '../../tests/mock/TestAuth';
+import strings from '../../locales/fr-CA';
 
 /*
 Examples :
@@ -23,4 +24,8 @@ module.exports = {
 	routes: createRoutes(),
 	loader: new TestLoader(3000),
 	auth: testAuth,
+	locale: 'fr-CA',
+	strings: {
+		'fr-CA': strings,
+	},
 };
