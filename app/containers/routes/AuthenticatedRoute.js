@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { observer, inject } from 'mobx-react/native';
-import { ERRORS } from 'hotelcaisse-app/dist/auth/Auth';
+import { observable, computed, autorun } from 'mobx';
+import { inject, observer } from 'mobx-react/native';
+import Auth, { ERRORS } from 'hotelcaisse-app/dist/auth/Auth';
 import RouteWithSubRoutes from '../RouteWithSubRoutes';
-import { STATES as UI_STATES } from '../../lib/UI';
+
+/**
+ * Special "React Router" Route that "guards" sub-routes only if a supplied Auth class indicates the
+ * device is authenticated. If it is, simply continue by showing sub-routes. If not, shows a
+ * Authentication component.
+ */
 
 const propTypes = {
 	routes: React.PropTypes.array.isRequired,
@@ -16,50 +22,100 @@ const propTypes = {
 @inject('auth', 'ui')
 @observer
 class AuthenticatedRoute extends Component {
-	constructor(props) {
-		super(props);
+	/**
+	 * If true, the authentication component is shown, even if we are now authenticated. Used to show
+	 * a "success" message after a successful authentication.
+	 *
+	 * @type {Boolean}
+	 */
+	@observable forceAuthenticationShown = false;
+	/**
+	 * Authentication status. Can be :
+	 * - null : no authentication tried yet
+	 * - 'success' : authentication was tried and was successful
+	 * - 'fail' : authentication was tried and was failed
+	 * - 'error' : authentication was tried but an erreur (other that fail) occured (ex: network
+	 * 		error)
+	 *
+	 * @type {string|null}
+	 */
+	@observable status = null;
+	/**
+	 * Disposer callback of the autorun
+	 *
+	 * @type {function}
+	 */
+	disposer = null;
 
-		this.state = {
-			// can be null, success, fail, authenticating, error
-			status: null,
-			showAuthentication: !props.auth.authenticated,
-		};
+	/**
+	 * Main boolean stating if the authentication component should be shown or not. Constructed from
+	 * forceAuthenticationShown and authenticated attribute of Auth class.
+	 *
+	 * @type {Boolean}
+	 */
+	@computed
+	get showAuthentication() {
+		return this.forceAuthenticationShown || !this.props.auth.authenticated;
 	}
 
+	/**
+	 * When the Auth class's authenticated property becomes false, force authentication display
+	 */
+	componentWillMount() {
+		this.disposer = autorun(() => {
+			if (!this.props.auth.authenticated) {
+				this.forceAuthenticationShown = true;
+			}
+		});
+	}
+
+	/**
+	 * Remove the autorun when unmounting
+	 */
+	componentWillUnmount() {
+		if (this.disposer) {
+			this.disposer();
+			this.disposer = null;
+		}
+	}
+
+	/**
+	 * Callback called by the Authentication component when the user tries to authenticate with a
+	 * code. Tries to authenticate on the Auth class. Sets the status during the process.
+	 *
+	 * @param {String} code
+	 */
 	onAuthenticate(code) {
 		const auth = this.props.auth;
 		const deviceUUID = this.props.ui.getDeviceUUID();
 
-		this.setState({
-			status: 'authenticating',
-		});
+		this.status = 'authenticating';
 
 		auth.authenticate(code, deviceUUID)
 			.then(() => {
-				this.setState({
-					status: 'success',
-				});
+				this.status = 'success';
 			})
 			.catch((errorCode) => {
-				this.setState({
-					status: errorCode === ERRORS.AUTHENTICATION_FAILED ? 'fail' : 'error',
-				});
+				this.status = errorCode === ERRORS.AUTHENTICATION_FAILED ? 'fail' : 'error';
 			});
 	}
 
+	/**
+	 * Callback called by the Authentication component when it wants to quit the authentication
+	 * screen after a successful authentication.
+	 */
 	onFinish() {
-		this.setState({
-			status: null,
-			showAuthentication: false,
-		});
+		this.status = null;
+		this.forceAuthenticationShown = false;
 	}
 
 	render() {
-		if (this.state.showAuthentication) {
+		if (this.showAuthentication) {
+			this.authenticationAlreadyShown = true;
 			const AuthenticationComponent = this.props.authenticationComponent;
 			return (
 				<AuthenticationComponent
-					status={this.state.status}
+					status={this.status}
 					onAuthenticate={this.onAuthenticate.bind(this)}
 					onFinish={this.onFinish.bind(this)}
 				/>

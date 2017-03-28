@@ -11,7 +11,6 @@ class TestAuth extends Auth {
 
 	// eslint-disable-next-line no-unused-vars
 	authenticate(code, deviceUUID) {
-		console.log(code, this.validCode);
 		const codeIsValid = this.validCode === null || code === this.validCode;
 		let success = false;
 
@@ -22,11 +21,13 @@ class TestAuth extends Auth {
 		if (this.delay > 0) {
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
+					this.authenticated = success;
 					success ? resolve() : reject();
 				}, this.delay);
 			});
 		}
 
+		this.authenticated = success;
 		return success ? Promise.resolve() : Promise.reject();
 	}
 }
