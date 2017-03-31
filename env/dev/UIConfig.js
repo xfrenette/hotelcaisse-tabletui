@@ -1,6 +1,10 @@
+import Application from 'hotelcaisse-app';
+import BusinessAutoload from 'hotelcaisse-app/dist/plugins/autoload/Business';
+import { serialize } from 'serializr';
 import createRoutes from './routes';
-import TestLoader from '../../tests/mock/TestLoader';
+import storedBusiness from './storedBusiness';
 import TestAuth from '../../tests/mock/TestAuth';
+import TestReader from '../../tests/mock/TestReader';
 import strings from '../../locales/fr-CA';
 
 /*
@@ -17,12 +21,24 @@ testAuth.delay = 2000;
 
 */
 
+const businessStorage = new TestReader(serialize(storedBusiness));
+businessStorage.delay = 1000;
+
 const testAuth = new TestAuth();
 testAuth.authenticated = true;
 
+const appConfig = {
+	plugins: [
+		new BusinessAutoload([businessStorage]),
+	],
+};
+
+const app = new Application(appConfig);
+
+// module.exports instead of export because it is an optional require in index.*
 module.exports = {
+	app,
 	routes: createRoutes(),
-	loader: new TestLoader(3000),
 	auth: testAuth,
 	locale: 'fr-CA',
 	strings: {
