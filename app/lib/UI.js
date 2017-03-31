@@ -50,13 +50,6 @@ class UI {
 	@observable
 	state = STATES.BOOTSTRAPPING;
 	/**
-	 * Loader of the UI. The loader is called when the UI start to load all the required data. The
-	 * state of the UI is updated accordingly. If null, it like if there is no loading.
-	 *
-	 * @type {Loader}
-	 */
-	loader = null;
-	/**
 	 * Array of route objects describing all the routes used in conjunction with the router.
 	 *
 	 * @type {Array}
@@ -74,20 +67,33 @@ class UI {
 	 * @type {Auth}
 	 */
 	auth = new DefaultAuth();
+	/**
+	 * Instance of the HotelCaisse-app application.
+	 *
+	 * @type {HotelCaisse-app}
+	 */
+	app = null;
+	/**
+	 * Promise of the application loading. When the UI starts, it shows a loading that will stay
+	 * until this Promise resolves. By default, resolves immediately. See start().
+	 *
+	 * @type {Promise}
+	 */
+	appLoadingPromise = Promise.resolve();
 
 	/**
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI
-	 * params (all optional):
+	 * params (all optional, but might not work if not present):
 	 * - routes
-	 * - loader
 	 * - auth
 	 * - locale (string)
 	 * - strings (object for Localizer)
+	 * - app (HotelCaisse-app)
 	 *
 	 * @param {Object} settings
 	 */
 	constructor(settings = {}) {
-		['routes', 'loader', 'auth'].forEach((setting) => {
+		['routes', 'auth', 'app'].forEach((setting) => {
 			if (settings[setting]) {
 				this[setting] = settings[setting];
 			}
@@ -96,10 +102,13 @@ class UI {
 	}
 
 	/**
-	 * Initialises all instances required before starting.
+	 * Initialises all instances required before starting and bootstraps the Application
 	 */
 	init() {
 		this.initRouter();
+		if (this.app) {
+			this.app.bootstrap();
+		}
 	}
 
 	/**
@@ -111,26 +120,27 @@ class UI {
 	}
 
 	/**
-	 * Starts the UI. Will start the app.
+	 * Starts the UI. Will start the app. The Promise returned by app.start() will be used to
+	 * determine when the loading finishes.
 	 */
 	start() {
+		if (this.app) {
+			this.appLoadingPromise = this.app.start();
+		}
 		this.startLoading();
 	}
 
 	/**
-	 * If a loader is present, starts it and listens when it loads. The state will be updated
-	 * accordingly. If no loader is present, skips the loading.
+	 * Sets the state to "loading" until the appLoadingPromise resolves. Returns a Promise that
+	 * resolves when the loading is finished.
+	 *
+	 * @return {Promise}
 	 */
 	startLoading() {
-		if (this.loader) {
-			this.state = STATES.LOADING;
-			this.loader.once('load', () => {
-				this.state = STATES.READY;
-			});
-			this.loader.start();
-		} else {
+		this.state = STATES.LOADING;
+		return this.appLoadingPromise.then(() => {
 			this.state = STATES.READY;
-		}
+		});
 	}
 
 	/**
@@ -138,6 +148,7 @@ class UI {
 	 * - ui : this instance
 	 * - router : the router instance (has methods to "navigate" like push, goBack, ...)
 	 * - auth : the auth class instance
+	 * - localizer : Localizer instance used
 	 *
 	 * @return {Object}
 	 */
