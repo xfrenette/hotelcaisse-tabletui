@@ -19,6 +19,7 @@ export default () => ([
 						authenticationComponent: Authentication,
 						routes: [
 							{ component: Home, path: '/', exact: true },
+							{ component: OpenRegister, path: '/register/open' },
 						],
 					},
 				],
