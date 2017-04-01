@@ -20,9 +20,9 @@ testAuth.validCode = '1234';
 testAuth.delay = 2000;
 
 */
-
-const businessStorage = new TestReader(serialize(storedBusiness));
-businessStorage.delay = 1000;
+const serializedData = serialize(storedBusiness);
+const businessStorage = new TestReader(serializedData);
+// businessStorage.delay = 1000;
 
 const testAuth = new TestAuth();
 testAuth.authenticated = true;
