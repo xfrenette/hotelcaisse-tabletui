@@ -158,6 +158,7 @@ class UI {
 			router: this.router,
 			auth: this.auth,
 			localizer: this.localizer,
+			business: this.app ? this.app.business : null,
 		};
 	}
 

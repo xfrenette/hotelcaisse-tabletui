@@ -86,4 +86,9 @@ describe('getStores()', () => {
 	test('contains localizer', () => {
 		expect(ui.getStores().localizer).toBe(ui.localizer);
 	});
+
+	test('contains business', () => {
+		ui.app = { business: { test: true } };
+		expect(ui.getStores().business).toBe(ui.app.business);
+	});
 });
