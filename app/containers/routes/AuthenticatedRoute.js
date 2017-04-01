@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Text } from 'react-native';
 import { observable, computed, autorun } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import Auth, { ERRORS } from 'hotelcaisse-app/dist/auth/Auth';
+import { Route } from 'react-router-native';
 import RouteWithSubRoutes from '../RouteWithSubRoutes';
 
 /**
@@ -21,7 +22,7 @@ const propTypes = {
 
 @inject('auth', 'ui')
 @observer
-class AuthenticatedRoute extends Component {
+class AuthenticatedRoute extends Route {
 	/**
 	 * If true, the authentication component is shown, even if we are now authenticated. Used to show
 	 * a "success" message after a successful authentication.
