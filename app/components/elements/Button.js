@@ -5,8 +5,26 @@ import {
 	Text,
 	TouchableNativeFeedback,
 	TouchableOpacity,
- } from 'react-native';
+} from 'react-native';
 import styles from '../../styles';
+
+const propTypes = {
+	title: React.PropTypes.string.isRequired,
+	type: React.PropTypes.string,
+	touchEffect: React.PropTypes.string,
+	layout: React.PropTypes.oneOfType([
+		React.PropTypes.object,
+		React.PropTypes.array,
+	]),
+	onPress: React.PropTypes.func,
+};
+
+const defaultProps = {
+	touchEffect: 'feedback',
+	type: null,
+	layout: null,
+	onPress: null,
+};
 
 class Button extends Component {
 	render() {
@@ -63,19 +81,7 @@ class Button extends Component {
 	}
 }
 
-Button.propTypes = {
-	title: React.PropTypes.string.isRequired,
-	type: React.PropTypes.string,
-	touchEffect: React.PropTypes.string,
-	layout: React.PropTypes.oneOfType([
-		React.PropTypes.object,
-		React.PropTypes.array,
-	]),
-	onPress: React.PropTypes.func,
-};
-
-Button.defaultProps = {
-	touchEffect: 'feedback',
-};
+Button.propTypes = propTypes;
+Button.defaultProps = defaultProps;
 
 export default Button;
