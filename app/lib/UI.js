@@ -1,8 +1,8 @@
 import { observable } from 'mobx';
 import { createMemoryHistory } from 'history';
 import DefaultAuth from 'hotelcaisse-app/dist/auth/Auth';
+import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { RouterStore, syncHistoryWithStore } from './mobx-react-router';
-import Localizer from './Localizer';
 
 /**
  * Different states the UI can be.
@@ -22,17 +22,13 @@ const STATES = {
  * @param {Object} (Optional) strings
  * @return {Localizer}
  */
-function createLocalizer(locale, strings) {
-	const localizer = new Localizer();
+function createLocalizer(locale, currency, strings) {
+	const localizer = new Localizer(locale, currency);
 
 	if (strings) {
 		Object.entries(strings).forEach(([stringsLocale, stringsData]) => {
 			localizer.setStrings(stringsLocale, stringsData);
 		});
-	}
-
-	if (locale) {
-		localizer.locale = locale;
 	}
 
 	return localizer;
@@ -88,7 +84,10 @@ class UI {
 	 * - auth
 	 * - locale (string)
 	 * - strings (object for Localizer)
+	 * - currency (string)
 	 * - app (HotelCaisse-app)
+	 * - moneyDenominations : array of number of the different money denominations
+	 * 	(ex: [0.05, 0.1, 5, 10])
 	 *
 	 * @param {Object} settings
 	 */
@@ -98,7 +97,8 @@ class UI {
 				this[setting] = settings[setting];
 			}
 		});
-		this.localizer = createLocalizer(settings.locale, settings.strings);
+		this.settings = settings;
+		this.localizer = createLocalizer(settings.locale, settings.currency, settings.strings);
 	}
 
 	/**
@@ -158,6 +158,7 @@ class UI {
 			router: this.router,
 			auth: this.auth,
 			localizer: this.localizer,
+			settings: this.settings,
 			business: this.app ? this.app.business : null,
 		};
 	}
