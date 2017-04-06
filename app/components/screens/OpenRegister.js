@@ -58,7 +58,7 @@ class OpenRegister extends Component {
 
 	onCancel() {
 		if (this.props.onCancel) {
-			this.props.onCancel(this.this.t('openRegister.messages.openingCanceled'));
+			this.props.onCancel(this.t('openRegister.messages.openingCanceled'));
 		}
 	}
 
