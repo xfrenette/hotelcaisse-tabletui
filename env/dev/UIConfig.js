@@ -41,6 +41,8 @@ module.exports = {
 	routes: createRoutes(),
 	auth: testAuth,
 	locale: 'fr-CA',
+	currency: 'CAD',
+	moneyDenominations: [0.05, 0.1, 0.25, 1, 2, 5, 10, 20, 50, 100],
 	strings: {
 		'fr-CA': strings,
 	},

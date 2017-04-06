@@ -91,4 +91,9 @@ describe('getStores()', () => {
 		ui.app = { business: { test: true } };
 		expect(ui.getStores().business).toBe(ui.app.business);
 	});
+
+	test('contains settings', () => {
+		ui.app = { settings: { test: true } };
+		expect(ui.getStores().settings).toBe(ui.app.settings);
+	});
 });

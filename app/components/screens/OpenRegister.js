@@ -1,10 +1,55 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { ScrollView } from 'react-native';
+import { observer } from 'mobx-react/native';
+import { observable, computed } from 'mobx';
+import Localizer from 'hotelcaisse-app/dist/Localizer';
+import Decimal from 'decimal.js';
 import Button from '../elements/Button';
+import Text from '../elements/Text';
+import TextInput from '../elements/TextInput';
+import MoneyInput from '../elements/MoneyInput';
+import TopBar from '../layout/TopBar';
+import BottomBar from '../layout/BottomBar';
+import Screen from '../layout/Screen';
+import MainContent from '../layout/MainContent';
+import buttonLayouts from '../../styles/Buttons';
 
+const propTypes = {
+	moneyDenominations: React.PropTypes.array.isRequired,
+	onCancel: React.PropTypes.func,
+	onOpen: React.PropTypes.func,
+	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
+};
+
+const defaultProps = {
+	onCancel: null,
+	onOpen: null,
+};
+
+@observer
 class OpenRegister extends Component {
+	@observable
 	employee = '';
-	amount = 0;
+	labelsToAmounts = {};
+	@observable
+	inputValues = {};
+
+	componentWillMount() {
+		const newInputValues = {};
+
+		this.props.moneyDenominations.forEach((denomination) => {
+			const displayedValue = this.props.localizer.formatCurrency(denomination);
+			this.labelsToAmounts[displayedValue] = new Decimal(denomination);
+			newInputValues[displayedValue] = 0;
+		});
+
+		// We do it this way so Mobx can detect new keys
+		this.inputValues = newInputValues;
+	}
+
+	onChangeValue(field, value) {
+		this.inputValues[field.label] = value;
+	}
 
 	onCancel() {
 		if (this.props.onCancel) {
@@ -14,19 +59,76 @@ class OpenRegister extends Component {
 
 	onOpenRegister() {
 		if (this.props.onOpen) {
-			this.props.onOpen(this.employee, this.amount);
+			this.props.onOpen(this.employee, this.totalAmount);
 		}
 	}
 
+	onEmployeeChange(value) {
+		this.employee = value;
+	}
+
+	@computed
+	get moneyInputValues() {
+		return Object.entries(this.inputValues).map(
+			([label, value]) => ({ label, value })
+		);
+	}
+
+	getTotalAmount() {
+		// We work with Decimal objects
+		const total = Object.entries(this.labelsToAmounts).reduce(
+			(total, [key, amount]) => amount.mul(this.inputValues[key]).add(total),
+			0
+		);
+
+		return this.props.localizer.formatCurrency(total.toNumber());
+	}
+
 	render() {
+		const values = this.moneyInputValues;
+		const total = this.getTotalAmount();
+
 		return (
-			<View>
-				<Text>Open register !!!</Text>
-				<Button title="Ouvrir la caisse" onPress={() => { this.onOpenRegister() }} />
-				<Button title="Annuler" onPress={() => { this.onCancel() }} />
-			</View>
+			<Screen>
+				<TopBar
+					title={this.props.localizer.t('register.opening')}
+				/>
+				<ScrollView>
+					<MainContent>
+						<Text>{this.props.localizer.t('register.employee.label')}</Text>
+						<TextInput
+							value={this.employee}
+							onChangeText={(value) => { this.onEmployeeChange(value); }}
+						/>
+						<Text>{this.props.localizer.t('register.moneyinput.label')}</Text>
+						<MoneyInput
+							values={values}
+							localizer={this.props.localizer}
+							onChangeValue={(field, value) => this.onChangeValue(field, value)}
+							total={total}
+							totalLabel={this.props.localizer.t('moneyinput.total')}
+						/>
+					</MainContent>
+				</ScrollView>
+				<BottomBar>
+					<Button
+						title={this.props.localizer.t('actions.cancel')}
+						type="back"
+						layout={buttonLayouts.text}
+						onPress={() => { this.onCancel(); }}
+					/>
+					<Button
+						title={this.props.localizer.t('register.open')}
+						layout={buttonLayouts.primary}
+						onPress={() => { this.onOpenRegister(); }}
+					/>
+				</BottomBar>
+			</Screen>
 		);
 	}
 }
+
+OpenRegister.propTypes = propTypes;
+OpenRegister.defaultProps = defaultProps;
 
 export default OpenRegister;

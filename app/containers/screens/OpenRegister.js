@@ -5,7 +5,7 @@ import { inject } from 'mobx-react/native';
 import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
 import OpenRegisterScreen from '../../components/screens/OpenRegister';
 
-@inject('router', 'business', 'localizer')
+@inject('router', 'business', 'localizer', 'settings')
 class OpenRegister extends Component {
 	/**
 	 * New Register instance that will be created.
@@ -103,6 +103,7 @@ class OpenRegister extends Component {
 				onCancel={(msg) => { this.onCancel(msg); }}
 				onOpen={(employee, amount) => { this.onOpen(employee, amount); }}
 				localizer={this.props.localizer}
+				moneyDenominations={this.props.settings.moneyDenominations}
 			/>
 		);
 	}
