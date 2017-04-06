@@ -10,6 +10,7 @@ import {
 	TextInput,
 	MoneyInput,
 } from '../elements';
+import { Field, Label } from '../elements/form';
 import {
 	TopBar,
 	BottomBar,
@@ -99,19 +100,23 @@ class OpenRegister extends Component {
 				/>
 				<ScrollView>
 					<MainContent>
-						<Text>{this.props.localizer.t('register.employee.label')}</Text>
-						<TextInput
-							value={this.employee}
-							onChangeText={(value) => { this.onEmployeeChange(value); }}
-						/>
-						<Text>{this.props.localizer.t('register.moneyinput.label')}</Text>
-						<MoneyInput
-							values={values}
-							localizer={this.props.localizer}
-							onChangeValue={(field, value) => this.onChangeValue(field, value)}
-							total={total}
-							totalLabel={this.props.localizer.t('moneyinput.total')}
-						/>
+						<Field>
+							<Label>{this.props.localizer.t('register.employee.label')}</Label>
+							<TextInput
+								value={this.employee}
+								onChangeText={(value) => { this.onEmployeeChange(value); }}
+							/>
+						</Field>
+						<Field>
+							<Label>{this.props.localizer.t('register.moneyinput.label')}</Label>
+							<MoneyInput
+								values={values}
+								localizer={this.props.localizer}
+								onChangeValue={(field, value) => this.onChangeValue(field, value)}
+								total={total}
+								totalLabel={this.props.localizer.t('moneyinput.total')}
+							/>
+						</Field>
 					</MainContent>
 				</ScrollView>
 				<BottomBar>
