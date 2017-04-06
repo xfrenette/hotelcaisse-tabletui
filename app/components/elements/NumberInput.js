@@ -83,7 +83,7 @@ class NumberInput extends Component {
 	 * @param {String} rawText
 	 */
 	onChangeText(rawText) {
-		// First, check if text ends with decimal separator
+		/*// First, check if text ends with decimal separator
 		let text = this.processDanglingDecimalSeparator(rawText);
 		// Remove extra decimals
 		text = this.limitDecimals(text);
@@ -96,7 +96,8 @@ class NumberInput extends Component {
 		}
 
 		// Keep count of the number of digits
-		this.processDecimalDigits(text);
+		this.processDecimalDigits(text);*/
+		const value = Number.parseFloat(rawText);
 
 		// Call valueChanged with parsed number, unless same number
 		if (value !== this.props.value) {
@@ -232,6 +233,10 @@ class NumberInput extends Component {
 	 */
 	formatValue() {
 		const value = this.props.value;
+
+		return `${value}`;
+		/*
+
 		let minDecimals = this.state.minDecimalDigits;
 		let maxDecimals = this.props.maxDecimals;
 
@@ -257,7 +262,7 @@ class NumberInput extends Component {
 			formatted += this.props.localizer.getDecimalSeparator();
 		}
 
-		return formatted;
+		return formatted;*/
 	}
 
 	/**
