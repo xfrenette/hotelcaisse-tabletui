@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Platform, ToastAndroid } from 'react-native';
+import { Platform, ToastAndroid, Alert } from 'react-native';
 import { autorun } from 'mobx';
 import { inject } from 'mobx-react/native';
+import Decimal from 'decimal.js';
 import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
 import OpenRegisterScreen from '../../components/screens/OpenRegister';
 
@@ -41,19 +42,30 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Opens the register with the supplied employee and amount and redirects to home.
+	 * Opens the register with the supplied employee and amount and redirects to home. First
+	 * validates that the values are valid. If they are not valid, shows an alert.
 	 *
-	 * @param {String} employee
+	 * @param {String} rawEmployee
 	 * @param {Decimal} amount
 	 */
-	onOpen(employee, amount) {
+	onOpen(rawEmployee, amount) {
+		const employee = rawEmployee ? rawEmployee.trim() : '';
+
+		if (!this.validateValues(employee, amount)) {
+			this.showErrorAlert(
+				this.t('error.alertTitle'),
+				this.t('register.opening.invalidInput'),
+			);
+			return;
+		}
+
 		// To prevent the register state listener
 		this.opening = true;
 
 		this.newRegister.open(employee, amount);
 		this.props.business.deviceRegister = this.newRegister;
 
-		this.showToast(this.props.localizer.t('register.opening.opened'), ToastAndroid.SHORT);
+		this.showToast(this.t('register.opening.opened'), ToastAndroid.SHORT);
 		this.props.router.replace('/');
 	}
 
@@ -71,6 +83,25 @@ class OpenRegister extends Component {
 		}
 	}
 
+	t(path) {
+		return this.props.localizer.t(path);
+	}
+
+	validateValues(rawEmployee, amount) {
+		const employee = rawEmployee ? rawEmployee.trim() : '';
+
+		if (employee === '') {
+			console.log('employee empty', employee);
+			return false;
+		}
+
+		if (!(amount instanceof Decimal) || amount.isNegative()) {
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Shows a Toast message only on Android.
 	 *
@@ -80,6 +111,10 @@ class OpenRegister extends Component {
 		if (Platform.OS === 'android') {
 			ToastAndroid.show(message, ToastAndroid.SHORT);
 		}
+	}
+
+	showErrorAlert(title, message) {
+		Alert.alert(title, message, [{ text: this.t('buttons.ok') }], { cancelable: false })
 	}
 
 	/**
@@ -92,7 +127,7 @@ class OpenRegister extends Component {
 			const state = register ? register.state : REGISTER_STATES.NEW;
 
 			if (!this.opening && state !== REGISTER_STATES.NEW) {
-				this.onCancel(this.props.localizer.t('register.opening.opened_outside'));
+				this.onCancel(this.t('register.opening.opened_outside'));
 			}
 		});
 	}

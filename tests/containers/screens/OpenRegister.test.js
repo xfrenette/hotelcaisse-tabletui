@@ -44,6 +44,28 @@ describe('onOpen()', () => {
 	});
 });
 
+describe('validateValues()', () => {
+	test('returns false if no employee', () => {
+		const amount = new Decimal(3);
+		['', null, ' '].forEach((employee) => {
+			expect(openRegister.validateValues(employee, amount)).toBe(false);
+		});
+	});
+
+	test('returns false if amount is not Decimal or negative', () => {
+		const employee = 'test-employee';
+		[null, 5, new Decimal(-3)].forEach((amount) => {
+			expect(openRegister.validateValues(employee, amount)).toBe(false);
+		});
+	});
+
+	test('returns true if all valid', () => {
+		const employee = 'test-employee';
+		const amount = new Decimal(12.34);
+		expect(openRegister.validateValues(employee, amount)).toBe(true);
+	});
+});
+
 describe('listenToRegisterState', () => {
 	test('cancels if register state changes outside', (done) => {
 		router.replace = (path) => {

@@ -64,7 +64,7 @@ class OpenRegister extends Component {
 
 	onOpenRegister() {
 		if (this.props.onOpen) {
-			this.props.onOpen(this.employee, this.totalAmount);
+			this.props.onOpen(this.employee, this.getTotalAmount());
 		}
 	}
 
@@ -81,17 +81,20 @@ class OpenRegister extends Component {
 
 	getTotalAmount() {
 		// We work with Decimal objects
-		const total = Object.entries(this.labelsToAmounts).reduce(
+		return Object.entries(this.labelsToAmounts).reduce(
 			(total, [key, amount]) => amount.mul(this.inputValues[key]).add(total),
-			0
+			new Decimal(0)
 		);
+	}
 
+	getFormattedTotalAmount() {
+		const total = this.getTotalAmount();
 		return this.props.localizer.formatCurrency(total.toNumber());
 	}
 
 	render() {
 		const values = this.moneyInputValues;
-		const total = this.getTotalAmount();
+		const total = this.getFormattedTotalAmount();
 
 		return (
 			<Screen>
@@ -105,6 +108,7 @@ class OpenRegister extends Component {
 							<TextInput
 								value={this.employee}
 								onChangeText={(value) => { this.onEmployeeChange(value); }}
+								autoCapitalize="words"
 							/>
 						</Field>
 						<Field>
