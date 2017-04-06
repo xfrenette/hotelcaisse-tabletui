@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { STATES } from 'hotelcaisse-app/dist/business/Register';
-import Button from '../elements/Button';
+import { Button } from '../elements';
 
 const propTypes = {
 	registerState: React.PropTypes.number.isRequired,

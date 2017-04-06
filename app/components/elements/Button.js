@@ -6,7 +6,7 @@ import {
 	TouchableNativeFeedback,
 	TouchableOpacity,
 } from 'react-native';
-import styles from '../../styles';
+import buttonLayouts from '../../styles/Buttons';
 
 const propTypes = {
 	title: React.PropTypes.string.isRequired,
@@ -28,9 +28,9 @@ const defaultProps = {
 
 class Button extends Component {
 	render() {
-		const buttonStyles = [styles.buttons.default.button];
-		const textStyles = [styles.buttons.default.text];
-		let rippleColor = [styles.buttons.default.rippleColor];
+		const buttonStyles = [buttonLayouts.default.button];
+		const textStyles = [buttonLayouts.default.text];
+		let rippleColor = [buttonLayouts.default.rippleColor];
 		const touchableProps = {};
 		let Touchable;
 		let preIcon;

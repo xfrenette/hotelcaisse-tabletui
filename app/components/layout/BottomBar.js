@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
 	View,
 	Text,
- } from 'react-native';
+} from 'react-native';
 import styles from '../../styles';
 
 class BottomBar extends Component {

@@ -4,14 +4,18 @@ import { observer } from 'mobx-react/native';
 import { observable, computed } from 'mobx';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Decimal from 'decimal.js';
-import Button from '../elements/Button';
-import Text from '../elements/Text';
-import TextInput from '../elements/TextInput';
-import MoneyInput from '../elements/MoneyInput';
-import TopBar from '../layout/TopBar';
-import BottomBar from '../layout/BottomBar';
-import Screen from '../layout/Screen';
-import MainContent from '../layout/MainContent';
+import {
+	Button,
+	Text,
+	TextInput,
+	MoneyInput,
+} from '../elements';
+import {
+	TopBar,
+	BottomBar,
+	Screen,
+	MainContent,
+} from '../layout';
 import buttonLayouts from '../../styles/Buttons';
 
 const propTypes = {

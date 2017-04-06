@@ -4,7 +4,7 @@ import {
 	Text,
  } from 'react-native';
 import { inject } from 'mobx-react/native';
-import Button from '../elements/Button';
+import { Button } from '../elements';
 
 const propTypes = {
 	status: React.PropTypes.string,

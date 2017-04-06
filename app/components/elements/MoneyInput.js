@@ -40,21 +40,29 @@ const styles = {
 
 const nbCols = 3;
 
+const propTypes = {
+	values: React.PropTypes.arrayOf(
+		React.PropTypes.shape({
+			label: React.PropTypes.string,
+			value: React.PropTypes.number,
+		}),
+	).isRequired,
+	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
+	onChangeValue: React.PropTypes.func,
+	totalLabel: React.PropTypes.string,
+	total: React.PropTypes.string,
+};
+
+const defaultProps = {
+	onChangeValue: null,
+	totalLabel: null,
+	total: null,
+};
+
 class MoneyInput extends Component {
 	fieldValueChanged(field, newValue) {
-		const newValues = this.props.values.map((oldField) => {
-			if (oldField.label === field.label) {
-				return {
-					label: field.label,
-					value: newValue,
-				};
-			}
-
-			return oldField;
-		});
-
-		if (this.props.onChangeValues) {
-			this.props.onChangeValues(newValues);
+		if (this.props.onChangeValue) {
+			this.props.onChangeValue(field, newValue);
 		}
 	}
 
@@ -131,23 +139,7 @@ class MoneyInput extends Component {
 	}
 }
 
-MoneyInput.propTypes = {
-	values: React.PropTypes.arrayOf(
-		React.PropTypes.shape({
-			label: React.PropTypes.string,
-			value: React.PropTypes.number,
-		}),
-	).isRequired,
-	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
-	onChangeValues: React.PropTypes.func,
-	totalLabel: React.PropTypes.string,
-	total: React.PropTypes.string,
-};
-
-MoneyInput.defaultProps = {
-	onChangeValues: null,
-	totalLabel: null,
-	total: null,
-};
+MoneyInput.propTypes = propTypes;
+MoneyInput.defaultProps = defaultProps;
 
 export default MoneyInput;

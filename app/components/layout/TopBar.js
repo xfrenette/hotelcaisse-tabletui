@@ -4,18 +4,18 @@ import {
 	Text,
 	TouchableOpacity,
 	ToastAndroid,
- } from 'react-native';
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles';
 
 class TopBar extends Component {
-	onBackHomePressed() {
+	onBackHome() {
 		ToastAndroid.show('Retour à l\'accueil', ToastAndroid.SHORT);
 	}
 
 	renderBackHome() {
 		return (
-			<TouchableOpacity style={styles.TopBarSideIcon} onPress={this.onBackHomePressed}>
+			<TouchableOpacity style={styles.TopBarSideIcon} onPress={this.onBackHome}>
 				<Icon name="home" style={styles.TopBarIcon} />
 			</TouchableOpacity>
 		);
