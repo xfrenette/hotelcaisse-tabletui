@@ -9,34 +9,25 @@ const styles = {
 		lineHeight: styleVars.verticalRhythm,
 		includeFontPadding: false,
 		textAlignVertical: 'center',
-	}
-}
+	},
+};
+
+const propTypes = {
+	style: NativeText.propTypes.style,
+};
+
+const defaultProps = {
+	style: null,
+};
 
 class Text extends Component {
 	render() {
-		let style = [styles.Text];
-
-		if (Array.isArray(this.props.style)) {
-			style = [
-				...style,
-				...this.props.style,
-			];
-		} else if (this.props.style) {
-			style.push(this.props.style);
-		}
-
+		const style = [styles.Text, this.props.style];
 		return <NativeText style={style}>{ this.props.children }</NativeText>;
 	}
 }
 
-Text.propTypes = {
-	style: React.PropTypes.oneOfType([
-		React.PropTypes.object,
-		React.PropTypes.array,
-	]),
-};
-
-Text.defaultProps = {
-};
+Text.propTypes = propTypes;
+Text.defaultProps = defaultProps;
 
 export default Text;
