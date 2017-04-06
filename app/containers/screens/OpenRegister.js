@@ -53,8 +53,8 @@ class OpenRegister extends Component {
 
 		if (!this.validateValues(employee, amount)) {
 			this.showErrorAlert(
-				this.t('error.alertTitle'),
-				this.t('register.opening.invalidInput'),
+				this.t('openRegister.messages.fieldsInvalid.title'),
+				this.t('openRegister.messages.fieldsInvalid.content'),
 			);
 			return;
 		}
@@ -65,7 +65,7 @@ class OpenRegister extends Component {
 		this.newRegister.open(employee, amount);
 		this.props.business.deviceRegister = this.newRegister;
 
-		this.showToast(this.t('register.opening.opened'), ToastAndroid.SHORT);
+		this.showToast(this.t('openRegister.messages.opened'), ToastAndroid.SHORT);
 		this.props.router.replace('/');
 	}
 
@@ -114,7 +114,12 @@ class OpenRegister extends Component {
 	}
 
 	showErrorAlert(title, message) {
-		Alert.alert(title, message, [{ text: this.t('buttons.ok') }], { cancelable: false })
+		Alert.alert(
+			title,
+			message,
+			[{ text: this.t('actions.retry') }],
+			{ cancelable: false }
+		);
 	}
 
 	/**
@@ -127,7 +132,7 @@ class OpenRegister extends Component {
 			const state = register ? register.state : REGISTER_STATES.NEW;
 
 			if (!this.opening && state !== REGISTER_STATES.NEW) {
-				this.onCancel(this.t('register.opening.opened_outside'));
+				this.onCancel(this.t('openRegister.messages.externallyOpened'));
 			}
 		});
 	}

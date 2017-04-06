@@ -58,7 +58,7 @@ class OpenRegister extends Component {
 
 	onCancel() {
 		if (this.props.onCancel) {
-			this.props.onCancel(this.props.localizer.t('register.opening.canceled'));
+			this.props.onCancel(this.this.t('openRegister.messages.openingCanceled'));
 		}
 	}
 
@@ -92,6 +92,10 @@ class OpenRegister extends Component {
 		return this.props.localizer.formatCurrency(total.toNumber());
 	}
 
+	t(path) {
+		return this.props.localizer.t(path);
+	}
+
 	render() {
 		const values = this.moneyInputValues;
 		const total = this.getFormattedTotalAmount();
@@ -99,12 +103,12 @@ class OpenRegister extends Component {
 		return (
 			<Screen>
 				<TopBar
-					title={this.props.localizer.t('register.opening')}
+					title={this.t('openRegister.title')}
 				/>
 				<ScrollView>
 					<MainContent>
 						<Field>
-							<Label>{this.props.localizer.t('register.employee.label')}</Label>
+							<Label>{this.t('openRegister.fields.employee')}</Label>
 							<TextInput
 								value={this.employee}
 								onChangeText={(value) => { this.onEmployeeChange(value); }}
@@ -112,26 +116,26 @@ class OpenRegister extends Component {
 							/>
 						</Field>
 						<Field>
-							<Label>{this.props.localizer.t('register.moneyinput.label')}</Label>
+							<Label>{this.t('openRegister.fields.moneyInput')}</Label>
 							<MoneyInput
 								values={values}
 								localizer={this.props.localizer}
 								onChangeValue={(field, value) => this.onChangeValue(field, value)}
 								total={total}
-								totalLabel={this.props.localizer.t('moneyinput.total')}
+								totalLabel={this.t('openRegister.fields.total')}
 							/>
 						</Field>
 					</MainContent>
 				</ScrollView>
 				<BottomBar>
 					<Button
-						title={this.props.localizer.t('actions.cancel')}
+						title={this.t('actions.cancel')}
 						type="back"
 						layout={buttonLayouts.text}
 						onPress={() => { this.onCancel(); }}
 					/>
 					<Button
-						title={this.props.localizer.t('register.open')}
+						title={this.t('openRegister.actions.open')}
 						layout={buttonLayouts.primary}
 						onPress={() => { this.onOpenRegister(); }}
 					/>
