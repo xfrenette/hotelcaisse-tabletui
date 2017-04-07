@@ -33,65 +33,123 @@ const defaultProps = {
 
 @observer
 class OpenRegister extends Component {
+	/**
+	 * Value of the "employee" field
+	 *
+	 * @type {String}
+	 */
 	@observable
 	employee = '';
-	labelsToAmounts = {};
+	/**
+	 * Object associating denomination to their amount value.
+	 *
+	 * @type {Object}
+	 */
+	denominationsValue = {};
+	/**
+	 * Object associating denomination to their quantity value.
+	 *
+	 * @type {Object}
+	 */
 	@observable
-	inputValues = {};
+	denominationsQuantity = {};
 
+	/**
+	 * When mounting, build the denominationsValue and denominationsQuantity objects.
+	 */
 	componentWillMount() {
-		const newInputValues = {};
+		const newDenominationsQuantity = {};
 
 		this.props.moneyDenominations.forEach((denomination) => {
-			const displayedValue = this.props.localizer.formatCurrency(denomination);
-			this.labelsToAmounts[displayedValue] = new Decimal(denomination);
-			newInputValues[displayedValue] = 0;
+			const formattedAmount = this.props.localizer.formatCurrency(denomination);
+			this.denominationsValue[formattedAmount] = new Decimal(denomination);
+			newDenominationsQuantity[formattedAmount] = 0;
 		});
 
 		// We do it this way so Mobx can detect new keys
-		this.inputValues = newInputValues;
+		this.denominationsQuantity = newDenominationsQuantity;
 	}
 
-	onChangeValue(field, value) {
-		this.inputValues[field.label] = value;
+	/**
+	 * Called when one of the denomination in MoneyInput changed value.
+	 *
+	 * @param {Object} denomination Denomination object
+	 * @param {Number} value
+	 */
+	onChangeValue(denomination, value) {
+		this.denominationsQuantity[denomination.label] = value;
 	}
 
+	/**
+	 * Called when press the "cancel" button.
+	 */
 	onCancel() {
 		if (this.props.onCancel) {
 			this.props.onCancel(this.t('openRegister.messages.openingCanceled'));
 		}
 	}
 
+	/**
+	 * Called when the "Open register" button is pressed.
+	 */
 	onOpenRegister() {
 		if (this.props.onOpen) {
 			this.props.onOpen(this.employee, this.getTotalAmount());
 		}
 	}
 
+	/**
+	 * Called when the value of the "employee name" field changes.
+	 *
+	 * @param {String} value
+	 */
 	onEmployeeChange(value) {
 		this.employee = value;
 	}
 
+	/**
+	 * Returns an object to be passed to MoneyInput containing all the denominations and their
+	 * quantity.
+	 *
+	 * @return {Object}
+	 */
 	@computed
 	get moneyInputValues() {
-		return Object.entries(this.inputValues).map(
+		return Object.entries(this.denominationsQuantity).map(
 			([label, value]) => ({ label, value })
 		);
 	}
 
+	/**
+	 * Returns the total money amount as represented by the MoneyInput. Returns it as a Decimal
+	 * object.
+	 *
+	 * @return {Decimal}
+	 */
 	getTotalAmount() {
-		// We work with Decimal objects
-		return Object.entries(this.labelsToAmounts).reduce(
-			(total, [key, amount]) => amount.mul(this.inputValues[key]).add(total),
+		return Object.entries(this.denominationsValue).reduce(
+			(total, [key, amount]) => amount.mul(this.denominationsQuantity[key]).add(total),
 			new Decimal(0)
 		);
 	}
 
+	/**
+	 * Returns as a formatted currency string the total money amount as represented by the
+	 * MoneyInput.
+	 *
+	 * @return {String}
+	 */
 	getFormattedTotalAmount() {
 		const total = this.getTotalAmount();
 		return this.props.localizer.formatCurrency(total.toNumber());
 	}
 
+	/**
+	 * Simple alias to this.props.localizer.t
+	 *
+	 * @param {String} path
+	 * @return {String}
+	 */
 	t(path) {
 		return this.props.localizer.t(path);
 	}

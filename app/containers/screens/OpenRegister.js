@@ -6,7 +6,7 @@ import Decimal from 'decimal.js';
 import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
 import OpenRegisterScreen from '../../components/screens/OpenRegister';
 
-@inject('router', 'business', 'localizer', 'settings')
+@inject('router', 'business', 'localizer', 'ui')
 class OpenRegister extends Component {
 	/**
 	 * New Register instance that will be created.
@@ -83,15 +83,30 @@ class OpenRegister extends Component {
 		}
 	}
 
+	/**
+	 * Simple alias to this.props.localizer.t
+	 *
+	 * @param {String} path
+	 * @return {String}
+	 */
 	t(path) {
 		return this.props.localizer.t(path);
 	}
 
+	/**
+	 * Returns a boolean indicating if the supplied values for employee and amount are valid to open
+	 * the register.
+	 * - The employee name must not be empty
+	 * - The amount must be a non-negative Decimal
+	 *
+	 * @param {String} rawEmployee
+	 * @param {Decimal} amount
+	 * @return {Boolean}
+	 */
 	validateValues(rawEmployee, amount) {
 		const employee = rawEmployee ? rawEmployee.trim() : '';
 
 		if (employee === '') {
-			console.log('employee empty', employee);
 			return false;
 		}
 
@@ -113,6 +128,12 @@ class OpenRegister extends Component {
 		}
 	}
 
+	/**
+	 * Shows an alert for an error.
+	 *
+	 * @param {String} title
+	 * @param {String} message
+	 */
 	showErrorAlert(title, message) {
 		Alert.alert(
 			title,
@@ -143,7 +164,7 @@ class OpenRegister extends Component {
 				onCancel={(msg) => { this.onCancel(msg); }}
 				onOpen={(employee, amount) => { this.onOpen(employee, amount); }}
 				localizer={this.props.localizer}
-				moneyDenominations={this.props.settings.moneyDenominations}
+				moneyDenominations={this.props.ui.settings.moneyDenominations}
 			/>
 		);
 	}

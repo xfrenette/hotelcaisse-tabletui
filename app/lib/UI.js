@@ -158,7 +158,6 @@ class UI {
 			router: this.router,
 			auth: this.auth,
 			localizer: this.localizer,
-			settings: this.settings,
 			business: this.app ? this.app.business : null,
 		};
 	}

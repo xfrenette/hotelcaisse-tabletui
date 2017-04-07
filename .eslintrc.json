@@ -25,6 +25,7 @@
             "error",
             "tab"
         ],
+        "react/sort-comp": "off",
         "react/jsx-filename-extension": "off",
         "linebreak-style": ["error", "unix"],
         "comma-dangle": [
