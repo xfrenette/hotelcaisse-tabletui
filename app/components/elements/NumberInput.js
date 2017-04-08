@@ -45,6 +45,7 @@ const styles = {
 const propTypes = {
 	value: React.PropTypes.number,
 	style: TextInput.propTypes.style,
+	type: React.PropTypes.string,
 	maxDecimals: React.PropTypes.number,
 	showIncrementors: React.PropTypes.bool,
 	onChangeValue: React.PropTypes.func,
@@ -54,6 +55,7 @@ const propTypes = {
 const defaultProps = {
 	value: null,
 	style: null,
+	type: null,
 	maxDecimals: Infinity,
 	onChangeValue: null,
 	localizer: null,
@@ -119,7 +121,8 @@ class NumberInput extends Component {
 
 		// If we have incrementors, adjust the padding on the text input
 		if (this.props.showIncrementors) {
-			textInputStyles.paddingHorizontal = (incrementorButtonWidth - styleVars.input.sidePadding) + 4;
+			const maskedWidth = incrementorButtonWidth - styleVars.input.sidePadding;
+			textInputStyles.paddingHorizontal = maskedWidth + 4;
 		}
 
 		return textInputStyles;
@@ -210,9 +213,9 @@ class NumberInput extends Component {
 				maximumFractionDigits: 20,
 			};
 			return this.props.localizer.formatNumber(value, formatterOptions);
-		} else {
-			return `${value}`;
 		}
+
+		return `${value}`;
 	}
 
 	formatValueUsingModel(value, model) {
@@ -283,6 +286,39 @@ class NumberInput extends Component {
 		};
 	}
 
+	getTextInputPreText() {
+		if (this.props.type !== 'money') {
+			return '';
+		}
+
+		if (!this.props.localizer) {
+			return '';
+		}
+
+		if (this.props.localizer.getCurrencySymbolPosition() === -1) {
+			return this.props.localizer.getCurrencySymbol();
+		}
+
+		return '';
+	}
+
+	getTextInputPostText() {
+		if (this.props.type !== 'money') {
+			return '';
+		}
+
+		if (!this.props.localizer) {
+			return '';
+		}
+
+		if (this.props.localizer.getCurrencySymbolPosition() === 1) {
+			return this.props.localizer.getCurrencySymbol();
+		}
+
+		return '';
+	}
+
+
 	/**
 	 * Rendering function to render the "more" and "less" button. For a "more", pass 1, for a less,
 	 * pass -1.
@@ -321,6 +357,8 @@ class NumberInput extends Component {
 	render() {
 		const { value, ...other } = this.props;
 		const style = [this.getTextInputStyles(), this.props.style];
+		const preText = this.getTextInputPreText();
+		const postText = this.getTextInputPostText();
 
 		return (
 			<View>
@@ -333,6 +371,8 @@ class NumberInput extends Component {
 					keyboardType="numeric"
 					onChangeText={(text) => { this.onChangeText(text); }}
 					disableFullscreenUI
+					preText={preText}
+					postText={postText}
 				/>
 			</View>
 		);

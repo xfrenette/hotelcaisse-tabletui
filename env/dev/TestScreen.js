@@ -6,7 +6,7 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { MainContent } from '../../app/components/layout';
 import { Text, NumberInput } from '../../app/components/elements';
 
-const localizer = new Localizer('fr-CA');
+const localizer = new Localizer('fr-CA', 'CAD');
 
 @observer
 class TestScreen extends Component {
@@ -22,7 +22,6 @@ class TestScreen extends Component {
 	}
 
 	onChangeValue(value) {
-		console.log('TestScreen', value);
 		this.numberInputValue = value;
 	}
 
@@ -44,7 +43,8 @@ class TestScreen extends Component {
 								value={this.numberInputValue}
 								onChangeValue={(value) => { this.onChangeValue(value); }}
 								localizer={localizer}
-								showIncrementors={true}
+								showIncrementors={false}
+								type='money'
 							/>
 						</View>
 					</MainContent>

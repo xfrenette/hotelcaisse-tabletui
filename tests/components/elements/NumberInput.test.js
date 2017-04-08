@@ -5,10 +5,11 @@ import NumberInput from 'components/elements/NumberInput';
 jest.mock('mobx-react/native', () => require('mobx-react/custom'));
 
 let numberInput;
-const localizer = new Localizer('fr-CA');
+let localizer;
 const baseValue = 5;
 
 beforeEach(() => {
+	localizer = new Localizer('fr-CA', 'CAD');
 	numberInput = new NumberInput({ value: baseValue, localizer });
 });
 
@@ -102,7 +103,7 @@ describe('parseValue()', () => {
 	});
 });
 
-describe.only('formatValue()', () => {
+describe('formatValue()', () => {
 	test('uses localizer', () => {
 		const value = 1234.56;
 		const expected = '1234,56';
@@ -184,3 +185,36 @@ describe('formatValueUsingModel()', () => {
 	});
 });
 
+describe('getTextInputPreText()', () => {
+	test('returns nothing if type is not "money"', () => {
+		expect(numberInput.getTextInputPreText()).toBe('');
+	});
+
+	test('returns nothing if a locale without pre money symbol', () => {
+		numberInput.props.type = 'money';
+		expect(numberInput.getTextInputPreText()).toBe('');
+	});
+
+	test('returns currency symbol if a locale with pre money symbol', () => {
+		localizer.setLocale('en');
+		numberInput.props.type = 'money';
+		expect(numberInput.getTextInputPreText()).toBe('CA$');
+	});
+});
+
+describe('getTextInputPostText()', () => {
+	test('returns nothing if type is not "money"', () => {
+		expect(numberInput.getTextInputPostText()).toBe('');
+	});
+
+	test('returns nothing if a locale without post money symbol', () => {
+		localizer.setLocale('en');
+		numberInput.props.type = 'money';
+		expect(numberInput.getTextInputPostText()).toBe('');
+	});
+
+	test('returns currency symbol if a locale with post money symbol', () => {
+		numberInput.props.type = 'money';
+		expect(numberInput.getTextInputPostText()).toBe('$');
+	});
+});
