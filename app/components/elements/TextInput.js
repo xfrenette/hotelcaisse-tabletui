@@ -51,6 +51,22 @@ const styles = {
 	},
 };
 
+const propTypes = {
+	style: NativeTextInput.propTypes.style,
+	labelStyle: Text.propTypes.style,
+	label: React.PropTypes.string,
+	preText: React.PropTypes.string,
+	postText: React.PropTypes.string,
+};
+
+const defaultProps = {
+	style: null,
+	labelStyle: null,
+	label: null,
+	preText: null,
+	postText: null,
+};
+
 class TextInput extends Component {
 	renderLabel() {
 		if (this.props.label) {
@@ -102,20 +118,7 @@ class TextInput extends Component {
 	}
 }
 
-TextInput.propTypes = {
-	style: NativeTextInput.propTypes.style,
-	labelStyle: Text.propTypes.style,
-	label: React.PropTypes.string,
-	preText: React.PropTypes.string,
-	postText: React.PropTypes.string,
-};
-
-TextInput.defaultProps = {
-	style: null,
-	labelStyle: null,
-	label: null,
-	preText: null,
-	postText: null,
-};
+TextInput.propTypes = propTypes;
+TextInput.defaultProps = defaultProps;
 
 export default TextInput;

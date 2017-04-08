@@ -45,6 +45,19 @@ const baseState = {
 	minDecimalDigits: 0,
 };
 
+const propTypes = {
+	value: React.PropTypes.number,
+	maxDecimals: React.PropTypes.number,
+	onChangeValue: React.PropTypes.func,
+	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
+};
+
+const defaultProps = {
+	value: null,
+	maxDecimals: Infinity,
+	onChangeValue: null,
+};
+
 // Accepts dot and locale's decimal separator as decimal separator
 class NumberInput extends Component {
 	constructor(props) {
@@ -345,18 +358,7 @@ class NumberInput extends Component {
 	}
 }
 
-NumberInput.propTypes = {
-	value: React.PropTypes.number,
-	maxDecimals: React.PropTypes.number,
-	onChangeValue: React.PropTypes.func,
-	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
-};
-
-NumberInput.defaultProps = {
-	value: null,
-	maxDecimals: Infinity,
-	onChangeValue: null,
-};
-
+NumberInput.propTypes = propTypes;
+NumberInput.defaultProps = defaultProps;
 
 export default NumberInput;
