@@ -15,6 +15,6 @@ export default {
 		fieldsInvalid: {
 			title: 'Champs invalides',
 			content: 'Assurez-vous de saisir le nom de l\'employée et de bien indiquer le montant dans la caisse à l\'ouverture.',
-		}
+		},
 	},
 };

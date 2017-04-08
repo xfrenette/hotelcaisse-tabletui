@@ -5,6 +5,7 @@ import Home from '../../app/containers/screens/Home';
 import Loading from '../../app/components/screens/Loading';
 import Authentication from '../../app/components/screens/Authentication';
 import OpenRegister from '../../app/containers/screens/OpenRegister';
+import CloseRegister from '../../app/containers/screens/CloseRegister';
 
 export default () => ([
 	{
@@ -20,6 +21,7 @@ export default () => ([
 						routes: [
 							{ component: Home, path: '/', exact: true },
 							{ component: OpenRegister, path: '/register/open' },
+							{ component: CloseRegister, path: '/register/close' },
 						],
 					},
 				],

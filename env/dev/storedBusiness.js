@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js';
 import Business from 'hotelcaisse-app/dist/business/Business';
 import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
 
@@ -6,9 +7,9 @@ import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/busine
  */
 
 const register = new Register();
-register.state = REGISTER_STATES.CLOSED;
+register.open('Xavier Frenette', new Decimal(100));
 
 const business = new Business();
-//business.deviceRegister = register;
+business.deviceRegister = register;
 
 export default business;
