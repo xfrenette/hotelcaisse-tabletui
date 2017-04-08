@@ -14,7 +14,6 @@ const styles = {
 	TextInput: {
 		textAlign: 'center',
 		zIndex: 1,
-		paddingHorizontal: (incrementorButtonWidth - styleVars.input.sidePadding) + 4,
 	},
 	IncrementButton: {
 		position: 'absolute',
@@ -111,6 +110,19 @@ class NumberInput extends Component {
 	onChangeText(text) {
 		const newValue = this.parseValue(text);
 		this.tryChangeValue(newValue, text);
+	}
+
+	getTextInputStyles() {
+		const textInputStyles = {
+			...styles.TextInput,
+		};
+
+		// If we have incrementors, adjust the padding on the text input
+		if (this.props.showIncrementors) {
+			textInputStyles.paddingHorizontal = (incrementorButtonWidth - styleVars.input.sidePadding) + 4;
+		}
+
+		return textInputStyles;
 	}
 
 	tryChangeValue(value, textModel) {
@@ -308,7 +320,7 @@ class NumberInput extends Component {
 	 */
 	render() {
 		const { value, ...other } = this.props;
-		const style = [styles.TextInput, this.props.style];
+		const style = [this.getTextInputStyles(), this.props.style];
 
 		return (
 			<View>
