@@ -109,7 +109,7 @@ class NumberInput extends Component {
 	}
 
 	onChangeText(text) {
-		let newValue = this.parseValue(text);
+		const newValue = this.parseValue(text);
 		this.tryChangeValue(newValue, text);
 	}
 
@@ -193,7 +193,11 @@ class NumberInput extends Component {
 		}
 
 		if (this.props.localizer) {
-			return this.props.localizer.formatNumber(value, { useGrouping: false });
+			const formatterOptions = {
+				useGrouping: false,
+				maximumFractionDigits: 20,
+			};
+			return this.props.localizer.formatNumber(value, formatterOptions);
 		} else {
 			return `${value}`;
 		}

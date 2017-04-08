@@ -39,7 +39,7 @@ class TestScreen extends Component {
 				{verticalRhythmImg}
 				<ScrollView>
 					<MainContent>
-						<View style={{ width: 100 }}>
+						<View>
 							<NumberInput
 								value={this.numberInputValue}
 								onChangeValue={(value) => { this.onChangeValue(value); }}
