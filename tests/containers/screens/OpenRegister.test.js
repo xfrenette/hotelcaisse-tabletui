@@ -1,8 +1,8 @@
-import { observable, autorun } from 'mobx';
 import Decimal from 'decimal.js';
-import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
+import Register from 'hotelcaisse-app/dist/business/Register';
 import Business from 'hotelcaisse-app/dist/business/Business';
 import OpenRegister from 'containers/screens/OpenRegister';
+import UI from 'lib/UI';
 
 jest.mock('mobx-react/native', () => require('mobx-react/custom'));
 
@@ -10,6 +10,7 @@ let openRegister;
 let localizer;
 let router;
 let business;
+let ui;
 
 beforeEach(() => {
 	localizer = {
@@ -19,9 +20,10 @@ beforeEach(() => {
 		replace: () => {},
 	};
 	business = new Business();
+	ui = new UI();
 
 	// wrappedComponent since the class uses @inject and we want the original component
-	openRegister = new OpenRegister.wrappedComponent({ localizer, router, business });
+	openRegister = new OpenRegister.wrappedComponent({ localizer, router, business, ui });
 	openRegister.componentWillMount();
 });
 
@@ -41,6 +43,12 @@ describe('onOpen()', () => {
 		router.replace = jest.fn();
 		openRegister.onOpen('test', new Decimal(123));
 		expect(router.replace).toHaveBeenCalledWith('/');
+	});
+
+	test('shows alert if in error', () => {
+		ui.showErrorAlert = jest.fn();
+		openRegister.onOpen('', new Decimal(-5));
+		expect(ui.showErrorAlert).toHaveBeenCalled();
 	});
 });
 

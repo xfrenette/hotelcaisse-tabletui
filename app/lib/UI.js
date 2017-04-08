@@ -1,4 +1,5 @@
 import { observable } from 'mobx';
+import { Platform, ToastAndroid, Alert } from 'react-native';
 import { createMemoryHistory } from 'history';
 import DefaultAuth from 'hotelcaisse-app/dist/auth/Auth';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
@@ -76,6 +77,12 @@ class UI {
 	 * @type {Promise}
 	 */
 	appLoadingPromise = Promise.resolve();
+	/**
+	 * Localizer instance
+	 *
+	 * @type {Localizer}
+	 */
+	localizer = null;
 
 	/**
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI
@@ -170,6 +177,32 @@ class UI {
 	 */
 	getDeviceUUID() {
 		return 'device-uuid-todo';
+	}
+
+	/**
+	 * Shows an alert for an error.
+	 *
+	 * @param {String} title
+	 * @param {String} message
+	 */
+	showErrorAlert(title, message) {
+		Alert.alert(
+			title,
+			message,
+			[{ text: this.localizer.t('actions.retry') }],
+			{ cancelable: false }
+		);
+	}
+
+	/**
+	 * Shows a Toast message only on Android.
+	 *
+	 * @param {String} message
+	 */
+	showToast(message) {
+		if (Platform.OS === 'android') {
+			ToastAndroid.show(message, ToastAndroid.SHORT);
+		}
 	}
 }
 

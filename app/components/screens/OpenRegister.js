@@ -41,13 +41,13 @@ class OpenRegister extends Component {
 	@observable
 	employee = '';
 	/**
-	 * Object associating denomination to their amount value.
+	 * Object associating denominations to their amount value.
 	 *
 	 * @type {Object}
 	 */
 	denominationsValue = {};
 	/**
-	 * Object associating denomination to their quantity value.
+	 * Object associating denominations to their quantity value.
 	 *
 	 * @type {Object}
 	 */

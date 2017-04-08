@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Platform, ToastAndroid, Alert } from 'react-native';
 import { autorun } from 'mobx';
 import { inject } from 'mobx-react/native';
 import Decimal from 'decimal.js';
@@ -52,7 +51,7 @@ class OpenRegister extends Component {
 		const employee = rawEmployee ? rawEmployee.trim() : '';
 
 		if (!this.validateValues(employee, amount)) {
-			this.showErrorAlert(
+			this.props.ui.showErrorAlert(
 				this.t('openRegister.messages.fieldsInvalid.title'),
 				this.t('openRegister.messages.fieldsInvalid.content'),
 			);
@@ -65,7 +64,7 @@ class OpenRegister extends Component {
 		this.newRegister.open(employee, amount);
 		this.props.business.deviceRegister = this.newRegister;
 
-		this.showToast(this.t('openRegister.messages.opened'), ToastAndroid.SHORT);
+		this.props.ui.showToast(this.t('openRegister.messages.opened'));
 		this.props.router.replace('/');
 	}
 
@@ -79,7 +78,7 @@ class OpenRegister extends Component {
 		this.props.router.replace('/');
 
 		if (message) {
-			this.showToast(message, ToastAndroid.SHORT);
+			this.props.ui.showToast(message);
 		}
 	}
 
@@ -115,32 +114,6 @@ class OpenRegister extends Component {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Shows a Toast message only on Android.
-	 *
-	 * @param {String} message
-	 */
-	showToast(message) {
-		if (Platform.OS === 'android') {
-			ToastAndroid.show(message, ToastAndroid.SHORT);
-		}
-	}
-
-	/**
-	 * Shows an alert for an error.
-	 *
-	 * @param {String} title
-	 * @param {String} message
-	 */
-	showErrorAlert(title, message) {
-		Alert.alert(
-			title,
-			message,
-			[{ text: this.t('actions.retry') }],
-			{ cancelable: false }
-		);
 	}
 
 	/**
