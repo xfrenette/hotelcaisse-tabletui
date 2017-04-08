@@ -1,331 +1,296 @@
 import React, { Component } from 'react';
 import { View, TouchableHighlight } from 'react-native';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react/native';
+import escapeStringRegexp from 'escape-string-regexp';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import TextInput from './TextInput';
 import styleVars from '../../styles/variables';
 
+const incrementorButtonWidth = 30;
+
 const styles = {
 	TextInput: {
 		textAlign: 'center',
 		zIndex: 1,
+		paddingHorizontal: (incrementorButtonWidth - styleVars.input.sidePadding) + 4,
 	},
-	AdjustButton: {
+	IncrementButton: {
 		position: 'absolute',
-		right: 1,
+		top: 1,
 		zIndex: 2,
-		height: (styleVars.input.height / 2) - 1,
+		height: styleVars.input.height - 2,
 		justifyContent: 'center',
 	},
-	AdjustButtonIcon: {
+	IncrementButtonIcon: {
 		lineHeight: 10,
-		fontSize: 10,
-		width: 30,
+		fontSize: 12,
+		width: incrementorButtonWidth,
 		textAlign: 'center',
 		alignSelf: 'center',
 		color: styleVars.theme.mainColor,
 	},
-	AdjustButtonMore: {
-		top: 1,
-		borderBottomWidth: 1,
-		borderBottomColor: styleVars.theme.lineColor,
+	IncrementButtonMore: {
+		right: 1,
+		borderLeftWidth: 1,
+		borderLeftColor: styleVars.theme.lineColor,
 	},
-	AdjustButtonLess: {
-		bottom: 1,
+	IncrementButtonLess: {
+		left: 1,
+		borderRightWidth: 1,
+		borderRightColor: styleVars.theme.lineColor,
 	},
-};
-
-/**
- * Default state values for when element is instanciated or "reset"
- *
- * @type {Object}
- */
-const baseState = {
-	danglingDecimalSeparator: false,
-	minDecimalDigits: 0,
 };
 
 const propTypes = {
 	value: React.PropTypes.number,
+	style: TextInput.propTypes.style,
 	maxDecimals: React.PropTypes.number,
+	showIncrementors: React.PropTypes.bool,
 	onChangeValue: React.PropTypes.func,
-	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
+	localizer: React.PropTypes.instanceOf(Localizer),
 };
 
 const defaultProps = {
 	value: null,
+	style: null,
 	maxDecimals: Infinity,
 	onChangeValue: null,
+	localizer: null,
+	showIncrementors: false,
 };
 
-// Accepts dot and locale's decimal separator as decimal separator
+@observer
 class NumberInput extends Component {
+	/**
+	 * Text displayed in the text field.
+	 *
+	 * @type {String}
+	 */
+	@observable
+	inputText = '';
+	/**
+	 * Value (number) currently in the text field.
+	 *
+	 * @type {Number}
+	 */
+	inputValue = null;
+	/**
+	 * Holds the incrementors element. This object exists to have a cache and not have to re-render
+	 * them at each render()
+	 *
+	 * @type {Object}
+	 */
+	incrementors = {
+		less: null,
+		more: null,
+	};
+
 	constructor(props) {
 		super(props);
-		this.state = {
-			...baseState,
-		};
+
+		this.inputValue = this.props.value;
+		this.updateInputText();
+
+		if (this.props.showIncrementors) {
+			this.createIncrementors();
+		}
 	}
 
 	componentWillReceiveProps(newProps) {
-		let doResetState = false;
+		if (newProps.value !== this.inputValue) {
+			const newValue = this.applyValueFilters(newProps.value);
 
-		if (this.props.value !== newProps.value) {
-			doResetState = true;
-		}
-
-		if (this.props.localizer !== newProps.localizer) {
-			doResetState = true;
-		}
-
-		if (this.props.maxDecimals !== newProps.maxDecimals) {
-			doResetState = true;
-		}
-
-		if (doResetState) {
-			this.setState({
-				...baseState,
-			});
+			if (newValue !== this.inputValue) {
+				this.updateInputText();
+			}
 		}
 	}
 
-	/**
-	 * Called by the TextInput when text changes. This method will transform the value to a number
-	 * and pass it to valueChanged(). Also processes dangling separator and decimals.
-	 *
-	 * @param {String} rawText
-	 */
-	onChangeText(rawText) {
-		/*// First, check if text ends with decimal separator
-		let text = this.processDanglingDecimalSeparator(rawText);
-		// Remove extra decimals
-		text = this.limitDecimals(text);
-		// Try to parse the number
-		const value = this.parseNumber(text);
-
-		// If didn't parse do nothing
-		if (value === null) {
-			return;
-		}
-
-		// Keep count of the number of digits
-		this.processDecimalDigits(text);*/
-		const value = Number.parseFloat(rawText);
-
-		// Call valueChanged with parsed number, unless same number
-		if (value !== this.props.value) {
-			this.valueChanged(value);
-		}
+	onChangeText(text) {
+		let newValue = this.parseValue(text);
+		this.tryChangeValue(newValue, text);
 	}
 
-	/**
-	 * Returns the current value. If the value is not set, returns 0.
-	 *
-	 * @return {Number}
-	 */
-	getValue() {
-		return this.props.value || 0;
+	tryChangeValue(value, textModel) {
+		const newValue = this.applyValueFilters(value);
+
+		// If the newValue is different from previous, we trigger a onChangeValue
+		if (newValue !== this.inputValue) {
+			this.inputValue = newValue;
+
+			if (this.props.onChangeValue) {
+				this.props.onChangeValue(newValue);
+			}
+		}
+
+		this.updateInputText(textModel);
 	}
 
-	/**
-	 * Processes a string representing a number and it it ends with a decimal separator, sets a flag
-	 * in the state. Returns the string without the separator. Ignores the separator if maxDecimals
-	 * props is 0 (integer only).
-	 *
-	 * @param {String} value
-	 * @return {String}
-	 */
-	processDanglingDecimalSeparator(value) {
-		const decimalSeparator = this.props.localizer.getDecimalSeparator();
-		const intOnly = this.props.maxDecimals === 0;
-		const dangling = value.indexOf(decimalSeparator) === value.length - 1;
-		const stateDangling = intOnly ? false : dangling;
-
-		if (this.state.danglingDecimalSeparator !== stateDangling) {
-			this.setState({
-				danglingDecimalSeparator: stateDangling,
-			});
-		}
-
-		if (dangling) {
-			return value.substring(0, value.length - 1);
-		}
-
-		return value;
-	}
-
-	/**
-	 * Counts the number of trailing zeros in the decimal part (ex: 10,0200 would have 2 trailing
-	 * decimal zeros) and saves it in the state. Note that this function only works with string of
-	 * valid number.
-	 *
-	 * @param {String} value
-	 */
-	processDecimalDigits(value) {
-		const decimalSeparator = this.props.localizer.getDecimalSeparator();
-		const regexp = new RegExp(`^.+${decimalSeparator}([0-9]+)$`);
-		const res = regexp.exec(value);
-		let stateDecimalDigits = 0;
-
-		if (res) {
-			stateDecimalDigits = res[1].length;
-		}
-
-		if (this.state.minDecimalDigits !== stateDecimalDigits) {
-			this.setState({
-				minDecimalDigits: stateDecimalDigits,
-			});
-		}
-	}
-
-	/**
-	 * Takes a string representing a number and strips any decimal exceding maxDecimals.
-	 *
-	 * @param {String} value
-	 * @return {String}
-	 */
-	limitDecimals(value) {
-		const max = this.props.maxDecimals;
-
-		if (max === Infinity || typeof max !== 'number') {
-			return value;
-		}
-
-		const decimalSeparator = this.props.localizer.getDecimalSeparator();
-		const decimalSeparatorIndex = value.indexOf(decimalSeparator);
-
-		if (decimalSeparatorIndex === -1) {
-			return value;
-		}
-
-		if (max === 0) {
-			return value.substring(0, decimalSeparatorIndex);
-		}
-
-		const regexp = new RegExp(`(^.+${decimalSeparator}[0-9]{1,${max}})[0-9]*$`);
-		const res = regexp.exec(value);
-
-		if (!res) {
-			return value;
-		}
-
-		return res[1];
-	}
-
-	/**
-	 * Parses a string number using the component's locale and returns a Number or NaN if it cannot
-	 * be parsed.
-	 *
-	 * @param {String} text
-	 * @return {Number|NaN}
-	 */
-	parseNumber(text) {
-		if (typeof text !== 'string' || text.trim() === '') {
+	parseValue(text) {
+		if (typeof text !== 'string') {
 			return null;
 		}
 
-		const value = this.props.localizer.parseNumber(text);
+		let cleanedText = text;
+		const decimalSeparator = this.getDecimalSeparator();
+		const escapedDecimalSeparator = escapeStringRegexp(decimalSeparator);
+		const decimalSeparatorPlaceholder = decimalSeparator === '@' ? '!' : '@';
 
-		if (Number.isNaN(value)) {
+		// First pass : remove any characters not a number, - or the decimal separator
+		const firstPassRegExp = new RegExp(`[^0-9-${escapedDecimalSeparator}]`, 'g');
+		cleanedText = cleanedText.replace(firstPassRegExp, '');
+
+		// Takes note if number is negative (starts with a '-')
+		const negativity = cleanedText[0] === '-' ? -1 : 1;
+
+		// Replace the last decimal separator by a placeholder
+		// Ex if decimal separator is ',', replaces '12,23,5' by '12,23@5'
+		const replaceLastDecimalRegExp = new RegExp(`${escapedDecimalSeparator}([^${escapedDecimalSeparator}]*)$`);
+		cleanedText = cleanedText.replace(replaceLastDecimalRegExp, `${decimalSeparatorPlaceholder}$1`);
+
+		// Second pass, keep only numbers and the decimal separator placeholder
+		const secondPassRegExp = new RegExp(`[^0-9${decimalSeparatorPlaceholder}]`, 'g');
+		cleanedText = cleanedText.replace(secondPassRegExp, '');
+
+		// Replace the decimal separator by a '.' (there should be just one decimal separator)
+		cleanedText = cleanedText.replace(decimalSeparatorPlaceholder, '.');
+
+		const number = Number.parseFloat(cleanedText);
+
+		if (Number.isNaN(number)) {
 			return null;
 		}
 
+		return number * negativity;
+	}
+
+	applyValueFilters(value) {
+		// Based on this.props, limit the value and returns it
+		// - If integer only
+		// - If has to be greater than
+		// - If has to be less than
+		// - If number of decimal is limited
 		return value;
 	}
 
-	/**
-	 * Returns a string of the current value to be displayed in the text input. Basically, we just
-	 * pass the number to iLib and return the result with the following particularities:
-	 *
-	 * - If number is null or undefined, an empty string is returned
-	 * - If we noted that the user had previously entered a decimal separator, we add it at the end.
-	 * - If the number has trailing decimal zeros, we add them
-	 *
-	 * @param {Number} number
-	 * @return {String}
-	 */
-	formatValue() {
-		const value = this.props.value;
+	updateInputText(textModel = null) {
+		let text = '';
 
-		return `${value}`;
-		/*
-
-		let minDecimals = this.state.minDecimalDigits;
-		let maxDecimals = this.props.maxDecimals;
-
-		if (typeof maxDecimals !== 'number') {
-			maxDecimals = Infinity;
+		if (textModel) {
+			text = this.formatValueUsingModel(this.inputValue, textModel);
+		} else {
+			text = this.formatValue(this.inputValue);
 		}
 
-		maxDecimals = Math.min(maxDecimals, 20);
-		minDecimals = Math.min(minDecimals, maxDecimals);
+		this.inputText = text;
+	}
 
-		const formatterOptions = {
-			minimumFractionDigits: minDecimals,
-			maximumFractionDigits: maxDecimals,
-		};
-
+	formatValue(value) {
 		if (typeof value !== 'number') {
 			return '';
 		}
 
-		let formatted = this.props.localizer.formatNumber(value, formatterOptions);
-
-		if (this.state.danglingDecimalSeparator) {
-			formatted += this.props.localizer.getDecimalSeparator();
-		}
-
-		return formatted;*/
-	}
-
-	/**
-	 * Adjusts the value by +1 ("more") or -1 ("less"). Used by the plus and minus buttons. Calls
-	 * valueChanged with the new value.
-	 *
-	 * @param {string} type "more" or "less"
-	 */
-	adjustValue(type) {
-		const value = this.getValue();
-		const adjustment = type === 'more' ? 1 : -1;
-		const newValue = value + adjustment;
-		this.valueChanged(newValue);
-	}
-
-	/**
-	 * Called when the value changed. Calls this.props.onChangeValue() with the new value.
-	 *
-	 * @param {Number} newValue
-	 */
-	valueChanged(newValue) {
-		if (this.props.onChangeValue) {
-			this.props.onChangeValue(newValue);
+		if (this.props.localizer) {
+			return this.props.localizer.formatNumber(value, { useGrouping: false });
+		} else {
+			return `${value}`;
 		}
 	}
 
+	formatValueUsingModel(value, model) {
+		const decimalSeparator = this.getDecimalSeparator();
+		const escapedDecimalSeparator = escapeStringRegexp(decimalSeparator);
+
+		if (value === null) {
+			if (model === '-') {
+				return '-';
+			}
+
+			// If the model is only the decimal separator, we prepend it with 0
+			if (model === decimalSeparator) {
+				return `0${decimalSeparator}`;
+			}
+		}
+
+		let formatted = this.formatValue(value);
+
+		// If model ends with trailing decimal separator or with a decimal followed by only zeros, we
+		// keep the zeros
+		let trailingDecimalSeparator = '';
+		const trailingDecimalRegExp = new RegExp(`${escapedDecimalSeparator}0*$`);
+		if (trailingDecimalRegExp.test(model)) {
+			trailingDecimalSeparator = decimalSeparator;
+		}
+
+		// If model ends with trailing zeros, we add them
+		let trailingZeros = '';
+		const trailingZerosRegExp = new RegExp(`${escapedDecimalSeparator}([0-9]*[1-9])?(0+)$`);
+		const trailingZerosRes = trailingZerosRegExp.exec(model);
+		if (trailingZerosRes) {
+			trailingZeros = trailingZerosRes[2];
+		}
+
+		// If value is 0 and model starts with a 0, we prepend a minus before
+		let negativity = '';
+		if (value === 0 && model[0] === '-') {
+			negativity = '-';
+		}
+
+		return `${negativity}${formatted}${trailingDecimalSeparator}${trailingZeros}`;
+	}
+
 	/**
-	 * Rendering function to render the "more" and "less" button (the one rendered depends on the
-	 * type parameter).
+	 * Returns the decimal separator character used and to use in the text input. Used the localizer.
+	 * If no localizer is set, returns '.'.
 	 *
-	 * @param {String} type
+	 * @return {String}
+	 */
+	getDecimalSeparator() {
+		if (this.props.localizer) {
+			return this.props.localizer.getDecimalSeparator();
+		}
+
+		return '.';
+	}
+
+	incrementValue(type) {
+		const currentValue = typeof this.inputValue === 'number' ? this.inputValue : 0;
+		this.tryChangeValue(currentValue + type, this.inputText);
+	}
+
+	createIncrementors() {
+		this.incrementors = {
+			less: this.renderIncrementor(-1),
+			more: this.renderIncrementor(1),
+		};
+	}
+
+	/**
+	 * Rendering function to render the "more" and "less" button. For a "more", pass 1, for a less,
+	 * pass -1.
+	 *
+	 * @param {Number} type
 	 * @return {Component}
 	 */
-	renderAdjustButton(type) {
-		const iconName = type === 'more' ? 'plus' : 'minus';
-		const buttonStyle = [styles.AdjustButton];
+	renderIncrementor(type) {
+		const iconName = type === 1 ? 'plus' : 'minus';
+		const buttonStyle = [styles.IncrementButton];
 
-		if (type === 'more') {
-			buttonStyle.push(styles.AdjustButtonMore);
+		if (type === 1) {
+			buttonStyle.push(styles.IncrementButtonMore);
 		} else {
-			buttonStyle.push(styles.AdjustButtonLess);
+			buttonStyle.push(styles.IncrementButtonLess);
 		}
 
-		const icon = <Icon name={iconName} style={styles.AdjustButtonIcon} />;
+		const icon = <Icon name={iconName} style={styles.IncrementButtonIcon} />;
 
 		return (
 			<TouchableHighlight
 				style={buttonStyle}
 				underlayColor={styleVars.colors.grey1}
-				onPress={() => { this.adjustValue(type); }}
+				onPress={() => { this.incrementValue(type); }}
 			>
 				{ icon }
 			</TouchableHighlight>
@@ -338,20 +303,20 @@ class NumberInput extends Component {
 	 * @return {Component}
 	 */
 	render() {
-		const moreButton = this.renderAdjustButton('more');
-		const lessButton = this.renderAdjustButton('less');
 		const { value, ...other } = this.props;
+		const style = [styles.TextInput, this.props.style];
 
 		return (
 			<View>
-				{ moreButton }
-				{ lessButton }
+				{ this.incrementors.more }
+				{ this.incrementors.less }
 				<TextInput
 					{...other}
-					value={this.formatValue()}
-					style={styles.TextInput}
+					value={this.inputText}
+					style={style}
 					keyboardType="numeric"
 					onChangeText={(text) => { this.onChangeText(text); }}
+					disableFullscreenUI
 				/>
 			</View>
 		);

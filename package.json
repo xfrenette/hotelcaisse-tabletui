@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "decimal.js": "^7.1.1",
+    "escape-string-regexp": "^1.0.5",
     "history": "^4.6.0",
     "hotelcaisse-app": "file:///C:\\Users\\Xavier\\Travail\\dev\\XavierFrenette\\HotelCaisse\\js-app",
     "lodash.get": "^4.4.2",

@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import { View, Image, ScrollView } from 'react-native';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react/native';
+import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { MainContent } from '../../app/components/layout';
-import { Text } from '../../app/components/elements';
+import { Text, NumberInput } from '../../app/components/elements';
 
+const localizer = new Localizer('fr-CA');
+
+@observer
 class TestScreen extends Component {
+	@observable
+	numberInputValue = 0;
+
 	renderVerticalRhythm() {
 		const style = {
 			position: 'absolute',
@@ -12,8 +21,13 @@ class TestScreen extends Component {
 		return <Image source={require('../../app/medias/vertical-rhythm.png')} style={style} />;
 	}
 
+	onChangeValue(value) {
+		console.log('TestScreen', value);
+		this.numberInputValue = value;
+	}
+
 	render() {
-		const verticalRhythm = true;
+		const verticalRhythm = false;
 		let verticalRhythmImg;
 
 		if (verticalRhythm) {
@@ -25,7 +39,14 @@ class TestScreen extends Component {
 				{verticalRhythmImg}
 				<ScrollView>
 					<MainContent>
-						<Text>Test!</Text>
+						<View style={{ width: 100 }}>
+							<NumberInput
+								value={this.numberInputValue}
+								onChangeValue={(value) => { this.onChangeValue(value); }}
+								localizer={localizer}
+								showIncrementors={true}
+							/>
+						</View>
 					</MainContent>
 				</ScrollView>
 			</View>
