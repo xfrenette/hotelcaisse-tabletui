@@ -25,6 +25,9 @@ class Home extends Component {
 			case 'find-order':
 				path = '/orders/find';
 				break;
+			case 'test':
+				path = '/test';
+				break;
 		}
 
 		if (path) {

@@ -63,6 +63,14 @@ class Home extends Component {
 			/>
 		));
 
+		mainButtons.push((
+			<Button
+				key="test"
+				onPress={() => { this.onLinkPressed('test'); }}
+				title="Test"
+			/>
+		));
+
 		return (
 			<View>
 				{ mainButtons }
