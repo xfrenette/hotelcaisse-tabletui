@@ -8,7 +8,7 @@ import {
 	Button,
 	TextInput,
 	NumberInput,
-	MoneyInput,
+	DenominationsInput,
 } from '../elements';
 import { Field, Label } from '../elements/form';
 import {
@@ -78,7 +78,7 @@ class CloseRegister extends Component {
 	}
 
 	/**
-	 * Called when one of the denomination in MoneyInput changed value.
+	 * Called when one of the denomination in DenominationsInput changed value.
 	 *
 	 * @param {Object} denomination Denomination object
 	 * @param {Number} value
@@ -125,20 +125,20 @@ class CloseRegister extends Component {
 	}
 
 	/**
-	 * Returns an object to be passed to MoneyInput containing all the denominations and their
+	 * Returns an object to be passed to DenominationsInput containing all the denominations and their
 	 * quantity.
 	 *
 	 * @return {Object}
 	 */
 	@computed
-	get moneyInputValues() {
+	get denominationsInputValues() {
 		return Object.entries(this.denominationsQuantity).map(
 			([label, value]) => ({ label, value })
 		);
 	}
 
 	/**
-	 * Returns the total money amount as represented by the MoneyInput. Returns it as a Decimal
+	 * Returns the total money amount as represented by the DenominationsInput. Returns it as a Decimal
 	 * object.
 	 *
 	 * @return {Decimal}
@@ -152,7 +152,7 @@ class CloseRegister extends Component {
 
 	/**
 	 * Returns as a formatted currency string the total money amount as represented by the
-	 * MoneyInput.
+	 * DenominationsInput.
 	 *
 	 * @return {String}
 	 */
@@ -172,7 +172,7 @@ class CloseRegister extends Component {
 	}
 
 	render() {
-		const values = this.moneyInputValues;
+		const values = this.denominationsInputValues;
 		const total = this.getFormattedTotalAmount();
 
 		return (
@@ -195,13 +195,14 @@ class CloseRegister extends Component {
 							<Label>{this.t('closeRegister.fields.POSTAmount')}</Label>
 							<NumberInput
 								value={this.POSTAmount}
+								type="money"
 								onChangeValue={(value) => { this.onPOSTAmountChange(value); }}
 								localizer={this.props.localizer}
 							/>
 						</Field>
 						<Field>
-							<Label>{this.t('closeRegister.fields.moneyInput')}</Label>
-							<MoneyInput
+							<Label>{this.t('closeRegister.fields.denominationsInput')}</Label>
+							<DenominationsInput
 								values={values}
 								localizer={this.props.localizer}
 								onChangeValue={(field, value) => this.onChangeValue(field, value)}

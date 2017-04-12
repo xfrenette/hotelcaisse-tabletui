@@ -2,7 +2,7 @@ import Button from './Button';
 import Dropdown from './Dropdown';
 import Keypad from './Keypad';
 import Message from './Message';
-import MoneyInput from './MoneyInput';
+import DenominationsInput from './DenominationsInput';
 import NumberInput from './NumberInput';
 import Text from './Text';
 import TextInput from './TextInput';
@@ -13,7 +13,7 @@ export {
 	Dropdown,
 	Keypad,
 	Message,
-	MoneyInput,
+	DenominationsInput,
 	NumberInput,
 	Text,
 	TextInput,

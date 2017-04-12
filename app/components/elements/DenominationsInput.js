@@ -3,13 +3,13 @@ import {
 	View,
 } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
-import NumberInput from './NumberInput';
-import Text from './Text';
+import { Text, NumberInput } from './index';
 import styleVars from '../../styles/variables';
 
 const styles = {
 	Field: {
 		flex: 1,
+		flexDirection: 'row',
 	},
 
 	FieldRow: {
@@ -20,6 +20,11 @@ const styles = {
 	FieldLabel: {
 		minWidth: 80,
 		textAlign: 'right',
+		paddingRight: 10,
+	},
+
+	NumberInputContainer: {
+		flex: 1,
 	},
 
 	Total: {
@@ -47,7 +52,7 @@ const propTypes = {
 			value: React.PropTypes.number,
 		}),
 	).isRequired,
-	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
+	localizer: React.PropTypes.instanceOf(Localizer),
 	onChangeValue: React.PropTypes.func,
 	totalLabel: React.PropTypes.string,
 	total: React.PropTypes.string,
@@ -57,25 +62,61 @@ const defaultProps = {
 	onChangeValue: null,
 	totalLabel: null,
 	total: null,
+	localizer: null,
 };
 
-class MoneyInput extends Component {
+class DenominationsInput extends Component {
+	fieldComponents = {};
+	fieldCurrentValues = {};
+
 	fieldValueChanged(field, newValue) {
 		if (this.props.onChangeValue) {
 			this.props.onChangeValue(field, newValue);
 		}
 	}
 
+	shouldRegenerateFieldComponent(field) {
+		const fieldKey = field.label;
+
+		// First, if the field is not alreay generated, return true
+		if (!this.fieldComponents[fieldKey]) {
+			return true;
+		}
+
+		// Return false if the value didn't change
+		if (typeof this.fieldCurrentValues[fieldKey] === 'number') {
+			if (this.fieldCurrentValues[fieldKey] === field.value) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	getCachedFieldComponent(field) {
+		const fieldKey = field.label;
+		return this.fieldComponents[fieldKey];
+	}
+
+	cacheFieldComponent(field, component) {
+		const fieldKey = field.label;
+
+		this.fieldComponents[fieldKey] = component;
+		this.fieldCurrentValues[fieldKey] = field.value;
+	}
+
 	renderField(field) {
 		return (
 			<View style={styles.Field} key={field.label}>
-				<NumberInput
-					label={field.label}
-					labelStyle={styles.FieldLabel}
-					value={field.value}
-					localizer={this.props.localizer}
-					onChangeValue={(val) => { this.fieldValueChanged(field, val); }}
-				/>
+				<Text style={styles.FieldLabel}>{ field.label }</Text>
+				<View style={styles.NumberInputContainer}>
+					<NumberInput
+						value={field.value}
+						localizer={this.props.localizer}
+						onChangeValue={(val) => { this.fieldValueChanged(field, val); }}
+						showIncrementors
+					/>
+				</View>
 			</View>
 		);
 	}
@@ -103,7 +144,15 @@ class MoneyInput extends Component {
 		const fieldsInRows = [];
 		const total = this.renderTotal();
 		this.props.values.forEach((field, index) => {
-			const renderedField = this.renderField(field);
+			let renderedField;
+
+			if (this.shouldRegenerateFieldComponent(field)) {
+				renderedField = this.renderField(field);
+				this.cacheFieldComponent(field, renderedField);
+			} else {
+				renderedField = this.getCachedFieldComponent(field);
+			}
+
 			const rowIndex = Math.floor(index / nbCols);
 
 			if (!fieldsInRows[rowIndex]) {
@@ -139,7 +188,7 @@ class MoneyInput extends Component {
 	}
 }
 
-MoneyInput.propTypes = propTypes;
-MoneyInput.defaultProps = defaultProps;
+DenominationsInput.propTypes = propTypes;
+DenominationsInput.defaultProps = defaultProps;
 
-export default MoneyInput;
+export default DenominationsInput;

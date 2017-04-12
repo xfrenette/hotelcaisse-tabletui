@@ -8,7 +8,7 @@ import {
 	Button,
 	Text,
 	TextInput,
-	MoneyInput,
+	DenominationsInput,
 } from '../elements';
 import { Field, Label } from '../elements/form';
 import {
@@ -71,7 +71,7 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Called when one of the denomination in MoneyInput changed value.
+	 * Called when one of the denomination in DenominationsInput changed value.
 	 *
 	 * @param {Object} denomination Denomination object
 	 * @param {Number} value
@@ -108,20 +108,20 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Returns an object to be passed to MoneyInput containing all the denominations and their
+	 * Returns an object to be passed to DenominationsInput containing all the denominations and their
 	 * quantity.
 	 *
 	 * @return {Object}
 	 */
 	@computed
-	get moneyInputValues() {
+	get denominationsInputValues() {
 		return Object.entries(this.denominationsQuantity).map(
 			([label, value]) => ({ label, value })
 		);
 	}
 
 	/**
-	 * Returns the total money amount as represented by the MoneyInput. Returns it as a Decimal
+	 * Returns the total money amount as represented by the DenominationsInput. Returns it as a Decimal
 	 * object.
 	 *
 	 * @return {Decimal}
@@ -135,7 +135,7 @@ class OpenRegister extends Component {
 
 	/**
 	 * Returns as a formatted currency string the total money amount as represented by the
-	 * MoneyInput.
+	 * DenominationsInput.
 	 *
 	 * @return {String}
 	 */
@@ -155,7 +155,7 @@ class OpenRegister extends Component {
 	}
 
 	render() {
-		const values = this.moneyInputValues;
+		const values = this.denominationsInputValues;
 		const total = this.getFormattedTotalAmount();
 
 		return (
@@ -174,8 +174,8 @@ class OpenRegister extends Component {
 							/>
 						</Field>
 						<Field>
-							<Label>{this.t('openRegister.fields.moneyInput')}</Label>
-							<MoneyInput
+							<Label>{this.t('openRegister.fields.denominationsInput')}</Label>
+							<DenominationsInput
 								values={values}
 								localizer={this.props.localizer}
 								onChangeValue={(field, value) => this.onChangeValue(field, value)}

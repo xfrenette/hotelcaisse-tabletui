@@ -3,7 +3,7 @@ export default {
 	fields: {
 		POSTRef: 'Numéro de lot du terminal de point de vente (TPV)',
 		POSTAmount: 'Montant total du lot du TPV',
-		moneyInput: 'Billets et monnaies dans la caisse à la fermeture',
+		denominationsInput: 'Billets et monnaies dans la caisse à la fermeture',
 		total: 'Total',
 	},
 	actions: {

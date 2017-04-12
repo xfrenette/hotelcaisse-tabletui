@@ -2,7 +2,7 @@ export default {
 	title: 'Ouverture de caisse',
 	fields: {
 		employee: 'Nom de l\'employé(e)',
-		moneyInput: 'Billets et monnaies dans la caisse à l\'ouverture',
+		denominationsInput: 'Billets et monnaies dans la caisse à l\'ouverture',
 		total: 'Total',
 	},
 	actions: {

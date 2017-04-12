@@ -4,14 +4,23 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { MainContent } from '../../app/components/layout';
-import { Text, NumberInput } from '../../app/components/elements';
+import { Text, DenominationsInput } from '../../app/components/elements';
 
 const localizer = new Localizer('fr-CA', 'CAD');
 
 @observer
 class TestScreen extends Component {
 	@observable
-	numberInputValue = 0;
+	denominationValues = [
+		{ label: '0,05 $', value: 1 },
+		{ label: '0,10 $', value: 0 },
+		{ label: '0,25 $', value: 0 },
+		{ label: '1,00 $', value: 0 },
+		{ label: '2,00 $', value: 0 },
+		{ label: '5,00 $', value: 0 },
+		{ label: '10,00 $', value: 3 },
+		{ label: '20,00 $', value: 2 },
+	];
 
 	renderVerticalRhythm() {
 		const style = {
@@ -21,7 +30,7 @@ class TestScreen extends Component {
 		return <Image source={require('../../app/medias/vertical-rhythm.png')} style={style} />;
 	}
 
-	onChangeValue(value) {
+	onChangeValue(field, value) {
 		this.numberInputValue = value;
 	}
 
@@ -39,12 +48,10 @@ class TestScreen extends Component {
 				<ScrollView>
 					<MainContent>
 						<View>
-							<NumberInput
-								value={this.numberInputValue}
-								onChangeValue={(value) => { this.onChangeValue(value); }}
+							<DenominationsInput
+								values={this.denominationValues.slice()}
 								localizer={localizer}
-								showIncrementors={false}
-								type='money'
+								onChangeValue={(field, value) => { this.onChangeValue(field, value); }}
 							/>
 						</View>
 					</MainContent>
