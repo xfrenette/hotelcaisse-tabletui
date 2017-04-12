@@ -109,11 +109,21 @@ class NumberInput extends Component {
 		}
 	}
 
+	/**
+	 * Called when the text input text changes. Parses the text and calls tryChangeValue
+	 *
+	 * @param {string} text
+	 */
 	onChangeText(text) {
 		const newValue = this.parseValue(text);
 		this.tryChangeValue(newValue, text);
 	}
 
+	/**
+	 * Returns styles for the text input. The styles changes if we have incrementors or not.
+	 *
+	 * @return {object}
+	 */
 	getTextInputStyles() {
 		const textInputStyles = {
 			...styles.TextInput,
@@ -128,6 +138,13 @@ class NumberInput extends Component {
 		return textInputStyles;
 	}
 
+	/**
+	 * Receives a number, applies the filters to it and updates the value if applicable. If a
+	 * textModel is passed, it will be used when updating the text input's value
+	 *
+	 * @param {Number} value
+	 * @param {String} textModel
+	 */
 	tryChangeValue(value, textModel) {
 		const newValue = this.applyValueFilters(value);
 
@@ -143,6 +160,12 @@ class NumberInput extends Component {
 		this.updateInputText(textModel);
 	}
 
+	/**
+	 * Parses the text and returns the number it found. Else returns null.
+	 *
+	 * @param {String} text
+	 * @return {Number}
+	 */
 	parseValue(text) {
 		if (typeof text !== 'string') {
 			return null;
@@ -181,7 +204,15 @@ class NumberInput extends Component {
 		return number * negativity;
 	}
 
+	/**
+	 * Applies all filters (ex: min and max, number of decimals, ...) to the value and returns the
+	 * filtered value.
+	 *
+	 * @param {Number} value
+	 * @return {Number}
+	 */
 	applyValueFilters(value) {
+		// TODO
 		// Based on this.props, limit the value and returns it
 		// - If integer only
 		// - If has to be greater than
@@ -190,6 +221,12 @@ class NumberInput extends Component {
 		return value;
 	}
 
+	/**
+	 * Updates the input text value by displaying the value prop. If a textModel is supplied, it will
+	 * be updated with the value (ex: if it ends with a decimal separator, it will be kept)
+	 *
+	 * @param {String} textModel
+	 */
 	updateInputText(textModel = null) {
 		let text = '';
 
@@ -202,6 +239,12 @@ class NumberInput extends Component {
 		this.inputText = text;
 	}
 
+	/**
+	 * Formats a number using the localizer.
+	 *
+	 * @param {Number} value
+	 * @return {String}
+	 */
 	formatValue(value) {
 		if (typeof value !== 'number') {
 			return '';
@@ -218,6 +261,14 @@ class NumberInput extends Component {
 		return `${value}`;
 	}
 
+	/**
+	 * Formats a number using the localizer and an existing "model". Ex : if the model ends with a
+	 * decimal separator, or with trailing decimal zeros, they will be kept.
+	 *
+	 * @param {Number} value
+	 * @param {String} model
+	 * @return {String}
+	 */
 	formatValueUsingModel(value, model) {
 		const decimalSeparator = this.getDecimalSeparator();
 		const escapedDecimalSeparator = escapeStringRegexp(decimalSeparator);
@@ -233,7 +284,7 @@ class NumberInput extends Component {
 			}
 		}
 
-		let formatted = this.formatValue(value);
+		const formatted = this.formatValue(value);
 
 		// If model ends with trailing decimal separator or with a decimal followed by only zeros, we
 		// keep the zeros
@@ -274,11 +325,20 @@ class NumberInput extends Component {
 		return '.';
 	}
 
+	/**
+	 * Adjust the value by an increment "type" (1 or -1). Calls tryChangeValue().
+	 *
+	 * @param {Number} type  1 or -1
+	 */
 	incrementValue(type) {
 		const currentValue = typeof this.inputValue === 'number' ? this.inputValue : 0;
 		this.tryChangeValue(currentValue + type, this.inputText);
 	}
 
+	/**
+	 * Creates the "plus" and "minus" incrementors React elements. They will be cached in the
+	 * incrementors internal object.
+	 */
 	createIncrementors() {
 		this.incrementors = {
 			less: this.renderIncrementor(-1),
@@ -286,6 +346,12 @@ class NumberInput extends Component {
 		};
 	}
 
+	/**
+	 * Returns the text to use a preText in the TextInput. It will be the currency sign, if
+	 * applicable with the localizer. Else returns an empty string.
+	 *
+	 * @return {String}
+	 */
 	getTextInputPreText() {
 		if (this.props.type !== 'money') {
 			return '';
@@ -302,6 +368,12 @@ class NumberInput extends Component {
 		return '';
 	}
 
+	/**
+	 * Returns the text to use a postText in the TextInput. It will be the currency sign, if
+	 * applicable with the localizer. Else returns an empty string.
+	 *
+	 * @return {String}
+	 */
 	getTextInputPostText() {
 		if (this.props.type !== 'money') {
 			return '';
