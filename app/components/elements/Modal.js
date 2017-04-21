@@ -175,7 +175,7 @@ class Modal extends Component {
 			<NativeModal
 				visible={this.visible}
 				onRequestClose={() => { this.onRequestClose(); }}
-				animation="none"
+				animationType="none"
 				transparent
 			>
 				<View style={styles.Background}>
