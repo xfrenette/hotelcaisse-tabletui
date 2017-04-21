@@ -8,7 +8,7 @@ export default {
 			backgroundColor: vars.button.backgroundColor,
 			paddingLeft: 16,
 			paddingRight: 16,
-			borderRadius: 2,
+			borderRadius: 3,
 			justifyContent: 'center',
 		},
 		text: {
