@@ -7,6 +7,7 @@ import NumberInput from './NumberInput';
 import Text from './Text';
 import TextInput from './TextInput';
 import Title from './Title';
+import Modal from './Modal';
 
 export {
 	Button,
@@ -18,4 +19,5 @@ export {
 	Text,
 	TextInput,
 	Title,
+	Modal,
 };

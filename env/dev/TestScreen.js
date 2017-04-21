@@ -4,23 +4,15 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { MainContent } from '../../app/components/layout';
-import { Text, DenominationsInput } from '../../app/components/elements';
+import { Button, Text, DenominationsInput, Modal } from '../../app/components/elements';
 
 const localizer = new Localizer('fr-CA', 'CAD');
 
 @observer
 class TestScreen extends Component {
+	modal = null;
 	@observable
-	denominationValues = [
-		{ label: '0,05 $', value: 1 },
-		{ label: '0,10 $', value: 0 },
-		{ label: '0,25 $', value: 0 },
-		{ label: '1,00 $', value: 0 },
-		{ label: '2,00 $', value: 0 },
-		{ label: '5,00 $', value: 0 },
-		{ label: '10,00 $', value: 3 },
-		{ label: '20,00 $', value: 2 },
-	];
+	actionPressed = 'none';
 
 	renderVerticalRhythm() {
 		const style = {
@@ -30,17 +22,22 @@ class TestScreen extends Component {
 		return <Image source={require('../../app/medias/vertical-rhythm.png')} style={style} />;
 	}
 
-	onChangeValue(field, value) {
-		this.numberInputValue = value;
+	onButtonPress() {
+		this.modal.open();
 	}
 
 	render() {
-		const verticalRhythm = false;
+		const verticalRhythm = true;
 		let verticalRhythmImg;
 
 		if (verticalRhythm) {
 			verticalRhythmImg = this.renderVerticalRhythm();
 		}
+
+		const actions = {
+			cancel: 'Annuler',
+			save: 'Enregistrer',
+		};
 
 		return (
 			<View style={{ flex: 1, backgroundColor: '#fcfcfc' }}>
@@ -48,12 +45,17 @@ class TestScreen extends Component {
 				<ScrollView>
 					<MainContent>
 						<View>
-							<DenominationsInput
-								values={this.denominationValues.slice()}
-								localizer={localizer}
-								onChangeValue={(field, value) => { this.onChangeValue(field, value); }}
-							/>
+							<Button title="Bouton de test" onPress={() => { this.onButtonPress(); }} />
+							<Text>{ this.actionPressed }</Text>
 						</View>
+						<Modal
+							ref={(modal) => { this.modal = modal; }}
+							title={this.actionPressed}
+							actions={actions}
+							onActionPress={(key) => { this.actionPressed = key; }}
+						>
+							<Text>Bonjour ici!</Text>
+						</Modal>
 					</MainContent>
 				</ScrollView>
 			</View>

@@ -1,6 +1,7 @@
 const verticalRhythm = 24;
 const baseFontSize = 16;
 const smallFontSize = 14;
+const bigFontSize = 18;
 const horizontalRhythm = 24;
 
 const sidePadding = horizontalRhythm;
@@ -19,12 +20,14 @@ const colors = {
 	lightGrey1: '#fafafa',
 	green1: '#31c544',
 	green2: '#279b36',
+	transparentBlack1: 'rgba(0, 0, 0, 0.4)',
 };
 
 const variables = {
 	verticalRhythm,
 	baseFontSize,
 	smallFontSize,
+	bigFontSize,
 	baseLineHeight,
 	horizontalRhythm,
 	sidePadding,
