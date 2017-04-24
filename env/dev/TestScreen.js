@@ -4,7 +4,8 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { MainContent } from '../../app/components/layout';
-import { Button, Text, DenominationsInput, Modal } from '../../app/components/elements';
+import { Button, Text, Modal } from '../../app/components/elements';
+import { Row, Cell } from '../../app/components/elements/table';
 
 const localizer = new Localizer('fr-CA', 'CAD');
 
@@ -27,7 +28,7 @@ class TestScreen extends Component {
 	}
 
 	render() {
-		const verticalRhythm = true;
+		const verticalRhythm = false;
 		let verticalRhythmImg;
 
 		if (verticalRhythm) {
@@ -45,17 +46,16 @@ class TestScreen extends Component {
 				<ScrollView>
 					<MainContent>
 						<View>
-							<Button title="Bouton de test" onPress={() => { this.onButtonPress(); }} />
-							<Text>{ this.actionPressed }</Text>
+							<Text>Ici:</Text>
+							<Row first>
+								<Cell first><Text>Cel1 Cel1 Cel 1 Cel w</Text></Cell>
+								<Cell><Text>Cell 2</Text></Cell>
+								<Cell last><Text>Cell 3</Text></Cell>
+							</Row>
+							<Row>
+								<Text>Contenu ici</Text>
+							</Row>
 						</View>
-						<Modal
-							ref={(modal) => { this.modal = modal; }}
-							title={this.actionPressed}
-							actions={actions}
-							onActionPress={(key) => { this.actionPressed = key; }}
-						>
-							<Text>Bonjour ici!</Text>
-						</Modal>
 					</MainContent>
 				</ScrollView>
 			</View>
