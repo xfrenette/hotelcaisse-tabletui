@@ -6,7 +6,31 @@ import {
 	ToastAndroid,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import styles from '../../styles';
+import styleVars from '../../styles/variables';
+
+const styles = {
+	TopBar: {
+		backgroundColor: styleVars.theme.mainColor,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		height: styleVars.verticalRhythm * 2,
+		paddingHorizontal: styleVars.sidePadding,
+		borderTopWidth: 1,
+		borderTopColor: styleVars.theme.lighter,
+	},
+	TopBarSideIcon: {
+		width: 3 * styleVars.verticalRhythm,
+	},
+	TopBarText: {
+		color: styleVars.theme.overlayColor,
+		fontSize: styleVars.rem(1.2),
+	},
+	TopBarIcon: {
+		color: styleVars.theme.overlayColor,
+		fontSize: styleVars.verticalRhythm,
+	},
+};
 
 class TopBar extends Component {
 	onBackHome() {
