@@ -8,6 +8,7 @@ import Text from './Text';
 import TextInput from './TextInput';
 import Title from './Title';
 import Modal from './Modal';
+import TrashButton from './TrashButton';
 
 export {
 	Button,
@@ -20,4 +21,5 @@ export {
 	TextInput,
 	Title,
 	Modal,
+	TrashButton,
 };

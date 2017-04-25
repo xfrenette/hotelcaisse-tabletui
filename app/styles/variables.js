@@ -21,6 +21,7 @@ const colors = {
 	green1: '#31c544',
 	green2: '#279b36',
 	transparentBlack1: 'rgba(0, 0, 0, 0.4)',
+	red1: '#aa0000',
 };
 
 const variables = {
@@ -62,6 +63,7 @@ const variables = {
 		overlayColor: colors.white1,
 		shadow: colors.grey1,
 		lineColor: colors.grey1,
+		dangerColor: colors.red1,
 	},
 };
 
