@@ -83,6 +83,12 @@ class UI {
 	 * @type {Localizer}
 	 */
 	localizer = null;
+	/**
+	 * Class which has a generate() method that generates a uuid
+	 *
+	 * @type {UUIDGenerator}
+	 */
+	uuidGenerator = null;
 
 	/**
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI
@@ -99,7 +105,7 @@ class UI {
 	 * @param {Object} settings
 	 */
 	constructor(settings = {}) {
-		['routes', 'auth', 'app'].forEach((setting) => {
+		['routes', 'auth', 'app', 'uuidGenerator'].forEach((setting) => {
 			if (settings[setting]) {
 				this[setting] = settings[setting];
 			}
@@ -165,6 +171,7 @@ class UI {
 			router: this.router,
 			auth: this.auth,
 			localizer: this.localizer,
+			uuidGenerator: this.uuidGenerator,
 			business: this.app ? this.app.business : null,
 		};
 	}

@@ -5,6 +5,7 @@ import createRoutes from './routes';
 import storedBusiness from './storedBusiness';
 import TestAuth from '../../tests/mock/TestAuth';
 import TestReader from '../../tests/mock/TestReader';
+import TestUUIDGenerator from '../../tests/mock/TestUUIDGenerator';
 import strings from '../../locales/fr-CA';
 
 /*
@@ -39,6 +40,7 @@ const app = new Application(appConfig);
 module.exports = {
 	app,
 	routes: createRoutes(),
+	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',
 	currency: 'CAD',
