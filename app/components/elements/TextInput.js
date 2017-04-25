@@ -18,6 +18,9 @@ const styles = {
 		backgroundColor: styleVars.theme.shadow,
 		flex: 1,
 	},
+	TextInputContainerError: {
+		borderColor: styleVars.input.errorColor,
+	},
 	TextInput: {
 		height: styleVars.input.height - 3,
 		backgroundColor: styleVars.input.backgroundColor,
@@ -49,6 +52,10 @@ const styles = {
 	TextInputPostText: {
 		paddingLeft: styleVars.input.sidePadding,
 	},
+	ErrorText: {
+		color: styleVars.theme.dangerColor,
+		fontStyle: 'italic',
+	},
 };
 
 const propTypes = {
@@ -57,6 +64,7 @@ const propTypes = {
 	label: React.PropTypes.string,
 	preText: React.PropTypes.string,
 	postText: React.PropTypes.string,
+	error: React.PropTypes.string,
 };
 
 const defaultProps = {
@@ -65,6 +73,7 @@ const defaultProps = {
 	label: null,
 	preText: null,
 	postText: null,
+	error: null,
 };
 
 class TextInput extends Component {
@@ -77,11 +86,24 @@ class TextInput extends Component {
 		return null;
 	}
 
+	renderError() {
+		if (!this.props.error) {
+			return null;
+		}
+
+		return <Text style={styles.ErrorText}>{ this.props.error }</Text>;
+	}
+
 	render() {
 		const textStyle = [styles.TextInputText, this.props.style];
 		let preText;
 		let postText;
 		const label = this.renderLabel();
+		const containerStyles = [styles.TextInputContainer];
+
+		if (this.props.error) {
+			containerStyles.push(styles.TextInputContainerError);
+		}
 
 		if (this.props.preText) {
 			preText = (
@@ -100,19 +122,22 @@ class TextInput extends Component {
 		}
 
 		return (
-			<View style={styles.TextInputGroup}>
-				{ label }
-				<View style={styles.TextInputContainer}>
-					<View style={styles.TextInput}>
-						{ preText }
-						<NativeTextInput
-							{...this.props}
-							underlineColorAndroid={'transparent'}
-							style={textStyle}
-						/>
-						{ postText }
+			<View>
+				<View style={styles.TextInputGroup}>
+					{ label }
+					<View style={containerStyles}>
+						<View style={styles.TextInput}>
+							{ preText }
+							<NativeTextInput
+								{...this.props}
+								underlineColorAndroid={'transparent'}
+								style={textStyle}
+							/>
+							{ postText }
+						</View>
 					</View>
 				</View>
+				{ this.renderError() }
 			</View>
 		);
 	}

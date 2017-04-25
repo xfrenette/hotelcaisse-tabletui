@@ -55,6 +55,7 @@ const variables = {
 		sidePadding: horizontalRhythm / 2,
 		backgroundColor: colors.white1,
 		placeholderColor: colors.grey2,
+		errorColor: colors.red1,
 	},
 	theme: {
 		backgroundColor: colors.white2,
