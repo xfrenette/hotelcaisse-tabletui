@@ -5,4 +5,5 @@ export default {
 	done: 'Terminer',
 	add: 'Ajouter',
 	save: 'Enregistrer',
+	delete: 'Supprimer',
 };

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { ScrollView, View } from 'react-native';
-import { observer } from 'mobx-react/native';
-import { observable, computed } from 'mobx';
+import { ScrollView, View, Alert } from 'react-native';
+import { observer, inject } from 'mobx-react/native';
+import { observable } from 'mobx';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
+import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import {
 	Button,
 	Title,
@@ -11,8 +12,10 @@ import {
 	TextInput,
 	Modal,
 	Message,
+	TrashButton,
 } from '../elements';
 import { Field, Label } from '../elements/form';
+import { Row, Cell } from '../elements/table';
 import {
 	TopBar,
 	BottomBar,
@@ -21,6 +24,8 @@ import {
 } from '../layout';
 import buttonLayouts from '../../styles/Buttons';
 import styleVars from '../../styles/variables';
+import tableStyles from '../../styles/tables';
+import typographyStyles from '../../styles/typography';
 
 const styles = {
 	InOutColumns: {
@@ -44,21 +49,39 @@ const styles = {
 	Actions: {
 		flexDirection: 'row',
 	},
+
+	PriceCol: {
+		alignItems: 'flex-end',
+		flex: 0,
+	},
+
+	CashMovementsTable: {
+		marginBottom: styleVars.baseBlockMargin,
+	},
+
+	EmptyMessage: {
+		marginVertical: styleVars.baseBlockMargin,
+	},
 };
 
 const propTypes = {
 	onFinish: React.PropTypes.func,
 	onAddCashMovement: React.PropTypes.func,
+	onDeleteCashMovement: React.PropTypes.func,
 	validation: React.PropTypes.func,
+	cashMovements: React.PropTypes.arrayOf(React.PropTypes.instanceOf(CashMovement)),
 	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
 };
 
 const defaultProps = {
 	onFinish: null,
 	onAddCashMovement: null,
+	onDeleteCashMovement: null,
 	validation: null,
+	cashMovements: [],
 };
 
+@inject('ui')
 @observer
 class ManageRegister extends Component {
 	/**
@@ -77,6 +100,11 @@ class ManageRegister extends Component {
 		amount: null,
 		errorMessage: null,
 	};
+	/**
+	 * Reference to the modal component
+	 *
+	 * @type {Component}
+	 */
 	addModal = null;
 
 	/**
@@ -125,6 +153,27 @@ class ManageRegister extends Component {
 	}
 
 	/**
+	 * Shows the confirmation alert to delete a CashMovement. If the user confirms, calls
+	 * onConfirmDelete().
+	 *
+	 * @param {CashMovement} cashMovement
+	 */
+	showDeleteConfirm(cashMovement) {
+		const deleteCallback = () => {
+			this.onConfirmDelete(cashMovement);
+		};
+
+		Alert.alert(
+			this.t('manageRegister.deletion.title'),
+			this.t('manageRegister.deletion.message'),
+			[
+				{ text: this.t('actions.cancel') },
+				{ text: this.t('actions.delete'), onPress: deleteCallback },
+			]
+		);
+	}
+
+	/**
 	 * Closes the modal
 	 */
 	closeModal() {
@@ -146,6 +195,10 @@ class ManageRegister extends Component {
 		}
 	}
 
+	/**
+	 * Called when the user clicks the "Save" button in the modal. Will validate the data and, if
+	 * valid, will call onAddCashMovement. Will then close the modal and show a Toaster.
+	 */
 	onModalSave() {
 		const type = this.modalData.type;
 		const description = this.modalData.description;
@@ -162,8 +215,38 @@ class ManageRegister extends Component {
 		}
 
 		this.closeModal();
+
+		const toastMessageKey = `manageRegister.add${type === 'in' ? 'In' : 'Out'}.success`;
+		this.props.ui.showToast(this.t(toastMessageKey));
 	}
 
+	/**
+	 * Called when the user presses the trash icon of a CashMovement line.
+	 *
+	 * @param {CashMovement} cashMovement
+	 */
+	onPressDeleteCashMovement(cashMovement) {
+		this.showDeleteConfirm(cashMovement);
+	}
+	/**
+	 * Called when the user confirms the suppression in the confirm alert.
+	 *
+	 * @param {CashMovement} cashMovement
+	 */
+	onConfirmDelete(cashMovement) {
+		if (this.props.onDeleteCashMovement) {
+			this.props.onDeleteCashMovement(cashMovement);
+		}
+	}
+
+	/**
+	 * Validates the fields' value. If a validation prop is supplied, will return its result, else
+	 * returns a valid result.
+	 *
+	 * @param {String} description
+	 * @param {Number} amount
+	 * @return {object}
+	 */
 	validateEntries(description, amount) {
 		if (this.props.validation) {
 			return this.props.validation(description, amount);
@@ -172,6 +255,22 @@ class ManageRegister extends Component {
 		return {
 			valid: true,
 		};
+	}
+
+	/**
+	 * Returns all CashMovement of a certain type ('in' or 'out')
+	 *
+	 * @param {String} type 'in' or 'out'
+	 * @return {Array}
+	 */
+	getCashMovements(type) {
+		return this.props.cashMovements.filter((cashMovement) => {
+			if (type === 'in') {
+				return cashMovement.amount.isPositive();
+			}
+
+			return cashMovement.amount.isNegative();
+		});
 	}
 
 	/**
@@ -219,13 +318,87 @@ class ManageRegister extends Component {
 					<TextInput
 						value={this.modalData.description}
 						onChangeText={(text) => { this.modalData.description = text; }}
+						autoCapitalize="sentences"
 					/>
 				</Field>
 			</Modal>
 		);
 	}
 
+	/**
+	 * Renders the rows of CashMovement
+	 *
+	 * @param {Array} cashMovements
+	 * @return {Component}
+	 */
+	renderCashMovementRows(cashMovements) {
+		const rows = cashMovements.map((cashMovement, i) => {
+			const isLast = i === cashMovements.length - 1;
+			return this.renderCashMovementRow(cashMovement, isLast);
+		});
+
+		return (
+			<View>{ rows }</View>
+		);
+	}
+
+	/**
+	 * Renders a single row of CashMovement.
+	 *
+	 * @param {CashMovement} cashMovement
+	 * @param {Boolean} isLast
+	 * @return {Component}
+	 */
+	renderCashMovementRow(cashMovement, isLast) {
+		const absAmount = cashMovement.amount.abs().toNumber();
+		const formattedAmount = this.props.localizer.formatCurrency(absAmount);
+
+		return (
+			<Row key={cashMovement.uuid} last={isLast}>
+				<Cell first><Text>{ cashMovement.note }</Text></Cell>
+				<Cell style={styles.PriceCol}><Text>{ formattedAmount }</Text></Cell>
+				<Cell last style={tableStyles.CellDelete}>
+					<TrashButton onPress={() => { this.onPressDeleteCashMovement(cashMovement); }} />
+				</Cell>
+			</Row>
+		);
+	}
+
 	render() {
+		const movementsIn = this.getCashMovements('in');
+		const movementsOut = this.getCashMovements('out');
+
+		let movementsInRows = null;
+		let movementsOutRows = null;
+
+		if (!movementsIn.length) {
+			movementsInRows = (
+				<View style={styles.EmptyMessage}>
+					<Text style={typographyStyles.empty}>{ this.t('manageRegister.moneyIn.empty') }</Text>
+				</View>
+			);
+		} else {
+			movementsInRows = (
+				<View style={styles.CashMovementsTable}>
+					{ this.renderCashMovementRows(movementsIn) }
+				</View>
+			);
+		}
+
+		if (!movementsOut.length) {
+			movementsOutRows = (
+				<View style={styles.EmptyMessage}>
+					<Text style={typographyStyles.empty}>{ this.t('manageRegister.moneyOut.empty') }</Text>
+				</View>
+			);
+		} else {
+			movementsOutRows = (
+				<View style={styles.CashMovementsTable}>
+					{ this.renderCashMovementRows(movementsOut) }
+				</View>
+			);
+		}
+
 		return (
 			<Screen>
 				<TopBar
@@ -236,6 +409,7 @@ class ManageRegister extends Component {
 						<View style={styles.InOutColumns}>
 							<View style={[styles.InOutColumn, styles.InOutColumnFirst]}>
 								<Title>{ this.t('manageRegister.moneyOut.title') }</Title>
+								{ movementsOutRows }
 								<View style={styles.Actions}>
 									<Button
 										title={this.t('manageRegister.actions.addOut')}
@@ -246,6 +420,7 @@ class ManageRegister extends Component {
 
 							<View style={[styles.InOutColumn, styles.InOutColumnLast]}>
 								<Title>{ this.t('manageRegister.moneyIn.title') }</Title>
+								{ movementsInRows }
 								<View style={styles.Actions}>
 									<Button
 										title={this.t('manageRegister.actions.addIn')}

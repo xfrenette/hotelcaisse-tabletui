@@ -1,5 +1,6 @@
 import Decimal from 'decimal.js';
 import Business from 'hotelcaisse-app/dist/business/Business';
+import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
 
 /**
@@ -8,6 +9,17 @@ import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/busine
 
 const register = new Register();
 register.open('Xavier Frenette', new Decimal(100));
+
+const cashMovement1 = new CashMovement(new Decimal(12));
+cashMovement1.note = 'Test cash in avec une note qui est vraiment longue';
+cashMovement1.uuid = 'test-uuid-1';
+
+const cashMovement2 = new CashMovement(new Decimal(-1.45));
+cashMovement2.note = 'Test cash out';
+cashMovement2.uuid = 'test-uuid-2';
+
+register.addCashMovement(cashMovement1);
+register.addCashMovement(cashMovement2);
 
 const business = new Business();
 business.deviceRegister = register;
