@@ -35,6 +35,12 @@ describe('constructor()', () => {
 		expect(ui.uuidGenerator).toBe(uuidGenerator);
 	});
 
+	test('sets logger if present', () => {
+		const logger = { log: () => {} };
+		ui = new UI({ logger });
+		expect(ui.logger).toBe(logger);
+	});
+
 	test('sets Localizer', () => {
 		const locale = 'fr-CA';
 		const strings = { 'fr-CA': { a: 'b' } };
@@ -98,8 +104,13 @@ describe('getStores()', () => {
 		expect(ui.getStores().business).toBe(ui.app.business);
 	});
 
-	test.only('contains uuidGenerator', () => {
+	test('contains uuidGenerator', () => {
 		ui.uuidGenerator = { generate: () => {} };
 		expect(ui.getStores().uuidGenerator).toBe(ui.uuidGenerator);
+	});
+
+	test('contains logger', () => {
+		ui.logger = { log: () => {} };
+		expect(ui.getStores().logger).toBe(ui.logger);
 	});
 });

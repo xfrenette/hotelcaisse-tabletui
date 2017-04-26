@@ -105,7 +105,7 @@ class UI {
 	 * @param {Object} settings
 	 */
 	constructor(settings = {}) {
-		['routes', 'auth', 'app', 'uuidGenerator'].forEach((setting) => {
+		['routes', 'auth', 'app', 'uuidGenerator', 'logger'].forEach((setting) => {
 			if (settings[setting]) {
 				this[setting] = settings[setting];
 			}
@@ -172,6 +172,7 @@ class UI {
 			auth: this.auth,
 			localizer: this.localizer,
 			uuidGenerator: this.uuidGenerator,
+			logger: this.logger,
 			business: this.app ? this.app.business : null,
 		};
 	}
