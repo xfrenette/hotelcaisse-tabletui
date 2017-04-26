@@ -99,6 +99,7 @@ class UI {
 	 * - strings (object for Localizer)
 	 * - currency (string)
 	 * - app (HotelCaisse-app)
+	 * - showConsole (boolean) to show the floating console
 	 * - moneyDenominations : array of number of the different money denominations
 	 * 	(ex: [0.05, 0.1, 5, 10])
 	 *

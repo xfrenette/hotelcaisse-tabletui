@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { inject } from 'mobx-react/native';
+import Console from './layout/Console';
 import RouteWithSubRoutes from './RouteWithSubRoutes';
 
 const propTypes = {
 	routes: React.PropTypes.array.isRequired,
 };
 
+@inject('ui')
 class Root extends Component {
 	render() {
+		let consoleComponent = null;
+
+		if (this.props.ui.settings.showConsole) {
+			consoleComponent = <Console />;
+		}
+
 		return (
 			<View style={{ flex: 1 }}>
-				{this.props.routes.map(
-					(route, i) => <RouteWithSubRoutes key={i} route={route} />
-				)}
+				<View style={{ flex: 1 }}>
+					{this.props.routes.map(
+						(route, i) => <RouteWithSubRoutes key={i} route={route} />
+					)}
+				</View>
+				{ consoleComponent }
 			</View>
 		);
 	}

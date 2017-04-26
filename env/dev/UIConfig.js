@@ -48,6 +48,7 @@ module.exports = {
 	auth: testAuth,
 	locale: 'fr-CA',
 	currency: 'CAD',
+	showConsole: true,
 	moneyDenominations: [0.05, 0.1, 0.25, 1, 2, 5, 10, 20, 50, 100],
 	strings: {
 		'fr-CA': strings,

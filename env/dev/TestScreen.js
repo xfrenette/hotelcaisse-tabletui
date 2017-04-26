@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { View, Image, ScrollView } from 'react-native';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer, inject } from 'mobx-react/native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { MainContent } from '../../app/components/layout';
-import { TextInput, Text } from '../../app/components/elements';
+import { Button, Text } from '../../app/components/elements';
 import { Row, Cell } from '../../app/components/elements/table';
 
 const localizer = new Localizer('fr-CA', 'CAD');
 
+@inject('logger')
 @observer
 class TestScreen extends Component {
 	renderVerticalRhythm() {
@@ -27,19 +28,15 @@ class TestScreen extends Component {
 			verticalRhythmImg = this.renderVerticalRhythm();
 		}
 
+		const logger = this.props.logger.getNamespace('test');
+
 		return (
 			<View style={{ flex: 1, backgroundColor: '#fcfcfc' }}>
 				{verticalRhythmImg}
 				<ScrollView>
 					<MainContent>
 						<View>
-							<TextInput
-								value="Bonjour"
-								error="Test error message"
-							/>
-							<TextInput
-								value="Bonjour"
-							/>
+							<Button title="Test" onPress={() => { logger.info('Bonjour!'); }} />
 						</View>
 					</MainContent>
 				</ScrollView>
