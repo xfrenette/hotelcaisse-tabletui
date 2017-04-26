@@ -3,6 +3,7 @@ import BusinessAutoload from 'hotelcaisse-app/dist/plugins/autoload/Business';
 import { serialize } from 'serializr';
 import createRoutes from './routes';
 import storedBusiness from './storedBusiness';
+import UILogger from '../../app/lib/UILogger';
 import TestAuth from '../../tests/mock/TestAuth';
 import TestReader from '../../tests/mock/TestReader';
 import TestUUIDGenerator from '../../tests/mock/TestUUIDGenerator';
@@ -28,6 +29,8 @@ const businessStorage = new TestReader(serializedData);
 const testAuth = new TestAuth();
 testAuth.authenticated = true;
 
+const logger = new UILogger();
+
 const appConfig = {
 	plugins: [
 		new BusinessAutoload([businessStorage]),
@@ -39,6 +42,7 @@ const app = new Application(appConfig);
 // module.exports instead of export because it is an optional require in index.*
 module.exports = {
 	app,
+	logger,
 	routes: createRoutes(),
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
