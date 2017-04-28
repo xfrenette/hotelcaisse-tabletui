@@ -204,6 +204,16 @@ class UI {
 	}
 
 	/**
+	 * Shows an application wide error message to the user.
+	 *
+	 * @param {String} message
+	 */
+	showError(message) {
+		// TODO: for now, show a toast
+		this.showToast(message);
+	}
+
+	/**
 	 * Shows a Toast message only on Android.
 	 *
 	 * @param {String} message
