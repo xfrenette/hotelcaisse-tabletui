@@ -13,31 +13,10 @@ class OpenRegister extends Component {
 	 * @type {Register}
 	 */
 	newRegister = null;
-	/**
-	 * Flag indicating if we are currently opening a Register through this component. If true,
-	 * prevents the cancellation by the watcher ("the register was opened outside the component").
-	 *
-	 * @type {Boolean}
-	 */
-	opening = false;
-	/**
-	 * Autorun() disposer
-	 *
-	 * @type {Function}
-	 */
-	disposer = null;
 
 	componentWillMount() {
 		this.newRegister = new Register();
 		this.opening = false;
-		this.listenToRegisterState();
-	}
-
-	componentWillUnmount() {
-		if (this.disposer) {
-			this.disposer();
-			this.disposer = null;
-		}
 	}
 
 	/**
@@ -57,9 +36,6 @@ class OpenRegister extends Component {
 			);
 			return;
 		}
-
-		// To prevent the register state listener
-		this.opening = true;
 
 		this.newRegister.open(employee, amount);
 		this.props.business.deviceRegister = this.newRegister;
@@ -114,21 +90,6 @@ class OpenRegister extends Component {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Listener that listens to changes in business.deviceRegister state. If it changes from outside
-	 * this component, cancels and show a message.
-	 */
-	listenToRegisterState() {
-		this.disposer = autorun(() => {
-			const register = this.props.business.deviceRegister;
-			const state = register ? register.state : REGISTER_STATES.NEW;
-
-			if (!this.opening && state !== REGISTER_STATES.NEW) {
-				this.onCancel(this.t('openRegister.messages.externallyOpened'));
-			}
-		});
 	}
 
 	render() {
