@@ -27,43 +27,6 @@ import styleVars from '../../styles/variables';
 import tableStyles from '../../styles/tables';
 import typographyStyles from '../../styles/typography';
 
-const styles = {
-	InOutColumns: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-	},
-
-	InOutColumn: {
-		marginHorizontal: styleVars.horizontalRhythm,
-		flex: 1,
-	},
-
-	InOutColumnFirst: {
-		marginLeft: 0,
-	},
-
-	InOutColumnLast: {
-		marginRight: 0,
-	},
-
-	Actions: {
-		flexDirection: 'row',
-	},
-
-	PriceCol: {
-		alignItems: 'flex-end',
-		flex: 0,
-	},
-
-	CashMovementsTable: {
-		marginBottom: styleVars.baseBlockMargin,
-	},
-
-	EmptyMessage: {
-		marginVertical: styleVars.baseBlockMargin,
-	},
-};
-
 const propTypes = {
 	onFinish: React.PropTypes.func,
 	onAddCashMovement: React.PropTypes.func,
@@ -356,7 +319,7 @@ class ManageRegister extends Component {
 		return (
 			<Row key={cashMovement.uuid} last={isLast}>
 				<Cell first><Text>{ cashMovement.note }</Text></Cell>
-				<Cell style={styles.PriceCol}><Text>{ formattedAmount }</Text></Cell>
+				<Cell style={styles.priceCol}><Text>{ formattedAmount }</Text></Cell>
 				<Cell last style={tableStyles.CellDelete}>
 					<TrashButton onPress={() => { this.onPressDeleteCashMovement(cashMovement); }} />
 				</Cell>
@@ -373,13 +336,13 @@ class ManageRegister extends Component {
 
 		if (!movementsIn.length) {
 			movementsInRows = (
-				<View style={styles.EmptyMessage}>
+				<View style={styles.emptyMessage}>
 					<Text style={typographyStyles.empty}>{ this.t('manageRegister.moneyIn.empty') }</Text>
 				</View>
 			);
 		} else {
 			movementsInRows = (
-				<View style={styles.CashMovementsTable}>
+				<View style={styles.cashMovementsTable}>
 					{ this.renderCashMovementRows(movementsIn) }
 				</View>
 			);
@@ -387,13 +350,13 @@ class ManageRegister extends Component {
 
 		if (!movementsOut.length) {
 			movementsOutRows = (
-				<View style={styles.EmptyMessage}>
+				<View style={styles.emptyMessage}>
 					<Text style={typographyStyles.empty}>{ this.t('manageRegister.moneyOut.empty') }</Text>
 				</View>
 			);
 		} else {
 			movementsOutRows = (
-				<View style={styles.CashMovementsTable}>
+				<View style={styles.cashMovementsTable}>
 					{ this.renderCashMovementRows(movementsOut) }
 				</View>
 			);
@@ -406,11 +369,11 @@ class ManageRegister extends Component {
 				/>
 				<ScrollView>
 					<MainContent>
-						<View style={styles.InOutColumns}>
-							<View style={[styles.InOutColumn, styles.InOutColumnFirst]}>
+						<View style={styles.inOutColumns}>
+							<View style={[styles.inOutColumn, styles.inOutColumnFirst]}>
 								<Title>{ this.t('manageRegister.moneyOut.title') }</Title>
 								{ movementsOutRows }
-								<View style={styles.Actions}>
+								<View style={styles.actions}>
 									<Button
 										title={this.t('manageRegister.actions.addOut')}
 										onPress={() => { this.onAddOut(); }}
@@ -418,10 +381,10 @@ class ManageRegister extends Component {
 								</View>
 							</View>
 
-							<View style={[styles.InOutColumn, styles.InOutColumnLast]}>
+							<View style={[styles.inOutColumn, styles.inOutColumnLast]}>
 								<Title>{ this.t('manageRegister.moneyIn.title') }</Title>
 								{ movementsInRows }
-								<View style={styles.Actions}>
+								<View style={styles.actions}>
 									<Button
 										title={this.t('manageRegister.actions.addIn')}
 										onPress={() => { this.onAddIn(); }}
@@ -447,5 +410,42 @@ class ManageRegister extends Component {
 
 ManageRegister.propTypes = propTypes;
 ManageRegister.defaultProps = defaultProps;
+
+const styles = {
+	inOutColumns: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+
+	inOutColumn: {
+		marginHorizontal: styleVars.horizontalRhythm,
+		flex: 1,
+	},
+
+	inOutColumnFirst: {
+		marginLeft: 0,
+	},
+
+	inOutColumnLast: {
+		marginRight: 0,
+	},
+
+	actions: {
+		flexDirection: 'row',
+	},
+
+	priceCol: {
+		alignItems: 'flex-end',
+		flex: 0,
+	},
+
+	cashMovementsTable: {
+		marginBottom: styleVars.baseBlockMargin,
+	},
+
+	emptyMessage: {
+		marginVertical: styleVars.baseBlockMargin,
+	},
+};
 
 export default ManageRegister;

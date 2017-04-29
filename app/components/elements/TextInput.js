@@ -6,58 +6,6 @@ import {
 import Text from './Text';
 import styleVars from '../../styles/variables';
 
-const styles = {
-	TextInputGroup: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	TextInputContainer: {
-		borderWidth: 1,
-		borderColor: styleVars.input.borderColor,
-		borderRadius: styleVars.input.borderRadius,
-		backgroundColor: styleVars.theme.shadow,
-		flex: 1,
-	},
-	TextInputContainerError: {
-		borderColor: styleVars.input.errorColor,
-	},
-	TextInput: {
-		height: styleVars.input.height - 3,
-		backgroundColor: styleVars.input.backgroundColor,
-		marginTop: 1,
-		borderRadius: styleVars.input.borderRadius,
-		paddingHorizontal: styleVars.input.sidePadding,
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	TextInputText: {
-		fontSize: styleVars.baseFontSize,
-		color: styleVars.mainTextColor,
-		lineHeight: styleVars.verticalRhythm - 2,
-		borderWidth: 0,
-		includeFontPadding: false,
-		textAlignVertical: 'center',
-		flex: 1,
-		padding: 0,
-	},
-	TextInputLabel: {
-		paddingRight: 10,
-	},
-	TextInputSideText: {
-
-	},
-	TextInputPreText: {
-		paddingRight: styleVars.input.sidePadding,
-	},
-	TextInputPostText: {
-		paddingLeft: styleVars.input.sidePadding,
-	},
-	ErrorText: {
-		color: styleVars.theme.dangerColor,
-		fontStyle: 'italic',
-	},
-};
-
 const propTypes = {
 	style: NativeTextInput.propTypes.style,
 	labelStyle: Text.propTypes.style,
@@ -79,7 +27,7 @@ const defaultProps = {
 class TextInput extends Component {
 	renderLabel() {
 		if (this.props.label) {
-			const style = [styles.TextInputLabel, this.props.labelStyle];
+			const style = [styles.label, this.props.labelStyle];
 			return <Text style={style}>{ this.props.label }</Text>;
 		}
 
@@ -91,23 +39,23 @@ class TextInput extends Component {
 			return null;
 		}
 
-		return <Text style={styles.ErrorText}>{ this.props.error }</Text>;
+		return <Text style={styles.errorText}>{ this.props.error }</Text>;
 	}
 
 	render() {
-		const textStyle = [styles.TextInputText, this.props.style];
+		const textStyle = [styles.inputText, this.props.style];
 		let preText;
 		let postText;
 		const label = this.renderLabel();
-		const containerStyles = [styles.TextInputContainer];
+		const containerStyles = [styles.container];
 
 		if (this.props.error) {
-			containerStyles.push(styles.TextInputContainerError);
+			containerStyles.push(styles.containerError);
 		}
 
 		if (this.props.preText) {
 			preText = (
-				<Text style={[styles.TextInputSideText, styles.TextInputPreText]}>
+				<Text style={[styles.sideText, styles.preText]}>
 					{ this.props.preText }
 				</Text>
 			);
@@ -115,7 +63,7 @@ class TextInput extends Component {
 
 		if (this.props.postText) {
 			postText = (
-				<Text style={[styles.TextInputSideText, styles.TextInputPostText]}>
+				<Text style={[styles.sideText, styles.postText]}>
 					{ this.props.postText }
 				</Text>
 			);
@@ -123,10 +71,10 @@ class TextInput extends Component {
 
 		return (
 			<View>
-				<View style={styles.TextInputGroup}>
+				<View style={styles.group}>
 					{ label }
 					<View style={containerStyles}>
-						<View style={styles.TextInput}>
+						<View style={styles.input}>
 							{ preText }
 							<NativeTextInput
 								{...this.props}
@@ -145,5 +93,56 @@ class TextInput extends Component {
 
 TextInput.propTypes = propTypes;
 TextInput.defaultProps = defaultProps;
+
+const styles = {
+	group: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	container: {
+		borderWidth: 1,
+		borderColor: styleVars.input.borderColor,
+		borderRadius: styleVars.input.borderRadius,
+		backgroundColor: styleVars.theme.shadow,
+		flex: 1,
+	},
+	containerError: {
+		borderColor: styleVars.input.errorColor,
+	},
+	input: {
+		height: styleVars.input.height - 3,
+		backgroundColor: styleVars.input.backgroundColor,
+		marginTop: 1,
+		borderRadius: styleVars.input.borderRadius,
+		paddingHorizontal: styleVars.input.sidePadding,
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	inputText: {
+		fontSize: styleVars.baseFontSize,
+		color: styleVars.mainTextColor,
+		lineHeight: styleVars.verticalRhythm - 2,
+		borderWidth: 0,
+		includeFontPadding: false,
+		textAlignVertical: 'center',
+		flex: 1,
+		padding: 0,
+	},
+	label: {
+		paddingRight: 10,
+	},
+	sideText: {
+	},
+	preText: {
+		paddingRight: styleVars.input.sidePadding,
+	},
+	postText: {
+		paddingLeft: styleVars.input.sidePadding,
+	},
+	errorText: {
+		color: styleVars.theme.dangerColor,
+		fontStyle: 'italic',
+	},
+};
 
 export default TextInput;

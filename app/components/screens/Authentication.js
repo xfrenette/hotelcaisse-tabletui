@@ -1,30 +1,20 @@
 import React, { Component } from 'react';
-import {
-	View,
-	Text,
- } from 'react-native';
+import { View, Text } from 'react-native';
 import { inject } from 'mobx-react/native';
 import { Button } from '../elements';
 
 const propTypes = {
 	status: React.PropTypes.string,
+	localizer: React.PropTypes.object,
 	onAuthenticate: React.PropTypes.func,
 	onFinish: React.PropTypes.func,
 };
 
 const defaultProps = {
 	status: null,
+	localizer: null,
 	onAuthenticate: null,
 	onFinish: null,
-};
-
-const styles = {
-	Authentication: {
-		backgroundColor: '#ddeeaa',
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	}
 };
 
 @inject('localizer')
@@ -58,17 +48,17 @@ class Authentication extends Component {
 	}
 
 	render() {
+		const buttons = [];
 		let message = this.t('auth.please');
-		let buttons = [];
 
 		if (this.props.status !== 'success' && this.props.status !== 'authenticating') {
-			buttons.push(<Button key="inv" onPress={() => { this.doFail() }} title="Connexion (échec)" />);
-			buttons.push(<Button key="val" onPress={() => { this.doSucceed() }} title="Connexion (réussie)" />);
+			buttons.push(<Button key="inv" onPress={() => { this.doFail(); }} title="Connexion (échec)" />);
+			buttons.push(<Button key="val" onPress={() => { this.doSucceed(); }} title="Connexion (réussie)" />);
 		} else if (this.props.status === 'success') {
-			buttons.push(<Button key="fin" onPress={() => { this.finish() }} title="Entrer" />);
+			buttons.push(<Button key="fin" onPress={() => { this.finish(); }} title="Entrer" />);
 		}
 
-		switch(this.props.status) {
+		switch (this.props.status) {
 			case 'fail':
 				message = 'Mauvais code';
 				break;
@@ -79,11 +69,12 @@ class Authentication extends Component {
 				message = 'Authentification avec succès';
 				break;
 			case 'authenticating':
+			default:
 				message = 'Authentification en cours...';
 				break;
 		}
 		return (
-			<View style={styles.Authentication}>
+			<View style={styles.authentication}>
 				<Text>{ message }</Text>
 				{ buttons }
 			</View>
@@ -93,5 +84,14 @@ class Authentication extends Component {
 
 Authentication.propTypes = propTypes;
 Authentication.defaultProps = defaultProps;
+
+const styles = {
+	authentication: {
+		backgroundColor: '#ddeeaa',
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+};
 
 export default Authentication;

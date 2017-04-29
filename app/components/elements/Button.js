@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
 	View,
@@ -26,62 +26,71 @@ const defaultProps = {
 	onPress: null,
 };
 
-class Button extends Component {
-	render() {
-		const buttonStyles = [buttonLayouts.default.button];
-		const textStyles = [buttonLayouts.default.text];
-		let rippleColor = [buttonLayouts.default.rippleColor];
-		const touchableProps = {};
-		let Touchable;
-		let preIcon;
-		let postIcon;
+const Button = (props) => {
+	const buttonStyles = [buttonLayouts.default.button];
+	const textStyles = [buttonLayouts.default.text];
+	let rippleColor = [buttonLayouts.default.rippleColor];
+	const touchableProps = {};
+	let Touchable;
+	let preIcon;
+	let postIcon;
 
-		if (this.props.touchEffect === 'feedback') {
-			Touchable = TouchableNativeFeedback;
-			touchableProps.background = TouchableNativeFeedback.Ripple(rippleColor);
-		} else {
-			Touchable = TouchableOpacity;
-		}
+	if (props.touchEffect === 'feedback') {
+		Touchable = TouchableNativeFeedback;
+		touchableProps.background = TouchableNativeFeedback.Ripple(rippleColor);
+	} else {
+		Touchable = TouchableOpacity;
+	}
 
-		if (this.props.layout) {
-			const layouts = Array.isArray(this.props.layout) ? this.props.layout : [this.props.layout];
+	if (props.layout) {
+		const layouts = Array.isArray(props.layout) ? props.layout : [props.layout];
 
-			layouts.forEach((layout) => {
-				if (layout.button) {
-					buttonStyles.push(layout.button);
-				}
+		layouts.forEach((layout) => {
+			if (layout.button) {
+				buttonStyles.push(layout.button);
+			}
 
-				if (layout.text) {
-					textStyles.push(layout.text);
-				}
+			if (layout.text) {
+				textStyles.push(layout.text);
+			}
 
-				if (layout.rippleColor) {
-					rippleColor = layout.rippleColor;
-				}
-			});
-		}
+			if (layout.rippleColor) {
+				rippleColor = layout.rippleColor;
+			}
+		});
+	}
 
-		if (this.props.type === 'back') {
-			preIcon = (
-				<Icon name="angle-left" style={[textStyles, { lineHeight: 18, fontSize: 18, paddingRight: 7 }]} />
-			);
-		}
-
-		return (
-			<Touchable
-				onPress={this.props.onPress}
-			>
-				<View style={[buttonStyles, { flexDirection: 'row', alignItems: 'center' }]}>
-					{ preIcon }
-					<Text style={textStyles}>{ this.props.title }</Text>
-					{ postIcon }
-				</View>
-			</Touchable>
+	if (props.type === 'back') {
+		preIcon = (
+			<Icon name="angle-left" style={[textStyles, styles.icon]} />
 		);
 	}
-}
+
+	return (
+		<Touchable onPress={props.onPress}>
+			<View style={[buttonStyles, styles.button]}>
+				{ preIcon }
+				<Text style={textStyles}>{ props.title }</Text>
+				{ postIcon }
+			</View>
+		</Touchable>
+	);
+};
 
 Button.propTypes = propTypes;
 Button.defaultProps = defaultProps;
+
+const styles = {
+	icon: {
+		lineHeight: 18,
+		fontSize: 18,
+		paddingRight: 7,
+	},
+
+	button: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+};
 
 export default Button;

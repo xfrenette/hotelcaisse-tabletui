@@ -1,5 +1,5 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {
 	View,
 	Text,
@@ -8,78 +8,40 @@ import {
 } from 'react-native';
 import styleVars from '../../styles/variables';
 
-const styles = {
-	TextInputContainer: {
-		marginBottom: styleVars.verticalRhythm,
-		borderBottomWidth: 1,
-		borderBottomColor: styleVars.theme.lineColor,
-		height: 3 * styleVars.verticalRhythm,
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		flexDirection: 'row',
-	},
+const propTypes = {
+	submitLabel: React.PropTypes.string,
+	placeholder: React.PropTypes.string,
+	value: React.PropTypes.string,
+	onChange: React.PropTypes.func,
+	onSubmit: React.PropTypes.func,
+};
 
-	TextInputChars: {
-		flexDirection: 'row',
-	},
-
-	TextInputChar: {
-		fontSize: styleVars.fontSize.big,
-		marginRight: 10,
-	},
-
-	TextInputPlaceholder: {
-		color: styleVars.input.placeholderColor,
-		fontStyle: 'italic',
-		fontSize: styleVars.fontSize.big,
-	},
-
-	TextInputCharLast: {
-		marginRight: 0,
-	},
-
-	Button: {
-		flex: 1,
-		borderRightWidth: 1,
-		borderRightColor: styleVars.theme.lineColor,
-		height: (3 * styleVars.verticalRhythm) - 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-
-	ButtonText: {
-		fontSize: styleVars.fontSize.big,
-	},
-
-	ButtonLast: {
-		borderRightWidth: 0,
-	},
-
-	Row: {
-		flexDirection: 'row',
-		borderBottomWidth: 1,
-		borderBottomColor: styleVars.theme.lineColor,
-	},
-
-	RowLast: {
-		borderBottomWidth: 0,
-	},
-
-	DeleteButton: {
-		fontSize: 20,
-	},
+const defaultProps = {
+	submitLabel: 'OK',
+	placeholder: 'Placeholder',
+	value: '',
+	onChange: null,
+	onSubmit: null,
 };
 
 class Keypad extends Component {
+	/**
+	 * When a key is pressed
+	 *
+	 * @param {String} buttonValue
+	 */
 	onPress(buttonValue) {
 		if (buttonValue === this.props.submitLabel) {
-			this.submitted();
+			this.submit();
 		} else {
 			const newValue = [this.props.value, buttonValue].join('');
 			this.valueChanged(newValue);
 		}
 	}
 
+	/**
+	 * When the delete button is pressed
+	 */
 	onPressDelete() {
 		const value = this.props.value;
 
@@ -91,16 +53,27 @@ class Keypad extends Component {
 		this.valueChanged(newValue);
 	}
 
+	/**
+	 * Clears the input
+	 */
 	clear() {
 		this.valueChanged('');
 	}
 
-	submitted() {
+	/**
+	 * Submits the value
+	 */
+	submit() {
 		if (this.props.onSubmit) {
 			this.props.onSubmit();
 		}
 	}
 
+	/**
+	 * Called when the text input value changes
+	 *
+	 * @param {String} newValue
+	 */
 	valueChanged(newValue) {
 		if (this.props.onChange) {
 			this.props.onChange(newValue);
@@ -108,7 +81,7 @@ class Keypad extends Component {
 	}
 
 	renderButton(value, last = false, flex = 1) {
-		const style = [styles.Button, { flex }, last && styles.ButtonLast];
+		const style = [styles.button, { flex }, last && styles.buttonLast];
 
 		return (
 			<TouchableNativeFeedback
@@ -116,7 +89,7 @@ class Keypad extends Component {
 				onPress={() => { this.onPress(value); }}
 			>
 				<View style={style}>
-					<Text style={styles.ButtonText}>{ value }</Text>
+					<Text style={styles.buttonText}>{ value }</Text>
 				</View>
 			</TouchableNativeFeedback>
 		);
@@ -130,7 +103,7 @@ class Keypad extends Component {
 				onPress={() => { this.onPressDelete(); }}
 				onLongPress={() => { this.clear(); }}
 			>
-				<Text style={styles.DeleteButton}>⌫</Text>
+				<Text style={styles.deleteButton}>⌫</Text>
 			</TouchableOpacity>
 		);
 	}
@@ -138,10 +111,10 @@ class Keypad extends Component {
 	renderTextInput() {
 		const value = this.props.value;
 		const characters = value.split('').map((char, index) => {
-			const style = [styles.TextInputChar];
+			const style = [styles.textInputChar];
 
 			if (index === value.length - 1) {
-				style.push(styles.TextInputCharLast);
+				style.push(styles.textInputCharLast);
 			}
 
 			return <Text style={style} key={`${char}_${index}`}>{ char }</Text>;
@@ -150,14 +123,14 @@ class Keypad extends Component {
 
 		if (!value.length) {
 			placeholder = (
-				<Text style={styles.TextInputPlaceholder}>{ this.props.placeholder}</Text>
+				<Text style={styles.textInputPlaceholder}>{ this.props.placeholder}</Text>
 			);
 		}
 
 		return (
-			<View style={styles.TextInputContainer}>
+			<View style={styles.textInputContainer}>
 				<View />
-				<View style={styles.TextInputChars}>
+				<View style={styles.textInputChars}>
 					{ placeholder }
 					{ characters }
 				</View>
@@ -170,22 +143,22 @@ class Keypad extends Component {
 		return (
 			<View>
 				{ this.renderTextInput() }
-				<View style={styles.Row}>
+				<View style={styles.row}>
 					{ this.renderButton(1) }
 					{ this.renderButton(2) }
 					{ this.renderButton(3, true) }
 				</View>
-				<View style={styles.Row}>
+				<View style={styles.row}>
 					{ this.renderButton(4) }
 					{ this.renderButton(5) }
 					{ this.renderButton(6, true) }
 				</View>
-				<View style={styles.Row}>
+				<View style={styles.row}>
 					{ this.renderButton(7) }
 					{ this.renderButton(8) }
 					{ this.renderButton(9, true) }
 				</View>
-				<View style={[styles.Row, styles.RowLast]}>
+				<View style={[styles.row, styles.rowLast]}>
 					{ this.renderButton(0) }
 					{ this.renderButton(this.props.submitLabel, true, 2) }
 				</View>
@@ -194,20 +167,69 @@ class Keypad extends Component {
 	}
 }
 
-Keypad.propTypes = {
-	submitLabel: React.PropTypes.string,
-	placeholder: React.PropTypes.string,
-	value: React.PropTypes.string,
-	onChange: React.PropTypes.func,
-	onSubmit: React.PropTypes.func,
-};
+Keypad.propTypes = propTypes;
+Keypad.defaultProps = defaultProps;
 
-Keypad.defaultProps = {
-	submitLabel: 'OK',
-	placeholder: 'Placeholder',
-	value: '',
-	onChange: null,
-	onSubmit: null,
+const styles = {
+	textInputContainer: {
+		marginBottom: styleVars.verticalRhythm,
+		borderBottomWidth: 1,
+		borderBottomColor: styleVars.theme.lineColor,
+		height: 3 * styleVars.verticalRhythm,
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		flexDirection: 'row',
+	},
+
+	textInputChars: {
+		flexDirection: 'row',
+	},
+
+	textInputChar: {
+		fontSize: styleVars.fontSize.big,
+		marginRight: 10,
+	},
+
+	textInputPlaceholder: {
+		color: styleVars.input.placeholderColor,
+		fontStyle: 'italic',
+		fontSize: styleVars.fontSize.big,
+	},
+
+	textInputCharLast: {
+		marginRight: 0,
+	},
+
+	button: {
+		flex: 1,
+		borderRightWidth: 1,
+		borderRightColor: styleVars.theme.lineColor,
+		height: (3 * styleVars.verticalRhythm) - 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+
+	buttonText: {
+		fontSize: styleVars.fontSize.big,
+	},
+
+	buttonLast: {
+		borderRightWidth: 0,
+	},
+
+	row: {
+		flexDirection: 'row',
+		borderBottomWidth: 1,
+		borderBottomColor: styleVars.theme.lineColor,
+	},
+
+	rowLast: {
+		borderBottomWidth: 0,
+	},
+
+	deleteButton: {
+		fontSize: 20,
+	},
 };
 
 export default Keypad;

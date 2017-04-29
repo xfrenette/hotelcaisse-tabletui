@@ -1,12 +1,26 @@
-import React, { Component } from 'react';
-import {
-	View,
-	Text,
-} from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import styleVars from '../../styles/variables';
 
+const propTypes = {
+	children: React.PropTypes.node,
+};
+
+const defaultProps = {
+	children: null,
+};
+
+const BottomBar = props => (
+	<View style={styles.bottomBar}>
+		{ props.children }
+	</View>
+);
+
+BottomBar.propTypes = propTypes;
+BottomBar.defaultProps = defaultProps;
+
 const styles = {
-	BottomBar: {
+	bottomBar: {
 		backgroundColor: styleVars.colors.lightGrey1,
 		height: styleVars.verticalRhythm * 3,
 		borderTopWidth: 1,
@@ -17,15 +31,5 @@ const styles = {
 		paddingHorizontal: styleVars.sidePadding,
 	},
 };
-
-class BottomBar extends Component {
-	render() {
-		return (
-			<View style={styles.BottomBar}>
-				{ this.props.children }
-			</View>
-		);
-	}
-}
 
 export default BottomBar;

@@ -101,19 +101,19 @@ class Console extends Component {
 		const style = [];
 		let data = null;
 
-		if (styles.entries[entry.type]) {
-			style.push(styles.entries[entry.type]);
+		if (typeStyles[entry.type]) {
+			style.push(typeStyles[entry.type]);
 		}
 
 		if (entry.data) {
-			data = <View style={styles.ConsoleEntryData}><Text>{ entry.data }</Text></View>;
+			data = <View style={styles.entryData}><Text>{ entry.data }</Text></View>;
 		}
 
 		return (
 			<View key={index}>
-				<View style={styles.ConsoleEntry}>
-					<Text style={styles.ConsoleEntryDate}>[{ entry.date.getTime() / 1000 }]</Text>
-					<Text style={styles.ConsoleEntryNamespace}>{ entry.namespace }</Text>
+				<View style={styles.entry}>
+					<Text style={styles.entryDate}>[{ entry.date.getTime() / 1000 }]</Text>
+					<Text style={styles.entryNamespace}>{ entry.namespace }</Text>
 					<Text style={style}>{ entry.message }</Text>
 				</View>
 				{ data }
@@ -123,11 +123,11 @@ class Console extends Component {
 
 	renderOpenedConsole() {
 		return (
-			<View style={styles.ConsoleOpened}>
-				<ScrollView style={styles.ConsoleEntries}>
+			<View style={styles.opened}>
+				<ScrollView style={styles.entries}>
 					{ this.renderEntries() }
 				</ScrollView>
-				<View style={styles.ConsoleActions}>
+				<View style={styles.actions}>
 					<Button title="Clear" onPress={() => { this.onClearConsole(); }} />
 					<Button title="Close" onPress={() => { this.onCloseConsole(); }} />
 				</View>
@@ -138,8 +138,8 @@ class Console extends Component {
 	renderClosedConsole() {
 		return (
 			<TouchableWithoutFeedback onPress={() => { this.onOpenConsole(); }}>
-				<View style={styles.ConsoleClosed}>
-					<Text style={styles.ConsoleClosedText}>({ this.unreadCount })</Text>
+				<View style={styles.closed}>
+					<Text style={styles.closedText}>({ this.unreadCount })</Text>
 				</View>
 			</TouchableWithoutFeedback>
 		);
@@ -160,7 +160,7 @@ Console.defaultProps = defaultProps;
 const padding = 15;
 
 const styles = {
-	ConsoleClosed: {
+	closed: {
 		position: 'absolute',
 		backgroundColor: 'blue',
 		left: 0,
@@ -168,11 +168,11 @@ const styles = {
 		padding: 5,
 	},
 
-	ConsoleClosedText: {
+	closedText: {
 		color: '#fff',
 	},
 
-	ConsoleOpened: {
+	opened: {
 		position: 'absolute',
 		backgroundColor: '#fbfbfb',
 		top: 0,
@@ -181,46 +181,46 @@ const styles = {
 		bottom: 0,
 	},
 
-	ConsoleEntries: {
+	entries: {
 		flex: 1,
 		padding,
 	},
 
-	ConsoleEntry: {
+	entry: {
 		flexDirection: 'row',
 	},
 
-	ConsoleEntryNamespace: {
+	entryNamespace: {
 		paddingRight: 5,
 		fontWeight: 'bold',
 		color: '#999',
 	},
 
-	ConsoleEntryDate: {
+	entryDate: {
 		paddingRight: 10,
 	},
 
-	ConsoleEntryData: {
+	entryData: {
 		paddingLeft: 20,
 	},
 
-	ConsoleActions: {
+	actions: {
 		flex: 0,
 		padding,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 	},
+};
 
-	entries: {
-		info: {
-			color: 'blue',
-		},
-		error: {
-			color: 'red',
-		},
-		warn: {
-			color: 'orange',
-		},
+const typeStyles = {
+	info: {
+		color: 'blue',
+	},
+	error: {
+		color: 'red',
+	},
+	warn: {
+		color: 'orange',
 	},
 };
 

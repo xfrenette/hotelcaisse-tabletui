@@ -1,47 +1,9 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
-import {
-	View,
-} from 'react-native';
+import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { Text, NumberInput } from './index';
 import styleVars from '../../styles/variables';
-
-const styles = {
-	Field: {
-		flex: 1,
-		flexDirection: 'row',
-	},
-
-	FieldRow: {
-		marginBottom: styleVars.verticalRhythm,
-		flexDirection: 'row',
-	},
-
-	FieldLabel: {
-		minWidth: 80,
-		textAlign: 'right',
-		paddingRight: 10,
-	},
-
-	NumberInputContainer: {
-		flex: 1,
-	},
-
-	Total: {
-		marginTop: styleVars.verticalRhythm,
-	},
-
-	TotalAmount: {
-		fontSize: styleVars.fontSize.super,
-		textAlign: 'center',
-		lineHeight: styleVars.verticalRhythm * 2,
-		fontWeight: 'bold',
-	},
-
-	TotalLabel: {
-		textAlign: 'center',
-	},
-};
 
 const nbCols = 3;
 
@@ -66,15 +28,38 @@ const defaultProps = {
 };
 
 class DenominationsInput extends Component {
+	/**
+	 * Cache of the fields component
+	 *
+	 * @type {Object}
+	 */
 	fieldComponents = {};
+	/**
+	 * Cache of the fields value
+	 *
+	 * @type {Object}
+	 */
 	fieldCurrentValues = {};
 
+	/**
+	 * Called when a number input value changed
+	 *
+	 * @param {Object} field
+	 * @param {Number} newValue
+	 */
 	fieldValueChanged(field, newValue) {
 		if (this.props.onChangeValue) {
 			this.props.onChangeValue(field, newValue);
 		}
 	}
 
+	/**
+	 * Returns a boolean indicating if a field component should regenerate based on its old a new
+	 * value.
+	 *
+	 * @param {Object} field
+	 * @return {Boolean}
+	 */
 	shouldRegenerateFieldComponent(field) {
 		const fieldKey = field.label;
 
@@ -93,11 +78,23 @@ class DenominationsInput extends Component {
 		return true;
 	}
 
+	/**
+	 * Returns the cached field component
+	 *
+	 * @param {Object} field
+	 * @return {Component}
+	 */
 	getCachedFieldComponent(field) {
 		const fieldKey = field.label;
 		return this.fieldComponents[fieldKey];
 	}
 
+	/**
+	 * Caches the component for a field
+	 *
+	 * @param {Object} field
+	 * @param {Component} component
+	 */
 	cacheFieldComponent(field, component) {
 		const fieldKey = field.label;
 
@@ -107,9 +104,9 @@ class DenominationsInput extends Component {
 
 	renderField(field) {
 		return (
-			<View style={styles.Field} key={field.label}>
-				<Text style={styles.FieldLabel}>{ field.label }</Text>
-				<View style={styles.NumberInputContainer}>
+			<View style={styles.field} key={field.label}>
+				<Text style={styles.fieldLabel}>{ field.label }</Text>
+				<View style={styles.numberInputContainer}>
 					<NumberInput
 						value={field.value}
 						localizer={this.props.localizer}
@@ -126,13 +123,13 @@ class DenominationsInput extends Component {
 			let label = null;
 
 			if (this.props.totalLabel) {
-				label = <Text style={styles.TotalLabel}>{ this.props.totalLabel }</Text>;
+				label = <Text style={styles.totalLabel}>{ this.props.totalLabel }</Text>;
 			}
 
 			return (
-				<View style={styles.Total}>
+				<View style={styles.total}>
 					{ label }
-					<Text style={styles.TotalAmount}>{ this.props.total }</Text>
+					<Text style={styles.totalAmount}>{ this.props.total }</Text>
 				</View>
 			);
 		}
@@ -143,6 +140,7 @@ class DenominationsInput extends Component {
 	render() {
 		const fieldsInRows = [];
 		const total = this.renderTotal();
+
 		this.props.values.forEach((field, index) => {
 			let renderedField;
 
@@ -161,17 +159,18 @@ class DenominationsInput extends Component {
 
 			fieldsInRows[rowIndex].push(renderedField);
 		});
+
 		const fieldRows = fieldsInRows.map((rowFields, index) => {
 			const fillers = [];
 
 			for (let i = 0; i < nbCols - rowFields.length; i += 1) {
-				fillers.push(<View style={styles.Field} key={`filler${i}`} />);
+				fillers.push(<View style={styles.field} key={`filler${i}`} />);
 			}
 
 			return (
 				<View
 					key={`row${index}`}
-					style={styles.FieldRow}
+					style={styles.row}
 				>
 					{rowFields}
 					{fillers}
@@ -190,5 +189,42 @@ class DenominationsInput extends Component {
 
 DenominationsInput.propTypes = propTypes;
 DenominationsInput.defaultProps = defaultProps;
+
+const styles = {
+	field: {
+		flex: 1,
+		flexDirection: 'row',
+	},
+
+	row: {
+		marginBottom: styleVars.verticalRhythm,
+		flexDirection: 'row',
+	},
+
+	fieldLabel: {
+		minWidth: 80,
+		textAlign: 'right',
+		paddingRight: 10,
+	},
+
+	numberInputContainer: {
+		flex: 1,
+	},
+
+	total: {
+		marginTop: styleVars.verticalRhythm,
+	},
+
+	totalAmount: {
+		fontSize: styleVars.fontSize.super,
+		textAlign: 'center',
+		lineHeight: styleVars.verticalRhythm * 2,
+		fontWeight: 'bold',
+	},
+
+	totalLabel: {
+		textAlign: 'center',
+	},
+};
 
 export default DenominationsInput;

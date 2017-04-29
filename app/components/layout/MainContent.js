@@ -1,22 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import styleVars from '../../styles/variables';
 
+const propTypes = {
+	children: React.PropTypes.node,
+};
+
+const defaultProps = {
+	children: null,
+};
+
+const MainContent = props => (
+	<View style={styles.mainContent}>
+		{ props.children }
+	</View>
+);
+
+MainContent.propTypes = propTypes;
+MainContent.defaultProps = defaultProps;
+
 const styles = {
-	MainContent: {
+	mainContent: {
 		paddingHorizontal: styleVars.mainContentSidePadding,
 		paddingVertical: 2 * styleVars.horizontalRhythm,
 	},
 };
-
-class MainContent extends Component {
-	render() {
-		return (
-			<View style={styles.MainContent}>
-				{ this.props.children }
-			</View>
-		);
-	}
-}
 
 export default MainContent;

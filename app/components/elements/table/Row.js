@@ -1,25 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import styleVars from '../../../styles/variables';
-
-const styles = {
-	Row: {
-		borderBottomWidth: 1,
-		borderBottomColor: styleVars.theme.lineColor,
-		paddingTop: (styleVars.verticalRhythm / 2) - 1,
-		paddingBottom: styleVars.verticalRhythm / 2,
-		flexDirection: 'row',
-	},
-
-	RowFirst: {
-		borderTopWidth: 1,
-		borderTopColor: styleVars.theme.lineColor,
-		paddingTop: (styleVars.verticalRhythm / 2) - 2,
-	},
-
-	RowLast: {
-	},
-};
 
 const propTypes = {
 	children: React.PropTypes.node.isRequired,
@@ -32,27 +13,44 @@ const defaultProps = {
 	last: false,
 };
 
-class Row extends Component {
-	render() {
-		const rowStyles = [styles.Row];
+const Row = (props) => {
+	const rowStyles = [styles.row];
 
-		if (this.props.first) {
-			rowStyles.push(styles.RowFirst);
-		}
-
-		if (this.props.last) {
-			rowStyles.push(styles.RowLast);
-		}
-
-		return (
-			<View style={rowStyles}>
-				{ this.props.children }
-			</View>
-		);
+	if (props.first) {
+		rowStyles.push(styles.rowFirst);
 	}
-}
+
+	if (props.last) {
+		rowStyles.push(styles.rowLast);
+	}
+
+	return (
+		<View style={rowStyles}>
+			{ props.children }
+		</View>
+	);
+};
 
 Row.propTypes = propTypes;
 Row.defaultProps = defaultProps;
+
+const styles = {
+	row: {
+		borderBottomWidth: 1,
+		borderBottomColor: styleVars.theme.lineColor,
+		paddingTop: (styleVars.verticalRhythm / 2) - 1,
+		paddingBottom: styleVars.verticalRhythm / 2,
+		flexDirection: 'row',
+	},
+
+	rowFirst: {
+		borderTopWidth: 1,
+		borderTopColor: styleVars.theme.lineColor,
+		paddingTop: (styleVars.verticalRhythm / 2) - 2,
+	},
+
+	rowLast: {
+	},
+};
 
 export default Row;

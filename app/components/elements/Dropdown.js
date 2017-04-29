@@ -1,37 +1,38 @@
-import React, { Component } from 'react';
-import {
-	View,
-	Text,
-	Picker,
-} from 'react-native';
+import React from 'react';
+import { View, Picker } from 'react-native';
 import styleVars from '../../styles/variables';
-const Item = Picker.Item;
+
+const propTypes = {
+	children: React.PropTypes.node,
+};
+
+const defaultProps = {
+	children: null,
+};
+
+const Dropdown = props => (
+	<View style={styles.dropdown}>
+		<Picker mode="dropdown" style={styles.picker}>
+			{ props.children }
+		</Picker>
+	</View>
+);
+
+Dropdown.Option = Picker.Item;
+Dropdown.propTypes = propTypes;
+Dropdown.defaultProps = defaultProps;
 
 const styles = {
-	Dropdown: {
+	dropdown: {
 		borderWidth: 1,
 		borderColor: styleVars.input.borderColor,
 		borderRadius: styleVars.input.borderRadius,
 		height: styleVars.input.height,
 		backgroundColor: styleVars.input.backgroundColor,
 	},
-	Picker: {
+	picker: {
 		height: styleVars.input.height - 4,
 	},
 };
-
-class Dropdown extends Component {
-	render() {
-		return (
-			<View style={styles.Dropdown}>
-				<Picker mode="dropdown" style={styles.Picker}>
-					{ this.props.children }
-				</Picker>
-			</View>
-		);
-	}
-}
-
-Dropdown.Option = Picker.Item;
 
 export default Dropdown;

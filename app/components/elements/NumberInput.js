@@ -8,40 +8,6 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import TextInput from './TextInput';
 import styleVars from '../../styles/variables';
 
-const incrementorButtonWidth = 30;
-
-const styles = {
-	TextInput: {
-		textAlign: 'center',
-		zIndex: 1,
-	},
-	IncrementButton: {
-		position: 'absolute',
-		top: 1,
-		zIndex: 2,
-		height: styleVars.input.height - 2,
-		justifyContent: 'center',
-	},
-	IncrementButtonIcon: {
-		lineHeight: 10,
-		fontSize: 12,
-		width: incrementorButtonWidth,
-		textAlign: 'center',
-		alignSelf: 'center',
-		color: styleVars.theme.mainColor,
-	},
-	IncrementButtonMore: {
-		right: 1,
-		borderLeftWidth: 1,
-		borderLeftColor: styleVars.theme.lineColor,
-	},
-	IncrementButtonLess: {
-		left: 1,
-		borderRightWidth: 1,
-		borderRightColor: styleVars.theme.lineColor,
-	},
-};
-
 const propTypes = {
 	value: React.PropTypes.number,
 	style: TextInput.propTypes.style,
@@ -126,7 +92,7 @@ class NumberInput extends Component {
 	 */
 	getTextInputStyles() {
 		const textInputStyles = {
-			...styles.TextInput,
+			...styles.textInput,
 		};
 
 		// If we have incrementors, adjust the padding on the text input
@@ -400,15 +366,15 @@ class NumberInput extends Component {
 	 */
 	renderIncrementor(type) {
 		const iconName = type === 1 ? 'plus' : 'minus';
-		const buttonStyle = [styles.IncrementButton];
+		const buttonStyle = [styles.incrementButton];
 
 		if (type === 1) {
-			buttonStyle.push(styles.IncrementButtonMore);
+			buttonStyle.push(styles.incrementButtonMore);
 		} else {
-			buttonStyle.push(styles.IncrementButtonLess);
+			buttonStyle.push(styles.incrementButtonLess);
 		}
 
-		const icon = <Icon name={iconName} style={styles.IncrementButtonIcon} />;
+		const icon = <Icon name={iconName} style={styles.incrementButtonIcon} />;
 
 		return (
 			<TouchableHighlight
@@ -453,5 +419,39 @@ class NumberInput extends Component {
 
 NumberInput.propTypes = propTypes;
 NumberInput.defaultProps = defaultProps;
+
+const incrementorButtonWidth = 30;
+
+const styles = {
+	textInput: {
+		textAlign: 'center',
+		zIndex: 1,
+	},
+	incrementButton: {
+		position: 'absolute',
+		top: 1,
+		zIndex: 2,
+		height: styleVars.input.height - 2,
+		justifyContent: 'center',
+	},
+	incrementButtonIcon: {
+		lineHeight: 10,
+		fontSize: 12,
+		width: incrementorButtonWidth,
+		textAlign: 'center',
+		alignSelf: 'center',
+		color: styleVars.theme.mainColor,
+	},
+	incrementButtonMore: {
+		right: 1,
+		borderLeftWidth: 1,
+		borderLeftColor: styleVars.theme.lineColor,
+	},
+	incrementButtonLess: {
+		left: 1,
+		borderRightWidth: 1,
+		borderRightColor: styleVars.theme.lineColor,
+	},
+};
 
 export default NumberInput;

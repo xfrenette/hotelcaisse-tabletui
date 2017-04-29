@@ -1,21 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import styleVars from '../../../styles/variables';
-
-const styles = {
-	Cell: {
-		flex: 1,
-		paddingHorizontal: styleVars.horizontalRhythm / 2,
-	},
-
-	CellFirst: {
-		paddingLeft: 0,
-	},
-
-	CellLast: {
-		paddingRight: 0,
-	},
-};
 
 const propTypes = {
 	children: React.PropTypes.node.isRequired,
@@ -30,29 +15,42 @@ const defaultProps = {
 	style: null,
 };
 
-class Cell extends Component {
-	render() {
-		const cellStyles = [styles.Cell];
+const Cell = (props) => {
+	const cellStyles = [styles.cell];
 
-		if (this.props.first) {
-			cellStyles.push(styles.CellFirst);
-		}
-
-		if (this.props.last) {
-			cellStyles.push(styles.CellLast);
-		}
-
-		cellStyles.push(this.props.style);
-
-		return (
-			<View style={cellStyles}>
-				{ this.props.children }
-			</View>
-		);
+	if (props.first) {
+		cellStyles.push(styles.cellFirst);
 	}
-}
+
+	if (props.last) {
+		cellStyles.push(styles.cellLast);
+	}
+
+	cellStyles.push(props.style);
+
+	return (
+		<View style={cellStyles}>
+			{ props.children }
+		</View>
+	);
+};
 
 Cell.propTypes = propTypes;
 Cell.defaultProps = defaultProps;
+
+const styles = {
+	cell: {
+		flex: 1,
+		paddingHorizontal: styleVars.horizontalRhythm / 2,
+	},
+
+	cellFirst: {
+		paddingLeft: 0,
+	},
+
+	cellLast: {
+		paddingRight: 0,
+	},
+};
 
 export default Cell;

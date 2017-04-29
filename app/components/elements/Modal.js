@@ -5,63 +5,6 @@ import { observer } from 'mobx-react/native';
 import { Text } from './index';
 import styleVars from '../../styles/variables';
 
-const modalHorizontalPadding = styleVars.horizontalRhythm;
-
-const styles = {
-	Background: {
-		backgroundColor: styleVars.colors.transparentBlack1,
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		flexDirection: 'row',
-	},
-
-	Modal: {
-		backgroundColor: styleVars.colors.white1,
-		width: 500,
-	},
-
-	ModalTitle: {
-		paddingHorizontal: modalHorizontalPadding,
-		paddingVertical: (styleVars.verticalRhythm / 2) - 1,
-		borderBottomWidth: 2,
-		borderBottomColor: styleVars.theme.mainColor,
-	},
-
-	ModalActions: {
-		borderTopWidth: 1,
-		borderTopColor: styleVars.theme.lighter,
-		flexDirection: 'row',
-	},
-
-	ModalAction: {
-		flex: 1,
-		borderRightWidth: 1,
-		borderRightColor: styleVars.theme.lighter,
-		paddingVertical: (styleVars.verticalRhythm / 2) - 1,
-		flexDirection: 'row',
-		justifyContent: 'center',
-	},
-
-	ModalActionText: {
-		color: styleVars.theme.mainColor,
-	},
-
-	ModalActionLast: {
-		borderRightWidth: 0,
-	},
-
-	ModalTitleText: {
-		color: styleVars.theme.mainColor,
-		fontSize: styleVars.bigFontSize,
-	},
-
-	ModalContent: {
-		paddingHorizontal: modalHorizontalPadding,
-		paddingVertical: styleVars.verticalRhythm,
-	},
-};
-
 const propTypes = {
 	title: React.PropTypes.string,
 	onRequestClose: React.PropTypes.func,
@@ -135,16 +78,16 @@ class Modal extends Component {
 		const lastActionKey = actionsArray[actionsArray.length - 1][0];
 
 		return actionsArray.map(([key, label]) => {
-			const actionStyles = [styles.ModalAction];
+			const actionStyles = [styles.action];
 
 			if (key === lastActionKey) {
-				actionStyles.push(styles.ModalActionLast);
+				actionStyles.push(styles.actionLast);
 			}
 
 			return (
 				<TouchableNativeFeedback key={key} onPress={() => { this.onActionPress(key); }}>
 					<View style={actionStyles}>
-						<Text style={styles.ModalActionText}>{ label }</Text>
+						<Text style={styles.actionText}>{ label }</Text>
 					</View>
 				</TouchableNativeFeedback>
 			);
@@ -157,15 +100,15 @@ class Modal extends Component {
 
 		if (this.props.title) {
 			title = (
-				<View style={styles.ModalTitle}>
-					<Text style={styles.ModalTitleText}>{ this.props.title }</Text>
+				<View style={styles.title}>
+					<Text style={styles.titleText}>{ this.props.title }</Text>
 				</View>
 			);
 		}
 
 		if (this.props.actions) {
 			actions = (
-				<View style={styles.ModalActions}>
+				<View style={styles.actions}>
 					{ this.renderActions() }
 				</View>
 			);
@@ -179,9 +122,9 @@ class Modal extends Component {
 				transparent
 			>
 				<View style={styles.Background}>
-					<View style={styles.Modal} elevation={4}>
+					<View style={styles.modal} elevation={4}>
 						{ title }
-						<View style={styles.ModalContent}>
+						<View style={styles.modalContent}>
 							{ this.props.children }
 						</View>
 						{ actions }
@@ -194,5 +137,62 @@ class Modal extends Component {
 
 Modal.propTypes = propTypes;
 Modal.defaultProps = defaultProps;
+
+const modalHorizontalPadding = styleVars.horizontalRhythm;
+
+const styles = {
+	background: {
+		backgroundColor: styleVars.colors.transparentBlack1,
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'row',
+	},
+
+	modal: {
+		backgroundColor: styleVars.colors.white1,
+		width: 500,
+	},
+
+	title: {
+		paddingHorizontal: modalHorizontalPadding,
+		paddingVertical: (styleVars.verticalRhythm / 2) - 1,
+		borderBottomWidth: 2,
+		borderBottomColor: styleVars.theme.mainColor,
+	},
+
+	titleText: {
+		color: styleVars.theme.mainColor,
+		fontSize: styleVars.bigFontSize,
+	},
+
+	actions: {
+		borderTopWidth: 1,
+		borderTopColor: styleVars.theme.lighter,
+		flexDirection: 'row',
+	},
+
+	action: {
+		flex: 1,
+		borderRightWidth: 1,
+		borderRightColor: styleVars.theme.lighter,
+		paddingVertical: (styleVars.verticalRhythm / 2) - 1,
+		flexDirection: 'row',
+		justifyContent: 'center',
+	},
+
+	actionText: {
+		color: styleVars.theme.mainColor,
+	},
+
+	actionLast: {
+		borderRightWidth: 0,
+	},
+
+	content: {
+		paddingHorizontal: modalHorizontalPadding,
+		paddingVertical: styleVars.verticalRhythm,
+	},
+};
 
 export default Modal;

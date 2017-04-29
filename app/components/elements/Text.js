@@ -1,9 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Text as NativeText } from 'react-native';
 import styleVars from '../../styles/variables';
 
+const propTypes = {
+	style: NativeText.propTypes.style,
+	children: React.PropTypes.node.isRequired,
+};
+
+const defaultProps = {
+	style: null,
+};
+
+const Text = (props) => {
+	const style = [styles.text, props.style];
+	return <NativeText style={style}>{ props.children }</NativeText>;
+};
+
+Text.propTypes = propTypes;
+Text.defaultProps = defaultProps;
+
 const styles = {
-	Text: {
+	text: {
 		fontSize: styleVars.baseFontSize,
 		color: styleVars.mainTextColor,
 		lineHeight: styleVars.verticalRhythm,
@@ -11,23 +28,5 @@ const styles = {
 		textAlignVertical: 'center',
 	},
 };
-
-const propTypes = {
-	style: NativeText.propTypes.style,
-};
-
-const defaultProps = {
-	style: null,
-};
-
-class Text extends Component {
-	render() {
-		const style = [styles.Text, this.props.style];
-		return <NativeText style={style}>{ this.props.children }</NativeText>;
-	}
-}
-
-Text.propTypes = propTypes;
-Text.defaultProps = defaultProps;
 
 export default Text;

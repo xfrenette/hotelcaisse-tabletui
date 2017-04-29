@@ -1,26 +1,19 @@
-import React, { Component } from 'react';
-import {
-	View,
-	Text,
- } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
+
+const Loading = () => (
+	<View style={styles.loading}>
+		<Text>Chargement...</Text>
+	</View>
+);
 
 const styles = {
-	Loading: {
+	loading: {
 		backgroundColor: 'yellow',
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-	}
-}
-
-class Loading extends Component {
-	render() {
-		return (
-			<View style={styles.Loading}>
-				<Text>Chargement...</Text>
-			</View>
-		);
-	}
-}
+	},
+};
 
 export default Loading;

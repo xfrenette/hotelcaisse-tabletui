@@ -138,8 +138,8 @@ class CloseRegister extends Component {
 	}
 
 	/**
-	 * Returns the total money amount as represented by the DenominationsInput. Returns it as a Decimal
-	 * object.
+	 * Returns the total money amount as represented by the DenominationsInput. Returns it as a
+	 * Decimal object.
 	 *
 	 * @return {Decimal}
 	 */

@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Text from './Text';
 import styleVars from '../../styles/variables';
-
-const styles = {
-	Icon: {
-		color: styleVars.theme.dangerColor,
-		fontSize: styleVars.baseFontSize + 4,
-	},
-};
 
 const propTypes = {
 	onPress: React.PropTypes.func,
@@ -20,6 +12,9 @@ const defaultProps = {
 };
 
 class TrashButton extends Component {
+	/**
+	 * When we press on the button
+	 */
 	onPress() {
 		if (this.props.onPress) {
 			this.props.onPress();
@@ -33,7 +28,7 @@ class TrashButton extends Component {
 				onPress={() => { this.onPress(); }}
 			>
 				<View>
-					<Icon name="trash-o" style={styles.Icon} />
+					<Icon name="trash-o" style={styles.icon} />
 				</View>
 			</TouchableOpacity>
 		);
@@ -42,5 +37,12 @@ class TrashButton extends Component {
 
 TrashButton.propTypes = propTypes;
 TrashButton.defaultProps = defaultProps;
+
+const styles = {
+	icon: {
+		color: styleVars.theme.dangerColor,
+		fontSize: styleVars.baseFontSize + 4,
+	},
+};
 
 export default TrashButton;

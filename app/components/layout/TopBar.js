@@ -8,28 +8,14 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styleVars from '../../styles/variables';
 
-const styles = {
-	TopBar: {
-		backgroundColor: styleVars.theme.mainColor,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		height: styleVars.verticalRhythm * 2,
-		paddingHorizontal: styleVars.sidePadding,
-		borderTopWidth: 1,
-		borderTopColor: styleVars.theme.lighter,
-	},
-	TopBarSideIcon: {
-		width: 3 * styleVars.verticalRhythm,
-	},
-	TopBarText: {
-		color: styleVars.theme.overlayColor,
-		fontSize: styleVars.rem(1.2),
-	},
-	TopBarIcon: {
-		color: styleVars.theme.overlayColor,
-		fontSize: styleVars.verticalRhythm,
-	},
+const propTypes = {
+	title: React.PropTypes.string,
+	backHome: React.PropTypes.bool,
+};
+
+const defaultProps = {
+	title: null,
+	backHome: true,
 };
 
 class TopBar extends Component {
@@ -39,8 +25,8 @@ class TopBar extends Component {
 
 	renderBackHome() {
 		return (
-			<TouchableOpacity style={styles.TopBarSideIcon} onPress={this.onBackHome}>
-				<Icon name="home" style={styles.TopBarIcon} />
+			<TouchableOpacity style={styles.sideIcon} onPress={this.onBackHome}>
+				<Icon name="home" style={styles.icon} />
 			</TouchableOpacity>
 		);
 	}
@@ -52,24 +38,42 @@ class TopBar extends Component {
 		}
 
 		return (
-			<View style={styles.TopBar} elevation={1}>
+			<View style={styles.topBar} elevation={1}>
 				{ backHome }
-				<Text style={styles.TopBarText}>
+				<Text style={styles.text}>
 					{ this.props.title }
 				</Text>
-				<View style={styles.TopBarSideIcon} />
+				<View style={styles.sideIcon} />
 			</View>
 		);
 	}
 }
 
-TopBar.propTypes = {
-	title: React.PropTypes.string,
-	backHome: React.PropTypes.bool,
-};
+TopBar.propTypes = propTypes;
+TopBar.defaultProps = defaultProps;
 
-TopBar.defaultProps = {
-	backHome: true,
+const styles = {
+	topBar: {
+		backgroundColor: styleVars.theme.mainColor,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		height: styleVars.verticalRhythm * 2,
+		paddingHorizontal: styleVars.sidePadding,
+		borderTopWidth: 1,
+		borderTopColor: styleVars.theme.lighter,
+	},
+	sideIcon: {
+		width: 3 * styleVars.verticalRhythm,
+	},
+	text: {
+		color: styleVars.theme.overlayColor,
+		fontSize: styleVars.rem(1.2),
+	},
+	icon: {
+		color: styleVars.theme.overlayColor,
+		fontSize: styleVars.verticalRhythm,
+	},
 };
 
 export default TopBar;

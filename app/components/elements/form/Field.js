@@ -1,17 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import styleVars from '../../../styles/variables';
 
+const propTypes = {
+	children: React.PropTypes.node,
+};
+
+const defaultProps = {
+	children: null,
+};
+
+const Field = props => (
+	<View style={styles.field}>{ props.children }</View>
+);
+
+Field.propTypes = propTypes;
+Field.defaultProps = defaultProps;
+
 const styles = {
-	Field: {
+	field: {
 		marginBottom: styleVars.verticalRhythm,
 	},
 };
-
-class Field extends Component {
-	render() {
-		return <View style={styles.Field}>{ this.props.children }</View>;
-	}
-}
 
 export default Field;
