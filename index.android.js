@@ -15,6 +15,9 @@ export default class HotelCaisse extends Component {
 
 		this.ui = new UIApp(UIConfig);
 		this.ui.init();
+	}
+
+	componentDidMount() {
 		this.ui.start();
 	}
 
