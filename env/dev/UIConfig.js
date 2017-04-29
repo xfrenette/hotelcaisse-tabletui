@@ -32,6 +32,7 @@ testAuth.authenticated = true;
 const logger = new UILogger();
 
 const appConfig = {
+	logger,
 	plugins: [
 		new BusinessAutoload([businessStorage]),
 	],
