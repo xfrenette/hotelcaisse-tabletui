@@ -1,8 +1,9 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { observable, computed, autorun } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
-import Auth, { ERRORS } from 'hotelcaisse-app/dist/auth/Auth';
+import { ERRORS } from 'hotelcaisse-app/dist/auth/Auth';
 import { Route } from 'react-router-native';
 import RouteWithSubRoutes from '../RouteWithSubRoutes';
 
@@ -117,8 +118,8 @@ class AuthenticatedRoute extends Route {
 			return (
 				<AuthenticationComponent
 					status={this.status}
-					onAuthenticate={this.onAuthenticate.bind(this)}
-					onFinish={this.onFinish.bind(this)}
+					onAuthenticate={(code) => { this.onAuthenticate(code); }}
+					onFinish={() => { this.onFinish(); }}
 				/>
 			);
 		}

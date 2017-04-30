@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React from 'react';
 import { View } from 'react-native';
 import { Router } from 'react-router-native';
 import { Provider } from 'mobx-react/native';
@@ -9,25 +10,23 @@ const propTypes = {
 	ui: React.PropTypes.instanceOf(UIApp).isRequired,
 };
 
-class UI extends Component {
-	render() {
-		const stores = this.props.ui.getStores();
-		const routes = this.props.ui.routes;
-		const history = this.props.ui.history;
+const UI = (props) => {
+	const stores = props.ui.getStores();
+	const routes = props.ui.routes;
+	const history = props.ui.history;
 
-		return (
-			<Provider {...stores}>
-				<Router history={history}>
-					<View style={{ flex: 1 }}>
-						{routes.map(
-							(route, i) => <RouteWithSubRoutes key={i} route={route} />
-						)}
-					</View>
-				</Router>
-			</Provider>
-		);
-	}
-}
+	return (
+		<Provider {...stores}>
+			<Router history={history}>
+				<View style={{ flex: 1 }}>
+					{routes.map(
+						(route, i) => <RouteWithSubRoutes key={i} route={route} />
+					)}
+				</View>
+			</Router>
+		</Provider>
+	);
+};
 
 UI.propTypes = propTypes;
 

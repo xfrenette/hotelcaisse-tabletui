@@ -1,5 +1,6 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { inject } from 'mobx-react/native';
 import Console from './layout/Console';
 import RouteWithSubRoutes from './RouteWithSubRoutes';
@@ -9,6 +10,7 @@ const propTypes = {
 };
 
 @inject('ui')
+/* eslint-disable react/prefer-stateless-function */
 class Root extends Component {
 	render() {
 		let consoleComponent = null;

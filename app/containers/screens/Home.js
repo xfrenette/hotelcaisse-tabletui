@@ -28,6 +28,9 @@ class Home extends Component {
 			case 'test':
 				path = '/test';
 				break;
+			default:
+				path = null;
+				break;
 		}
 
 		if (path) {

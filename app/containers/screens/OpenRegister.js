@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { autorun } from 'mobx';
 import { inject } from 'mobx-react/native';
 import Decimal from 'decimal.js';
-import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
+import Register from 'hotelcaisse-app/dist/business/Register';
 import OpenRegisterScreen from '../../components/screens/OpenRegister';
 
 @inject('router', 'business', 'localizer', 'ui')
