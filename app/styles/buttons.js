@@ -51,7 +51,7 @@ export default {
 			paddingRight: 24,
 		},
 		text: {
-			fontSize: vars.rem(1.2),
+			fontSize: vars.bigFontSize,
 			top: -1,
 		},
 	},

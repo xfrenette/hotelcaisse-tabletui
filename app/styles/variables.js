@@ -36,9 +36,6 @@ const variables = {
 	baseBlockMargin,
 	colors,
 	mainTextColor: colors.darkGrey1,
-	rem(value) {
-		return value * baseFontSize;
-	},
 	button: {
 		backgroundColor: colors.grey1,
 	},

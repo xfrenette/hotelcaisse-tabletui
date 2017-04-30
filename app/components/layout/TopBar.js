@@ -68,7 +68,7 @@ const styles = {
 	},
 	text: {
 		color: styleVars.theme.overlayColor,
-		fontSize: styleVars.rem(1.2),
+		fontSize: styleVars.bigFontSize,
 	},
 	icon: {
 		color: styleVars.theme.overlayColor,
