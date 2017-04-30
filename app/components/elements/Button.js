@@ -6,7 +6,7 @@ import {
 	TouchableNativeFeedback,
 	TouchableOpacity,
 } from 'react-native';
-import buttonLayouts from '../../styles/Buttons';
+import buttonLayouts from '../../styles/buttons';
 
 const propTypes = {
 	title: React.PropTypes.string.isRequired,

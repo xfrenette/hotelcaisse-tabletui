@@ -22,7 +22,7 @@ import {
 	Screen,
 	MainContent,
 } from '../layout';
-import buttonLayouts from '../../styles/Buttons';
+import buttonLayouts from '../../styles/buttons';
 import styleVars from '../../styles/variables';
 import tableStyles from '../../styles/tables';
 import typographyStyles from '../../styles/typography';

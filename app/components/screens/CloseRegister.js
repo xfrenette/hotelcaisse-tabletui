@@ -17,7 +17,7 @@ import {
 	Screen,
 	MainContent,
 } from '../layout';
-import buttonLayouts from '../../styles/Buttons';
+import buttonLayouts from '../../styles/buttons';
 
 const propTypes = {
 	moneyDenominations: React.PropTypes.array.isRequired,
