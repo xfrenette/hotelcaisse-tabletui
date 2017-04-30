@@ -1,13 +1,9 @@
 import styleVars from './variables';
 
 export default {
-	CellDelete: {
+	cellDelete: {
 		flex: 0,
 		alignItems: 'flex-start',
 		paddingTop: 1,
-	},
-
-	TextDelete: {
-		color: styleVars.theme.dangerColor,
 	},
 };

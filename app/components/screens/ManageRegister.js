@@ -320,7 +320,7 @@ class ManageRegister extends Component {
 			<Row key={cashMovement.uuid} last={isLast}>
 				<Cell first><Text>{ cashMovement.note }</Text></Cell>
 				<Cell style={styles.priceCol}><Text>{ formattedAmount }</Text></Cell>
-				<Cell last style={tableStyles.CellDelete}>
+				<Cell last style={tableStyles.cellDelete}>
 					<TrashButton onPress={() => { this.onPressDeleteCashMovement(cashMovement); }} />
 				</Cell>
 			</Row>
