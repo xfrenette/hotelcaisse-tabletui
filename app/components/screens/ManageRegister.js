@@ -68,11 +68,11 @@ class ManageRegister extends Component {
 		},
 	};
 	/**
-	 * Reference to the modal component
+	 * References to node elements
 	 *
-	 * @type {Component}
+	 * @type {Object}
 	 */
-	addModal = null;
+	nodeRefs = {};
 
 	/**
 	 * Called when press the "cancel" button.
@@ -110,11 +110,11 @@ class ManageRegister extends Component {
 	}
 
 	/**
-	 * Opens the modal
+	 * Shows the modal
 	 */
 	showModal() {
 		this.resetModal();
-		this.addModal.open();
+		this.nodeRefs.addModal.show();
 	}
 
 	/**
@@ -149,10 +149,10 @@ class ManageRegister extends Component {
 	}
 
 	/**
-	 * Closes the modal
+	 * Hides the modal
 	 */
-	closeModal() {
-		this.addModal.close();
+	hideModal() {
+		this.nodeRefs.addModal.hide();
 	}
 
 	/**
@@ -162,7 +162,7 @@ class ManageRegister extends Component {
 	 */
 	onModalActionPress(key) {
 		if (key === 'cancel') {
-			this.closeModal();
+			this.hideModal();
 		}
 
 		if (key === 'save') {
@@ -172,7 +172,7 @@ class ManageRegister extends Component {
 
 	/**
 	 * Called when the user clicks the "Save" button in the modal. Will validate the data and, if
-	 * valid, will call onAddCashMovement. Will then close the modal and show a Toaster.
+	 * valid, will call onAddCashMovement. Will then hide the modal and show a Toaster.
 	 */
 	onModalSave() {
 		if (!this.validate(['note', 'amount'])) {
@@ -187,7 +187,7 @@ class ManageRegister extends Component {
 			this.props.onAddCashMovement(type, note, amount);
 		}
 
-		this.closeModal();
+		this.hideModal();
 
 		const toastMessageKey = `manageRegister.add${type === 'in' ? 'In' : 'Out'}.success`;
 		this.props.ui.showToast(this.t(toastMessageKey));
@@ -298,6 +298,15 @@ class ManageRegister extends Component {
 	}
 
 	/**
+	 * Puts the focus in the specified field
+	 *
+	 * @type {String} field   Key of the field in the nodeRefs object
+	 */
+	focusField(field) {
+		this.nodeRefs[field].focus();
+	}
+
+	/**
 	 * Renders the modal to add a cash movement. Title and content are dynamic based on
 	 * this.modalData.
 	 *
@@ -323,30 +332,37 @@ class ManageRegister extends Component {
 
 		return (
 			<Modal
-				ref={(modal) => { this.addModal = modal; }}
+				ref={(modal) => { this.nodeRefs.addModal = modal; }}
 				title={titleTransKey}
 				actions={actions}
 				onActionPress={(key) => { this.onModalActionPress(key); }}
+				onShow={() => { this.focusField('amountInput'); }}
 			>
 				{ message }
 				<Label>{ this.t('manageRegister.fields.amount') }</Label>
 				<Field>
 					<NumberInput
+						ref={(node) => { this.nodeRefs.amountInput = node; }}
 						value={this.modalData.amount}
 						type="money" localizer={this.props.localizer}
 						onChangeValue={(value) => { this.modalData.amount = value; }}
 						error={this.modalData.inputErrors.amount}
 						onBlur={() => { this.onFieldBlur('amount'); }}
+						selectTextOnFocus
+						onSubmitEditing={() => { this.focusField('noteInput'); }}
+						returnKeyType="next"
 					/>
 				</Field>
 				<Label>{ this.t('manageRegister.fields.note') }</Label>
 				<Field>
 					<TextInput
+						ref={(node) => { this.nodeRefs.noteInput = node; }}
 						value={this.modalData.note}
 						onChangeText={(text) => { this.modalData.note = text; }}
 						autoCapitalize="sentences"
 						error={this.modalData.inputErrors.note}
 						onBlur={() => { this.onFieldBlur('note'); }}
+						returnKeyType="done"
 					/>
 				</Field>
 			</Modal>
