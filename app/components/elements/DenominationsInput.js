@@ -18,13 +18,15 @@ const propTypes = {
 	onChangeValue: React.PropTypes.func,
 	totalLabel: React.PropTypes.string,
 	total: React.PropTypes.string,
+	error: React.PropTypes.string,
 };
 
 const defaultProps = {
+	localizer: null,
 	onChangeValue: null,
 	totalLabel: null,
 	total: null,
-	localizer: null,
+	error: null,
 };
 
 class DenominationsInput extends Component {
@@ -119,17 +121,19 @@ class DenominationsInput extends Component {
 	}
 
 	renderTotal() {
+		const errorStyle = this.props.error ? styles.totalError : null;
+
 		if (this.props.total) {
 			let label = null;
 
 			if (this.props.totalLabel) {
-				label = <Text style={styles.totalLabel}>{ this.props.totalLabel }</Text>;
+				label = <Text style={[styles.totalLabel, errorStyle]}>{ this.props.totalLabel }</Text>;
 			}
 
 			return (
 				<View style={styles.total}>
 					{ label }
-					<Text style={styles.totalAmount}>{ this.props.total }</Text>
+					<Text style={[styles.totalAmount, errorStyle]}>{ this.props.total }</Text>
 				</View>
 			);
 		}
@@ -137,9 +141,18 @@ class DenominationsInput extends Component {
 		return null;
 	}
 
+	renderError() {
+		if (!this.props.error) {
+			return null;
+		}
+
+		return <Text style={styles.errorMessage}>{ this.props.error }</Text>;
+	}
+
 	render() {
 		const fieldsInRows = [];
 		const total = this.renderTotal();
+		const error = this.renderError();
 
 		this.props.values.forEach((field, index) => {
 			let renderedField;
@@ -182,6 +195,7 @@ class DenominationsInput extends Component {
 			<View>
 				{ fieldRows }
 				{ total }
+				{ error }
 			</View>
 		);
 	}
@@ -215,6 +229,10 @@ const styles = {
 		marginTop: styleVars.verticalRhythm,
 	},
 
+	totalError: {
+		color: styleVars.theme.dangerColor,
+	},
+
 	totalAmount: {
 		fontSize: styleVars.fontSize.super,
 		textAlign: 'center',
@@ -223,6 +241,12 @@ const styles = {
 	},
 
 	totalLabel: {
+		textAlign: 'center',
+	},
+
+	errorMessage: {
+		color: styleVars.theme.dangerColor,
+		fontStyle: 'italic',
 		textAlign: 'center',
 	},
 };
