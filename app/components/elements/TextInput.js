@@ -25,6 +25,20 @@ const defaultProps = {
 };
 
 class TextInput extends Component {
+	/**
+	 * Reference to the native text input
+	 *
+	 * @type {NativeTextInput}
+	 */
+	textInputNode = null;
+
+	/**
+	 * Call this method to focus the NativeTextInput
+	 */
+	focus() {
+		this.textInputNode.focus();
+	}
+
 	renderLabel() {
 		if (this.props.label) {
 			const style = [styles.label, this.props.labelStyle];
@@ -78,6 +92,7 @@ class TextInput extends Component {
 							{ preText }
 							<NativeTextInput
 								{...this.props}
+								ref={(node) => { this.textInputNode = node; }}
 								underlineColorAndroid={'transparent'}
 								style={textStyle}
 							/>
