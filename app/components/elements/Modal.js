@@ -9,6 +9,7 @@ const propTypes = {
 	title: React.PropTypes.string,
 	onRequestClose: React.PropTypes.func,
 	onActionPress: React.PropTypes.func,
+	onShow: React.PropTypes.func,
 	children: React.PropTypes.node.isRequired,
 	actions: React.PropTypes.object,
 };
@@ -17,6 +18,7 @@ const defaultProps = {
 	title: null,
 	onRequestClose: null,
 	onActionPress: null,
+	onShow: null,
 	actions: null,
 };
 
@@ -32,14 +34,14 @@ class Modal extends Component {
 
 	/**
 	 * When the back button is pressed on Android. If a onRequestClose props is defined, we call it,
-	 * else we close the modal.
+	 * else we hide the modal.
 	 */
 	onRequestClose() {
 		if (this.props.onRequestClose) {
 			this.props.onRequestClose();
 		}
 
-		this.close();
+		this.hide();
 	}
 
 	/**
@@ -55,16 +57,16 @@ class Modal extends Component {
 	}
 
 	/**
-	 * Opens the modal
+	 * Shows the modal
 	 */
-	open() {
+	show() {
 		this.visible = true;
 	}
 
 	/**
-	 * Closes the modal
+	 * Hides the modal
 	 */
-	close() {
+	hide() {
 		this.visible = false;
 	}
 
@@ -120,6 +122,7 @@ class Modal extends Component {
 				onRequestClose={() => { this.onRequestClose(); }}
 				animationType="none"
 				transparent
+				onShow={this.props.onShow}
 			>
 				<View style={styles.background}>
 					<View style={styles.modal} elevation={4}>
