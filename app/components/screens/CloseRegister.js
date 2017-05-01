@@ -180,6 +180,7 @@ class CloseRegister extends Component {
 			<Screen>
 				<TopBar
 					title={this.t('closeRegister.title')}
+					onPressHome={() => { this.onCancel(); }}
 				/>
 				<ScrollView>
 					<MainContent>

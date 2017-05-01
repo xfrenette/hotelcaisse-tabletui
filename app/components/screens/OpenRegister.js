@@ -6,7 +6,6 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Decimal from 'decimal.js';
 import {
 	Button,
-	Text,
 	TextInput,
 	DenominationsInput,
 	BottomBarBackButton,
@@ -163,6 +162,7 @@ class OpenRegister extends Component {
 			<Screen>
 				<TopBar
 					title={this.t('openRegister.title')}
+					onPressHome={() => { this.onCancel(); }}
 				/>
 				<ScrollView>
 					<MainContent>

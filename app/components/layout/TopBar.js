@@ -1,38 +1,38 @@
 import React, { Component } from 'react';
-import {
-	View,
-	Text,
-	TouchableOpacity,
-	ToastAndroid,
-} from 'react-native';
+import {	View,	TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Text } from '../elements';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
 	title: React.PropTypes.string,
 	backHome: React.PropTypes.bool,
+	onPressHome: React.PropTypes.func,
 };
 
 const defaultProps = {
 	title: null,
 	backHome: true,
+	onPressHome: null,
 };
 
 class TopBar extends Component {
-	onBackHome() {
-		ToastAndroid.show('Retour à l\'accueil', ToastAndroid.SHORT);
+	onPressHome() {
+		if (this.props.onPressHome) {
+			this.props.onPressHome();
+		}
 	}
 
 	renderBackHome() {
 		return (
-			<TouchableOpacity style={styles.sideIcon} onPress={this.onBackHome}>
+			<TouchableOpacity style={styles.sideIcon} onPress={() => { this.onPressHome(); }}>
 				<Icon name="home" style={styles.icon} />
 			</TouchableOpacity>
 		);
 	}
 
 	render() {
-		let backHome = <Text />;
+		let backHome = <View />;
 		if (this.props.backHome) {
 			backHome = this.renderBackHome();
 		}

@@ -366,6 +366,7 @@ class ManageRegister extends Component {
 			<Screen>
 				<TopBar
 					title={this.t('manageRegister.title')}
+					onPressHome={() => { this.onFinish(); }}
 				/>
 				<ScrollView>
 					<MainContent>
