@@ -15,18 +15,22 @@ const propTypes = {
 		}),
 	).isRequired,
 	localizer: React.PropTypes.instanceOf(Localizer),
-	onChangeValue: React.PropTypes.func,
 	totalLabel: React.PropTypes.string,
 	total: React.PropTypes.string,
 	error: React.PropTypes.string,
+	returnKeyType: React.PropTypes.string,
+	onChangeValue: React.PropTypes.func,
+	onSubmitEditing: React.PropTypes.func,
 };
 
 const defaultProps = {
 	localizer: null,
-	onChangeValue: null,
 	totalLabel: null,
 	total: null,
 	error: null,
+	returnKeyType: null,
+	onChangeValue: null,
+	onSubmitEditing: null,
 };
 
 class DenominationsInput extends Component {
@@ -42,6 +46,57 @@ class DenominationsInput extends Component {
 	 * @type {Object}
 	 */
 	fieldCurrentValues = {};
+	/**
+	 * For each field, save a reference to its next field (used to focus fields one after the other).
+	 * The last field has a null value.
+	 *
+	 * @type {Object}
+	 */
+	fieldsNext = {};
+	/**
+	 * References to fields component
+	 *
+	 * @type {Object}
+	 */
+	nodeRefs = {};
+
+	componentWillMount() {
+		this.updateFieldsNext();
+	}
+
+	/**
+	 * Traverses the values and save in this.fieldsNext the next field for each.
+	 */
+	updateFieldsNext() {
+		this.props.values.forEach((field, index) => {
+			const fieldKey = field.label;
+			const nextIndex = index === this.props.values.length - 1 ? null : index + 1;
+			const nextField = nextIndex ? this.props.values[nextIndex] : null;
+
+			this.fieldsNext[fieldKey] = nextField;
+		});
+	}
+
+	/**
+	 * For a field, returns the next one, or a falsy value if no next
+	 *
+	 * @param {Object} field
+	 * @return {Object}
+	 */
+	getNextField(field) {
+		const fieldKey = field.label;
+		return this.fieldsNext[fieldKey];
+	}
+
+	/**
+	 * Returns a boolean indicating if the field has a next one.
+	 *
+	 * @param {Object} field
+	 * @return {Boolean}
+	 */
+	hasNextField(field) {
+		return !!this.getNextField(field);
+	}
 
 	/**
 	 * Called when a number input value changed
@@ -104,16 +159,66 @@ class DenominationsInput extends Component {
 		this.fieldCurrentValues[fieldKey] = field.value;
 	}
 
+	/**
+	 * Focus the first field
+	 */
+	focus() {
+		const firstField = this.props.values[0];
+		this.focusField(firstField);
+	}
+
+	/**
+	 * Focus a field
+	 *
+	 * @param {Object} field
+	 */
+	focusField(field) {
+		const key = field.label;
+		this.nodeRefs[key].focus();
+	}
+
+	/**
+	 * Focus the field's next field. If it has no next (it is the last one), calls onSubmitEditing()
+	 *
+	 * @param {[type]} field
+	 * @return {[type]}
+	 */
+	focusNextField(field) {
+		const nextField = this.getNextField(field);
+
+		if (nextField) {
+			this.focusField(nextField);
+		} else {
+			this.onSubmitEditing();
+		}
+	}
+
+	/**
+	 * Callback when the user submits the last field
+	 */
+	onSubmitEditing() {
+		if (this.props.onSubmitEditing) {
+			this.props.onSubmitEditing();
+		}
+	}
+
 	renderField(field) {
+		const hasNext = this.hasNextField(field);
+		const returnKeyType = hasNext ? 'next' : this.props.returnKeyType;
+
 		return (
 			<View style={styles.field} key={field.label}>
 				<Text style={styles.fieldLabel}>{ field.label }</Text>
 				<View style={styles.numberInputContainer}>
 					<NumberInput
+						ref={(node) => { this.nodeRefs[field.label] = node; }}
 						value={field.value}
 						localizer={this.props.localizer}
 						onChangeValue={(val) => { this.fieldValueChanged(field, val); }}
+						onSubmitEditing={() => { this.focusNextField(field); }}
+						returnKeyType={returnKeyType}
 						showIncrementors
+						selectTextOnFocus
 					/>
 				</View>
 			</View>
