@@ -4,7 +4,7 @@ import Decimal from 'decimal.js';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import OpenRegisterScreen from '../../components/screens/OpenRegister';
 
-@inject('router', 'business', 'localizer', 'ui')
+@inject('router', 'business', 'localizer', 'ui', 'uuidGenerator')
 class OpenRegister extends Component {
 	/**
 	 * New Register instance that will be created.
@@ -14,7 +14,9 @@ class OpenRegister extends Component {
 	newRegister = null;
 
 	componentWillMount() {
+		const uuid = this.props.uuidGenerator.generate();
 		this.newRegister = new Register();
+		this.newRegister.uuid = uuid;
 		this.opening = false;
 	}
 
