@@ -6,7 +6,11 @@ export default {
 	},
 	fields: {
 		amount: 'Montant',
-		description: 'Description',
+		note: 'Description',
+	},
+	inputErrors: {
+		amount: 'Veuillez entrer un montant valide',
+		note: 'Veuillez spécifier une description valide',
 	},
 	addIn: {
 		title: 'Ajout d\'une entrée d\'argent',

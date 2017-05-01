@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ScrollView, View, Alert } from 'react-native';
 import { observer, inject } from 'mobx-react/native';
 import { observable } from 'mobx';
+import Decimal from 'decimal.js';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import {
@@ -31,7 +32,7 @@ const propTypes = {
 	onFinish: React.PropTypes.func,
 	onAddCashMovement: React.PropTypes.func,
 	onDeleteCashMovement: React.PropTypes.func,
-	validation: React.PropTypes.func,
+	validate: React.PropTypes.func,
 	cashMovements: React.PropTypes.arrayOf(React.PropTypes.instanceOf(CashMovement)),
 	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
 };
@@ -40,7 +41,7 @@ const defaultProps = {
 	onFinish: null,
 	onAddCashMovement: null,
 	onDeleteCashMovement: null,
-	validation: null,
+	validate: null,
 	cashMovements: [],
 };
 
@@ -50,18 +51,21 @@ class ManageRegister extends Component {
 	/**
 	 * Variable holding current state of modal.
 	 * - type (string): 'in' or 'out'
-	 * - description (string): description currently being entered
+	 * - note (string): note currently being entered
 	 * - amount (number): amount currently being entered
-	 * - errorMessage (string): error message to display in the modal
+	 * - inputErrors (object): error message for each field (null if no error, else an error message)
 	 *
 	 * @type {Object}
 	 */
 	@observable
 	modalData = {
 		type: null,
-		description: null,
+		note: null,
 		amount: null,
-		errorMessage: null,
+		inputErrors: {
+			note: null,
+			amount: null,
+		},
 	};
 	/**
 	 * Reference to the modal component
@@ -109,10 +113,18 @@ class ManageRegister extends Component {
 	 * Opens the modal
 	 */
 	showModal() {
-		this.modalData.description = null;
-		this.modalData.amount = null;
-		this.modalData.errorMessage = null;
+		this.resetModal();
 		this.addModal.open();
+	}
+
+	/**
+	 * Resets all the fields used in the modal
+	 */
+	resetModal() {
+		this.modalData.note = null;
+		this.modalData.amount = null;
+		this.modalData.inputErrors.note = null;
+		this.modalData.inputErrors.amount = null;
 	}
 
 	/**
@@ -163,18 +175,16 @@ class ManageRegister extends Component {
 	 * valid, will call onAddCashMovement. Will then close the modal and show a Toaster.
 	 */
 	onModalSave() {
-		const type = this.modalData.type;
-		const description = this.modalData.description;
-		const amount = this.modalData.amount;
-		const validationResult = this.validateEntries(description, amount);
-
-		if (!validationResult.valid) {
-			this.modalData.errorMessage = validationResult.message;
+		if (!this.validate(['note', 'amount'])) {
 			return;
 		}
 
+		const type = this.modalData.type;
+		const note = this.modalData.note;
+		const amount = this.getModalAmountAsDecimal();
+
 		if (this.props.onAddCashMovement) {
-			this.props.onAddCashMovement(type, description, amount);
+			this.props.onAddCashMovement(type, note, amount);
 		}
 
 		this.closeModal();
@@ -203,21 +213,72 @@ class ManageRegister extends Component {
 	}
 
 	/**
-	 * Validates the fields' value. If a validation prop is supplied, will return its result, else
-	 * returns a valid result.
+	 * Listener added on blur on some fields to validate their value when blurring.
 	 *
-	 * @param {String} description
-	 * @param {Number} amount
-	 * @return {object}
+	 * @param {String} field
 	 */
-	validateEntries(description, amount) {
-		if (this.props.validation) {
-			return this.props.validation(description, amount);
+	onFieldBlur(field) {
+		this.validate([field]);
+	}
+
+	/**
+	 * Receives a list of fields to validate (see this.inputErrors for valid field names) and, if a
+	 * validate function is defined in the props, will call it to validate only those fields. Will
+	 * then call setErrors() with the resulting validation. This function returns a boolean that is
+	 * true if no validation errors were found (or if no validate function in the props).
+	 *
+	 * @param {Array} fields
+	 * @return {Boolean}
+	 */
+	validate(fields) {
+		if (!this.props.validate) {
+			return true;
 		}
 
-		return {
-			valid: true,
-		};
+		const values = {};
+
+		if (fields.indexOf('note') !== -1) {
+			values.note = this.modalData.note;
+		}
+
+		if (fields.indexOf('amount') !== -1) {
+			values.amount = this.getModalAmountAsDecimal();
+		}
+
+		const result = this.props.validate(values);
+		this.setErrors(fields, result);
+
+		return result === undefined;
+	}
+
+	/**
+	 * From a list of fields that were validated and the validation result, updates values in
+	 * this.inputErrors with null (no error) or a localized error message.
+	 *
+	 * @param {Array} fields
+	 * @param {Object} errors
+	 */
+	setErrors(fields, errors = {}) {
+		fields.forEach((field) => {
+			if (errors[field]) {
+				this.modalData.inputErrors[field] = this.t(`manageRegister.inputErrors.${field}`);
+			} else {
+				this.modalData.inputErrors[field] = null;
+			}
+		});
+	}
+
+	/**
+	 * Returns the amount value in the modal as a decimal. If no amount is set, returns null.
+	 *
+	 * @return {Decimal}
+	 */
+	getModalAmountAsDecimal() {
+		if (typeof this.modalData.amount === 'number') {
+			return new Decimal(this.modalData.amount);
+		}
+
+		return null;
 	}
 
 	/**
@@ -274,14 +335,18 @@ class ManageRegister extends Component {
 						value={this.modalData.amount}
 						type="money" localizer={this.props.localizer}
 						onChangeValue={(value) => { this.modalData.amount = value; }}
+						error={this.modalData.inputErrors.amount}
+						onBlur={() => { this.onFieldBlur('amount'); }}
 					/>
 				</Field>
-				<Label>{ this.t('manageRegister.fields.description') }</Label>
+				<Label>{ this.t('manageRegister.fields.note') }</Label>
 				<Field>
 					<TextInput
-						value={this.modalData.description}
-						onChangeText={(text) => { this.modalData.description = text; }}
+						value={this.modalData.note}
+						onChangeText={(text) => { this.modalData.note = text; }}
 						autoCapitalize="sentences"
+						error={this.modalData.inputErrors.note}
+						onBlur={() => { this.onFieldBlur('note'); }}
 					/>
 				</Field>
 			</Modal>

@@ -32,38 +32,31 @@ class ManageRegister extends Component {
 	 * @param {Decimal} amount
 	 * @return {CashMovement}
 	 */
-	createCashMovement(description, amount) {
-		const cashMovement = new CashMovement(amount);
-		cashMovement.uuid = this.props.uuidGenerator.generate();
-		cashMovement.note = description;
+	createCashMovement(note, amount) {
+		const uuid = this.props.uuidGenerator.generate();
+		const cashMovement = new CashMovement(uuid, amount, note.trim());
 
 		return cashMovement;
 	}
 
 	/**
-	 * Called when the user created a new CashMovement in the screen. Will first validate and if it
-	 * passes, will create a new CashMovement and add it to the Register. If the type is "out", the
-	 * amount is inversed (ie. 12.45 => -12.45)
+	 * Called when the user created a new CashMovement in the screen. Will create a new CashMovement
+	 * and add it to the Register. It is the responsability of the Component to ensure the values
+	 * are valid before calling this function. See validate(). If the type is "out", the amount is
+	 * inversed (ie. 12.45 => -12.45)
 	 *
 	 * @param {String} type 'in' or 'out'
-	 * @param {String} rawDescription
+	 * @param {String} note
 	 * @param {Decimal} rawAmount
 	 */
-	onAddCashMovement(type, rawDescription, rawAmount) {
-		const description = rawDescription.trim();
-		const validationResult = this.validateEntries(description, rawAmount);
+	onAddCashMovement(type, note, rawAmount) {
+		let amount = rawAmount;
 
-		if (!validationResult.valid) {
-			return;
-		}
-
-		let amount = new Decimal(rawAmount);
 		if (type === 'out') {
 			amount = amount.mul(-1);
 		}
 
-		const cashMovement = this.createCashMovement(description, amount);
-
+		const cashMovement = this.createCashMovement(note, amount);
 		this.props.business.deviceRegister.addCashMovement(cashMovement);
 	}
 
@@ -77,36 +70,14 @@ class ManageRegister extends Component {
 	}
 
 	/**
-	 * Returns a validation object specifying if the description and amount are valid values to give
-	 * to a new CashMovement. The returned object has the following structure :
-	 * {
-	 * 	valid: boolean
-	 * 	message : string, contains a translated error message
-	 * }
+	 * Validates values to create a new CashMovement by calling CashMovement.validate() and returns
+	 * its result.
 	 *
-	 * @param {String} description
-	 * @param {Number} amount
-	 * @return {object}
+	 * @param {Object} values (valid keys: amount, note)
+	 * @return {Object}
 	 */
-	validateEntries(description, amount) {
-		const result = {
-			valid: true,
-			message: null,
-		};
-
-		if (typeof amount !== 'number' || amount <= 0) {
-			result.valid = false;
-			result.message = this.t('manageRegister.errors.invalidAmount');
-			return result;
-		}
-
-		if (typeof description !== 'string' || description.trim() === '') {
-			result.valid = false;
-			result.message = this.t('manageRegister.errors.emptyDescription');
-			return result;
-		}
-
-		return result;
+	validate(values) {
+		return CashMovement.validate(values);
 	}
 
 	render() {
@@ -116,10 +87,10 @@ class ManageRegister extends Component {
 			<ManageRegisterScreen
 				onFinish={() => { this.onFinish(); }}
 				localizer={this.props.localizer}
-				validation={(...params) => this.validateEntries(...params)}
 				onAddCashMovement={(...params) => { this.onAddCashMovement(...params); }}
 				onDeleteCashMovement={(cashMovement) => { this.onDeleteCashMovement(cashMovement); }}
 				cashMovements={cashMovements}
+				validate={values => this.validate(values)}
 			/>
 		);
 	}
