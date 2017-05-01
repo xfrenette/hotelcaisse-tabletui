@@ -53,6 +53,12 @@ class NumberInput extends Component {
 		less: null,
 		more: null,
 	};
+	/**
+	 * Reference to the TextInput node
+	 *
+	 * @type {TextInput}
+	 */
+	textInputNode = null;
 
 	constructor(props) {
 		super(props);
@@ -83,6 +89,13 @@ class NumberInput extends Component {
 	onChangeText(text) {
 		const newValue = this.parseValue(text);
 		this.tryChangeValue(newValue, text);
+	}
+
+	/**
+	 * Call this function to focus in the field.
+	 */
+	focus() {
+		this.textInputNode.focus();
 	}
 
 	/**
@@ -404,6 +417,7 @@ class NumberInput extends Component {
 				{ this.incrementors.less }
 				<TextInput
 					{...other}
+					ref={(node) => { this.textInputNode = node; }}
 					value={this.inputText}
 					style={style}
 					keyboardType="numeric"
