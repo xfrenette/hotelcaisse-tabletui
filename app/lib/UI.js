@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { Platform, ToastAndroid, Alert } from 'react-native';
+import { Platform, ToastAndroid, Alert, BackHandler } from 'react-native';
 import { createMemoryHistory } from 'history';
 import DefaultAuth from 'hotelcaisse-app/dist/auth/Auth';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
@@ -142,6 +142,7 @@ class UI {
 			this.appLoadingPromise = this.app.start();
 		}
 		this.startLoading();
+		this.installDefaultBackHandler();
 	}
 
 	/**
@@ -222,6 +223,35 @@ class UI {
 		if (Platform.OS === 'android') {
 			ToastAndroid.show(message, ToastAndroid.SHORT);
 		}
+	}
+
+	/**
+	 * Installs a default back handler, which will go back one step in the history for regular
+	 * pages, but will exit the application for 'initial' screens (screens that don't have 'before',
+	 * like the home).
+	 */
+	installDefaultBackHandler() {
+		BackHandler.addEventListener('hardwareBackPress', () => {
+			if (this.isInitialScreen()) {
+				BackHandler.exitApp();
+				return true;
+			}
+
+			this.router.goBack();
+			return true;
+		});
+	}
+
+	/**
+	 * Returns a boolean indicating if we are at an 'initial' screen, a screen where there is no
+	 * 'before'. Used in the default handler of the back button.
+	 *
+	 * @return {Boolean}
+	 */
+	isInitialScreen() {
+		const currentPath = this.history.location.pathname;
+		const baseScreenPaths = ['/'];
+		return baseScreenPaths.indexOf(currentPath) !== -1;
 	}
 }
 
