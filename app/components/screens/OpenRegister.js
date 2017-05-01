@@ -67,6 +67,12 @@ class OpenRegister extends Component {
 		employee: null,
 		cashAmount: null,
 	};
+	/**
+	 * References to Components (see their ref attribute)
+	 *
+	 * @type {Object}
+	 */
+	nodeRefs = {};
 
 	/**
 	 * When mounting, build the denominationsValue and denominationsQuantity objects.
@@ -130,6 +136,13 @@ class OpenRegister extends Component {
 	 */
 	onEmployeeBlur() {
 		this.validate(['employee']);
+	}
+
+	/**
+	 * Focus the cashAmount field
+	 */
+	focusCashAmount() {
+		this.nodeRefs.cashAmount.focus();
 	}
 
 	/**
@@ -246,17 +259,22 @@ class OpenRegister extends Component {
 								autoCapitalize="words"
 								error={this.inputErrors.employee}
 								onBlur={() => { this.onEmployeeBlur(); }}
+								autoFocus
+								onSubmitEditing={() => { this.focusCashAmount(); }}
+								returnKeyType="next"
 							/>
 						</Field>
 						<Field>
 							<Label>{this.t('openRegister.fields.cashAmount')}</Label>
 							<DenominationsInput
+								ref={(node) => { this.nodeRefs.cashAmount = node; }}
 								values={values}
 								localizer={this.props.localizer}
 								onChangeValue={(field, value) => this.onChangeValue(field, value)}
 								total={total}
 								totalLabel={this.t('openRegister.fields.total')}
 								error={this.inputErrors.cashAmount}
+								returnKeyType="done"
 							/>
 						</Field>
 					</MainContent>
