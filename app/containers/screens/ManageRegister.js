@@ -12,7 +12,7 @@ class ManageRegister extends Component {
 	 * Called when the screen wants to leave the page
 	 */
 	onFinish() {
-		this.props.router.goBack();
+		this.props.router.replace('/');
 	}
 
 	/**
