@@ -9,6 +9,7 @@ import TextInput from './TextInput';
 import Title from './Title';
 import Modal from './Modal';
 import TrashButton from './TrashButton';
+import BottomBarBackButton from './BottomBarBackButton';
 
 export {
 	Button,
@@ -22,4 +23,5 @@ export {
 	Title,
 	Modal,
 	TrashButton,
+	BottomBarBackButton,
 };

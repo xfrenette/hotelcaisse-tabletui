@@ -9,6 +9,7 @@ import {
 	TextInput,
 	NumberInput,
 	DenominationsInput,
+	BottomBarBackButton,
 } from '../elements';
 import { Field, Label } from '../elements/form';
 import {
@@ -213,10 +214,8 @@ class CloseRegister extends Component {
 					</MainContent>
 				</ScrollView>
 				<BottomBar>
-					<Button
+					<BottomBarBackButton
 						title={this.t('actions.cancel')}
-						type="back"
-						layout={buttonLayouts.text}
 						onPress={() => { this.onCancel(); }}
 					/>
 					<Button

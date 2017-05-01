@@ -16,14 +16,12 @@ const propTypes = {
 		React.PropTypes.object,
 		React.PropTypes.array,
 	]),
-	onPress: React.PropTypes.func,
 };
 
 const defaultProps = {
 	touchEffect: 'feedback',
 	type: null,
 	layout: null,
-	onPress: null,
 };
 
 const Button = (props) => {
@@ -35,42 +33,44 @@ const Button = (props) => {
 	let preIcon;
 	let postIcon;
 
-	if (props.touchEffect === 'feedback') {
+	const { layout, touchEffect, type, title, ...otherProps } = props;
+
+	if (touchEffect === 'feedback') {
 		Touchable = TouchableNativeFeedback;
 		touchableProps.background = TouchableNativeFeedback.Ripple(rippleColor);
 	} else {
 		Touchable = TouchableOpacity;
 	}
 
-	if (props.layout) {
-		const layouts = Array.isArray(props.layout) ? props.layout : [props.layout];
+	if (layout) {
+		const layouts = Array.isArray(layout) ? layout : [layout];
 
-		layouts.forEach((layout) => {
-			if (layout.button) {
-				buttonStyles.push(layout.button);
+		layouts.forEach((currLayout) => {
+			if (currLayout.button) {
+				buttonStyles.push(currLayout.button);
 			}
 
-			if (layout.text) {
-				textStyles.push(layout.text);
+			if (currLayout.text) {
+				textStyles.push(currLayout.text);
 			}
 
-			if (layout.rippleColor) {
-				rippleColor = layout.rippleColor;
+			if (currLayout.rippleColor) {
+				rippleColor = currLayout.rippleColor;
 			}
 		});
 	}
 
-	if (props.type === 'back') {
+	if (type === 'back') {
 		preIcon = (
 			<Icon name="angle-left" style={[textStyles, styles.icon]} />
 		);
 	}
 
 	return (
-		<Touchable onPress={props.onPress}>
+		<Touchable {...otherProps}>
 			<View style={[buttonStyles, styles.button]}>
 				{ preIcon }
-				<Text style={textStyles}>{ props.title }</Text>
+				<Text style={textStyles}>{ title }</Text>
 				{ postIcon }
 			</View>
 		</Touchable>
