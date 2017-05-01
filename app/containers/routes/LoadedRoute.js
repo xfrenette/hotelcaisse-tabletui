@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { observer, inject } from 'mobx-react/native';
 import { Route } from 'react-router-native';
@@ -7,10 +8,10 @@ import RouteWithSubRoutes from '../RouteWithSubRoutes';
 import { STATES as UI_STATES } from '../../lib/UI';
 
 const propTypes = {
-	routes: React.PropTypes.array.isRequired,
-	loadingComponent: React.PropTypes.oneOfType([
-		React.PropTypes.element,
-		React.PropTypes.func,
+	routes: PropTypes.array.isRequired,
+	loadingComponent: PropTypes.oneOfType([
+		PropTypes.element,
+		PropTypes.func,
 	]).isRequired,
 };
 

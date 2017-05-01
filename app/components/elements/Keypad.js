@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
 	View,
 	Text,
@@ -9,11 +10,11 @@ import {
 import styleVars from '../../styles/variables';
 
 const propTypes = {
-	submitLabel: React.PropTypes.string,
-	placeholder: React.PropTypes.string,
-	value: React.PropTypes.string,
-	onChange: React.PropTypes.func,
-	onSubmit: React.PropTypes.func,
+	submitLabel: PropTypes.string,
+	placeholder: PropTypes.string,
+	value: PropTypes.string,
+	onChange: PropTypes.func,
+	onSubmit: PropTypes.func,
 };
 
 const defaultProps = {

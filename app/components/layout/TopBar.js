@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {	View,	TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Text } from '../elements';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
-	title: React.PropTypes.string,
-	backHome: React.PropTypes.bool,
-	onPressHome: React.PropTypes.func,
+	title: PropTypes.string,
+	backHome: PropTypes.bool,
+	onPressHome: PropTypes.func,
 };
 
 const defaultProps = {

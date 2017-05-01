@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import PropTypes from 'prop-types';
 import {
 	View,
 	Text,
@@ -9,12 +10,12 @@ import {
 import buttonLayouts from '../../styles/buttons';
 
 const propTypes = {
-	title: React.PropTypes.string.isRequired,
-	type: React.PropTypes.string,
-	touchEffect: React.PropTypes.string,
-	layout: React.PropTypes.oneOfType([
-		React.PropTypes.object,
-		React.PropTypes.array,
+	title: PropTypes.string.isRequired,
+	type: PropTypes.string,
+	touchEffect: PropTypes.string,
+	layout: PropTypes.oneOfType([
+		PropTypes.object,
+		PropTypes.array,
 	]),
 };
 

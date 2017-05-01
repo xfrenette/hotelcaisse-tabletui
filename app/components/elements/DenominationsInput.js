@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { Text, NumberInput } from './index';
@@ -8,19 +9,19 @@ import styleVars from '../../styles/variables';
 const nbCols = 3;
 
 const propTypes = {
-	values: React.PropTypes.arrayOf(
-		React.PropTypes.shape({
-			label: React.PropTypes.string,
-			value: React.PropTypes.number,
+	values: PropTypes.arrayOf(
+		PropTypes.shape({
+			label: PropTypes.string,
+			value: PropTypes.number,
 		}),
 	).isRequired,
-	localizer: React.PropTypes.instanceOf(Localizer),
-	totalLabel: React.PropTypes.string,
-	total: React.PropTypes.string,
-	error: React.PropTypes.string,
-	returnKeyType: React.PropTypes.string,
-	onChangeValue: React.PropTypes.func,
-	onSubmitEditing: React.PropTypes.func,
+	localizer: PropTypes.instanceOf(Localizer),
+	totalLabel: PropTypes.string,
+	total: PropTypes.string,
+	error: PropTypes.string,
+	returnKeyType: PropTypes.string,
+	onChangeValue: PropTypes.func,
+	onSubmitEditing: PropTypes.func,
 };
 
 const defaultProps = {

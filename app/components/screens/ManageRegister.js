@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { ScrollView, View, Alert } from 'react-native';
 import { observer, inject } from 'mobx-react/native';
 import { observable } from 'mobx';
@@ -29,12 +30,12 @@ import tableStyles from '../../styles/tables';
 import typographyStyles from '../../styles/typography';
 
 const propTypes = {
-	onFinish: React.PropTypes.func,
-	onAddCashMovement: React.PropTypes.func,
-	onDeleteCashMovement: React.PropTypes.func,
-	validate: React.PropTypes.func,
-	cashMovements: React.PropTypes.arrayOf(React.PropTypes.instanceOf(CashMovement)),
-	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
+	onFinish: PropTypes.func,
+	onAddCashMovement: PropTypes.func,
+	onDeleteCashMovement: PropTypes.func,
+	validate: PropTypes.func,
+	cashMovements: PropTypes.arrayOf(PropTypes.instanceOf(CashMovement)),
+	localizer: PropTypes.instanceOf(Localizer).isRequired,
 };
 
 const defaultProps = {

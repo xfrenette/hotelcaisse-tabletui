@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { observable, computed, autorun } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
@@ -14,10 +15,10 @@ import RouteWithSubRoutes from '../RouteWithSubRoutes';
  */
 
 const propTypes = {
-	routes: React.PropTypes.array.isRequired,
-	authenticationComponent: React.PropTypes.oneOfType([
-		React.PropTypes.element,
-		React.PropTypes.func,
+	routes: PropTypes.array.isRequired,
+	authenticationComponent: PropTypes.oneOfType([
+		PropTypes.element,
+		PropTypes.func,
 	]).isRequired,
 };
 

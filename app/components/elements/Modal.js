@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, Modal as NativeModal, TouchableNativeFeedback } from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
@@ -6,12 +7,12 @@ import { Text } from './index';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
-	title: React.PropTypes.string,
-	onRequestClose: React.PropTypes.func,
-	onActionPress: React.PropTypes.func,
-	onShow: React.PropTypes.func,
-	children: React.PropTypes.node.isRequired,
-	actions: React.PropTypes.object,
+	title: PropTypes.string,
+	onRequestClose: PropTypes.func,
+	onActionPress: PropTypes.func,
+	onShow: PropTypes.func,
+	children: PropTypes.node.isRequired,
+	actions: PropTypes.object,
 };
 
 const defaultProps = {

@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Text as NativeText } from 'react-native';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
 	style: NativeText.propTypes.style,
-	children: React.PropTypes.node,
+	children: PropTypes.node,
 };
 
 const defaultProps = {

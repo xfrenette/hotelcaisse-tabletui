@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View } from 'react-native';
 
 const propTypes = {
-	children: React.PropTypes.node,
+	children: PropTypes.node,
 };
 
 const defaultProps = {

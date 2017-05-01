@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, TouchableHighlight } from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
@@ -9,13 +10,13 @@ import TextInput from './TextInput';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
-	value: React.PropTypes.number,
+	value: PropTypes.number,
 	style: TextInput.propTypes.style,
-	type: React.PropTypes.string,
-	maxDecimals: React.PropTypes.number,
-	showIncrementors: React.PropTypes.bool,
-	onChangeValue: React.PropTypes.func,
-	localizer: React.PropTypes.instanceOf(Localizer),
+	type: PropTypes.string,
+	maxDecimals: PropTypes.number,
+	showIncrementors: PropTypes.bool,
+	onChangeValue: PropTypes.func,
+	localizer: PropTypes.instanceOf(Localizer),
 };
 
 const defaultProps = {

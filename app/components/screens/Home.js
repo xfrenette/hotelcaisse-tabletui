@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { STATES } from 'hotelcaisse-app/dist/business/Register';
 import { Button } from '../elements';
 
 const propTypes = {
-	registerState: React.PropTypes.number.isRequired,
-	onLinkPressed: React.PropTypes.func,
+	registerState: PropTypes.number.isRequired,
+	onLinkPressed: PropTypes.func,
 };
 
 const defaultProps = {

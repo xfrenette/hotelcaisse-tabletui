@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
 import { inject } from 'mobx-react/native';
 import { Button } from '../elements';
 
 const propTypes = {
-	status: React.PropTypes.string,
-	localizer: React.PropTypes.object,
-	onAuthenticate: React.PropTypes.func,
-	onFinish: React.PropTypes.func,
+	status: PropTypes.string,
+	localizer: PropTypes.object,
+	onAuthenticate: PropTypes.func,
+	onFinish: PropTypes.func,
 };
 
 const defaultProps = {

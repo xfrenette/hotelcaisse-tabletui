@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { ScrollView } from 'react-native';
 import { observer } from 'mobx-react/native';
 import { observable, computed } from 'mobx';
@@ -21,11 +22,11 @@ import {
 import buttonLayouts from '../../styles/buttons';
 
 const propTypes = {
-	moneyDenominations: React.PropTypes.array.isRequired,
-	onCancel: React.PropTypes.func,
-	onClose: React.PropTypes.func,
-	validate: React.PropTypes.func,
-	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
+	moneyDenominations: PropTypes.array.isRequired,
+	onCancel: PropTypes.func,
+	onClose: PropTypes.func,
+	validate: PropTypes.func,
+	localizer: PropTypes.instanceOf(Localizer).isRequired,
 };
 
 const defaultProps = {

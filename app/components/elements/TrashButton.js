@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
-	onPress: React.PropTypes.func,
+	onPress: PropTypes.func,
 };
 
 const defaultProps = {

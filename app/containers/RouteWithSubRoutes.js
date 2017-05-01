@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route } from 'react-router-native';
 
 const propTypes = {
-	route: React.PropTypes.object.isRequired,
+	route: PropTypes.object.isRequired,
 };
 
 const RouteWithSubRoutes = (props) => {

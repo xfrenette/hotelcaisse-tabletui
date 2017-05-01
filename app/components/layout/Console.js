@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
 	View,
 	Text,
@@ -10,8 +11,8 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 
 const propTypes = {
-	entries: React.PropTypes.array,
-	onClear: React.PropTypes.func,
+	entries: PropTypes.array,
+	onClear: PropTypes.func,
 };
 
 const defaultProps = {

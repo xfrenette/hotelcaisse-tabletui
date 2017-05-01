@@ -1,12 +1,13 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { inject } from 'mobx-react/native';
 import Console from './layout/Console';
 import RouteWithSubRoutes from './RouteWithSubRoutes';
 
 const propTypes = {
-	routes: React.PropTypes.array.isRequired,
+	routes: PropTypes.array.isRequired,
 };
 
 @inject('ui')

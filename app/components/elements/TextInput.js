@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
 	View,
 	TextInput as NativeTextInput,
@@ -9,10 +10,10 @@ import styleVars from '../../styles/variables';
 const propTypes = {
 	style: NativeTextInput.propTypes.style,
 	labelStyle: Text.propTypes.style,
-	label: React.PropTypes.string,
-	preText: React.PropTypes.string,
-	postText: React.PropTypes.string,
-	error: React.PropTypes.string,
+	label: PropTypes.string,
+	preText: PropTypes.string,
+	postText: PropTypes.string,
+	error: PropTypes.string,
 };
 
 const defaultProps = {
