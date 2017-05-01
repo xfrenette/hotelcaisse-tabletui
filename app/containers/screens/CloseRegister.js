@@ -1,27 +1,20 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react/native';
+import Register from 'hotelcaisse-app/dist/business/Register';
 import Decimal from 'decimal.js';
 import CloseRegisterScreen from '../../components/screens/CloseRegister';
 
 @inject('router', 'business', 'localizer', 'ui')
 class CloseRegister extends Component {
 	/**
-	 * Closes the register after validating the data. If the data is not valid, shows an alert, else
-	 * redirects to home and shows a Toaster.
+	 * Closes the register. It is the responsibility of the component to ensure the data is valid
+	 * calling this method (see the validate method).
 	 *
 	 * @param {Decimal} amount
 	 * @param {String} POSTRef
 	 * @param {Decimal} POSTAmount
 	 */
 	onClose(amount, POSTRef, POSTAmount) {
-		if (!this.validateValues(amount, POSTRef, POSTAmount)) {
-			this.props.ui.showErrorAlert(
-				this.t('closeRegister.messages.fieldsInvalid.title'),
-				this.t('closeRegister.messages.fieldsInvalid.content'),
-			);
-			return;
-		}
-
 		const register = this.props.business.deviceRegister;
 		register.close(amount, POSTRef, POSTAmount);
 
@@ -44,35 +37,6 @@ class CloseRegister extends Component {
 	}
 
 	/**
-	 * Validates the values that will be sent to Register.close
-	 * - amount : must be a non-negative Decimal
-	 * - rawPOSTRef : must be a non-empty string
-	 * - POSTAmount : must be a non-negative Decimal
-	 *
-	 * @param {Decimal} amount
-	 * @param {String} rawPOSTRef
-	 * @param {Decimal} POSTAmount
-	 * @return {Boolean}
-	 */
-	validateValues(amount, rawPOSTRef, POSTAmount) {
-		const POSTRef = rawPOSTRef ? rawPOSTRef.trim() : '';
-
-		if (POSTRef === '') {
-			return false;
-		}
-
-		if (!(amount instanceof Decimal) || amount.isNegative()) {
-			return false;
-		}
-
-		if (!(POSTAmount instanceof Decimal) || POSTAmount.isNegative()) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Simple alias to this.props.localizer.t
 	 *
 	 * @param {String} path
@@ -82,6 +46,16 @@ class CloseRegister extends Component {
 		return this.props.localizer.t(path);
 	}
 
+	/**
+	 * Validates close values by calling Register.validateClose() and returns its result.
+	 *
+	 * @param {Object} values (valid keys: POSTRef, POSTAmount, cashAmount)
+	 * @return {Object}
+	 */
+	validate(values) {
+		return Register.validateClose(values);
+	}
+
 	render() {
 		return (
 			<CloseRegisterScreen
@@ -89,6 +63,7 @@ class CloseRegister extends Component {
 				onClose={(amount, POSTRef, POSTAmount) => { this.onClose(amount, POSTRef, POSTAmount); }}
 				localizer={this.props.localizer}
 				moneyDenominations={this.props.ui.settings.moneyDenominations}
+				validate={values => this.validate(values)}
 			/>
 		);
 	}

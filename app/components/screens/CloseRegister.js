@@ -24,12 +24,14 @@ const propTypes = {
 	moneyDenominations: React.PropTypes.array.isRequired,
 	onCancel: React.PropTypes.func,
 	onClose: React.PropTypes.func,
+	validate: React.PropTypes.func,
 	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
 };
 
 const defaultProps = {
 	onCancel: null,
 	onClose: null,
+	validate: null,
 };
 
 @observer
@@ -61,6 +63,19 @@ class CloseRegister extends Component {
 	 */
 	@observable
 	denominationsQuantity = {};
+	/**
+	 * Error message for each of the inputs. Set a value to null if no error, else set it to the
+	 * error message. Note: since this is an observable object, all its keys must be defined at
+	 * initialisation, we cannot add or remove keys later.
+	 *
+	 * @type {Object}
+	 */
+	@observable
+	inputErrors = {
+		POSTRef: null,
+		POSTAmount: null,
+		cashAmount: null,
+	};
 
 	/**
 	 * When mounting, build the denominationsValue and denominationsQuantity objects.
@@ -98,12 +113,16 @@ class CloseRegister extends Component {
 	}
 
 	/**
-	 * Called when the "Close register" button is pressed.
+	 * Called when the "Close register" button is pressed. First validates the values. If valid calls
+	 * the onClose prop.
 	 */
 	onCloseRegister() {
+		if (!this.validate(['POSTAmount', 'POSTRef', 'cashAmount'])) {
+			return;
+		}
+
 		if (this.props.onClose) {
-			const POSTAmount = new Decimal(this.POSTAmount);
-			this.props.onClose(this.getTotalAmount(), this.POSTRef, POSTAmount);
+			this.props.onClose(this.getTotalAmount(), this.POSTRef, this.getPOSTAmountDecimal());
 		}
 	}
 
@@ -123,6 +142,10 @@ class CloseRegister extends Component {
 	 */
 	onPOSTAmountChange(value) {
 		this.POSTAmount = value;
+	}
+
+	onFieldBlur(field) {
+		this.validate([field]);
 	}
 
 	/**
@@ -163,6 +186,19 @@ class CloseRegister extends Component {
 	}
 
 	/**
+	 * Returns the POSTAmount as a Decimal instance, or null if no POSTAmount is defined.
+	 *
+	 * @return {Decimal}
+	 */
+	getPOSTAmountDecimal() {
+		if (typeof this.POSTAmount === 'number') {
+			return new Decimal(this.POSTAmount);
+		}
+
+		return null;
+	}
+
+	/**
 	 * Simple alias to this.props.localizer.t
 	 *
 	 * @param {String} path
@@ -170,6 +206,57 @@ class CloseRegister extends Component {
 	 */
 	t(path) {
 		return this.props.localizer.t(path);
+	}
+
+	/**
+	 * Receives a list of fields to validate (see this.inputErrors for valid field names) and, if a
+	 * validate function is defined in the props, will call it to validate only those fields. Will
+	 * then call setErrors() with the resulting validation. This function returns a boolean that is
+	 * true if no validation errors were found (or if no validate function in the props).
+	 *
+	 * @param {Array} fields
+	 * @return {Boolean}
+	 */
+	validate(fields) {
+		if (!this.props.validate) {
+			return true;
+		}
+
+		const values = {};
+
+		if (fields.indexOf('POSTRef') !== -1) {
+			values.POSTRef = this.POSTRef;
+		}
+
+		if (fields.indexOf('POSTAmount') !== -1) {
+			values.POSTAmount = this.getPOSTAmountDecimal();
+		}
+
+		if (fields.indexOf('cashAmount') !== -1) {
+			values.cashAmount = this.getTotalAmount();
+		}
+
+		const result = this.props.validate(values);
+		this.setErrors(fields, result);
+
+		return result === undefined;
+	}
+
+	/**
+	 * From a list of fields that were validated and the validation result, updates values in
+	 * this.inputErrors with null (no error) or a localized error message.
+	 *
+	 * @param {Array} fields
+	 * @param {Object} errors
+	 */
+	setErrors(fields, errors = {}) {
+		fields.forEach((field) => {
+			if (errors[field]) {
+				this.inputErrors[field] = this.t(`closeRegister.inputErrors.${field}`);
+			} else {
+				this.inputErrors[field] = null;
+			}
+		});
 	}
 
 	render() {
@@ -191,6 +278,8 @@ class CloseRegister extends Component {
 								onChangeText={(value) => { this.onPOSTRefChange(value); }}
 								preText="#"
 								keyboardType="numeric"
+								error={this.inputErrors.POSTRef}
+								onBlur={() => { this.onFieldBlur('POSTRef'); }}
 							/>
 						</Field>
 						<Field>
@@ -200,16 +289,19 @@ class CloseRegister extends Component {
 								type="money"
 								onChangeValue={(value) => { this.onPOSTAmountChange(value); }}
 								localizer={this.props.localizer}
+								error={this.inputErrors.POSTAmount}
+								onBlur={() => { this.onFieldBlur('POSTAmount'); }}
 							/>
 						</Field>
 						<Field>
-							<Label>{this.t('closeRegister.fields.denominationsInput')}</Label>
+							<Label>{this.t('closeRegister.fields.cashAmount')}</Label>
 							<DenominationsInput
 								values={values}
 								localizer={this.props.localizer}
 								onChangeValue={(field, value) => this.onChangeValue(field, value)}
 								total={total}
 								totalLabel={this.t('closeRegister.fields.total')}
+								error={this.inputErrors.cashAmount}
 							/>
 						</Field>
 					</MainContent>

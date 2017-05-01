@@ -3,8 +3,13 @@ export default {
 	fields: {
 		POSTRef: 'Numéro de lot du terminal de point de vente (TPV)',
 		POSTAmount: 'Montant total du lot du TPV',
-		denominationsInput: 'Billets et monnaies dans la caisse à la fermeture',
+		cashAmount: 'Billets et monnaies dans la caisse à la fermeture',
 		total: 'Total',
+	},
+	inputErrors: {
+		POSTRef: 'Veuillez spécifier un numéro de référence',
+		POSTAmount: 'Veuillez entrer un montant valide',
+		cashAmount: 'Veuillez entrer un montant valide',
 	},
 	actions: {
 		close: 'Fermer la caisse',
