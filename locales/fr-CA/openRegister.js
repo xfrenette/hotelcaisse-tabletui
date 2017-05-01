@@ -2,8 +2,12 @@ export default {
 	title: 'Ouverture de caisse',
 	fields: {
 		employee: 'Nom de l\'employé(e)',
-		denominationsInput: 'Billets et monnaies dans la caisse à l\'ouverture',
+		cashAmount: 'Billets et monnaies dans la caisse à l\'ouverture',
 		total: 'Total',
+	},
+	inputErrors: {
+		employee: 'Veuillez entrer un nom',
+		cashAmount: 'Veuillez entrer un montant valide',
 	},
 	actions: {
 		open: 'Ouvrir la caisse',

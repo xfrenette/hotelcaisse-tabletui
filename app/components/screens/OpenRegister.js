@@ -23,12 +23,14 @@ const propTypes = {
 	moneyDenominations: React.PropTypes.array.isRequired,
 	onCancel: React.PropTypes.func,
 	onOpen: React.PropTypes.func,
+	validate: React.PropTypes.func,
 	localizer: React.PropTypes.instanceOf(Localizer).isRequired,
 };
 
 const defaultProps = {
 	onCancel: null,
 	onOpen: null,
+	validate: null,
 };
 
 @observer
@@ -53,6 +55,18 @@ class OpenRegister extends Component {
 	 */
 	@observable
 	denominationsQuantity = {};
+	/**
+	 * Error message for each of the inputs. Set a value to null if no error, else set it to the
+	 * error message. Note: since this is an observable object, all its keys must be defined at
+	 * initialisation, we cannot add or remove keys later.
+	 *
+	 * @type {Object}
+	 */
+	@observable
+	inputErrors = {
+		employee: null,
+		cashAmount: null,
+	};
 
 	/**
 	 * When mounting, build the denominationsValue and denominationsQuantity objects.
@@ -90,11 +104,15 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Called when the "Open register" button is pressed.
+	 * Called when the "Open register" button is pressed. First validates the field. If valid, calls
+	 * onOpen in the props.
 	 */
 	onOpenRegister() {
-		if (this.props.onOpen) {
-			this.props.onOpen(this.employee, this.getTotalAmount());
+		const valid = this.validate(['employee', 'cashAmount']);
+		if (valid) {
+			if (this.props.onOpen) {
+				this.props.onOpen(this.employee, this.getTotalAmount());
+			}
 		}
 	}
 
@@ -105,6 +123,13 @@ class OpenRegister extends Component {
 	 */
 	onEmployeeChange(value) {
 		this.employee = value;
+	}
+
+	/**
+	 * When we blur from the employee field, we validate its value
+	 */
+	onEmployeeBlur() {
+		this.validate(['employee']);
 	}
 
 	/**
@@ -121,8 +146,8 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Returns the total money amount as represented by the DenominationsInput. Returns it as a Decimal
-	 * object.
+	 * Returns the total money amount as represented by the DenominationsInput. Returns it as a
+	 * Decimal object.
 	 *
 	 * @return {Decimal}
 	 */
@@ -154,6 +179,53 @@ class OpenRegister extends Component {
 		return this.props.localizer.t(path);
 	}
 
+	/**
+	 * Receives a list of fields to validate (see this.inputErrors for valid field names) and, if a
+	 * validate function is defined in the props, will call it to validate only those fields. Will
+	 * then call setErrors() with the resulting validation. This function returns a boolean that is
+	 * true if no validation errors were found (or if no validate function in the props).
+	 *
+	 * @param {Array} fields
+	 * @return {Boolean}
+	 */
+	validate(fields) {
+		if (!this.props.validate) {
+			return true;
+		}
+
+		const values = {};
+
+		if (fields.indexOf('employee') !== -1) {
+			values.employee = this.employee;
+		}
+
+		if (fields.indexOf('cashAmount') !== -1) {
+			values.cashAmount = this.getTotalAmount();
+		}
+
+		const result = this.props.validate(values);
+		this.setErrors(fields, result);
+
+		return result === undefined;
+	}
+
+	/**
+	 * From a list of fields that were validated and the validation result, updates values in
+	 * this.inputErrors with null (no error) or a localized error message.
+	 *
+	 * @param {Array} fields
+	 * @param {Object} errors
+	 */
+	setErrors(fields, errors = {}) {
+		fields.forEach((field) => {
+			if (errors[field]) {
+				this.inputErrors[field] = this.t(`openRegister.inputErrors.${field}`);
+			} else {
+				this.inputErrors[field] = null;
+			}
+		});
+	}
+
 	render() {
 		const values = this.denominationsInputValues;
 		const total = this.getFormattedTotalAmount();
@@ -172,16 +244,19 @@ class OpenRegister extends Component {
 								value={this.employee}
 								onChangeText={(value) => { this.onEmployeeChange(value); }}
 								autoCapitalize="words"
+								error={this.inputErrors.employee}
+								onBlur={() => { this.onEmployeeBlur(); }}
 							/>
 						</Field>
 						<Field>
-							<Label>{this.t('openRegister.fields.denominationsInput')}</Label>
+							<Label>{this.t('openRegister.fields.cashAmount')}</Label>
 							<DenominationsInput
 								values={values}
 								localizer={this.props.localizer}
 								onChangeValue={(field, value) => this.onChangeValue(field, value)}
 								total={total}
 								totalLabel={this.t('openRegister.fields.total')}
+								error={this.inputErrors.cashAmount}
 							/>
 						</Field>
 					</MainContent>

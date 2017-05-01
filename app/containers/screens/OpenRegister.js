@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react/native';
-import Decimal from 'decimal.js';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import OpenRegisterScreen from '../../components/screens/OpenRegister';
 
@@ -21,23 +20,16 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Opens the register with the supplied employee and amount and redirects to home. First
-	 * validates that the values are valid. If they are not valid, shows an alert.
+	 * It is the responsibility of the component to validate values before calling this function
 	 *
-	 * @param {String} rawEmployee
+	 * Opens the register with the supplied employee and amount and redirects to home. It is the
+	 * responsibility of the component to validate entries before calling this method since we will
+	 * not do it here.
+	 *
+	 * @param {String} employee
 	 * @param {Decimal} amount
 	 */
-	onOpen(rawEmployee, amount) {
-		const employee = rawEmployee ? rawEmployee.trim() : '';
-
-		if (!this.validateValues(employee, amount)) {
-			this.props.ui.showErrorAlert(
-				this.t('openRegister.messages.fieldsInvalid.title'),
-				this.t('openRegister.messages.fieldsInvalid.content'),
-			);
-			return;
-		}
-
+	onOpen(employee, amount) {
 		this.newRegister.open(employee, amount);
 		this.props.business.deviceRegister = this.newRegister;
 
@@ -70,27 +62,13 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Returns a boolean indicating if the supplied values for employee and amount are valid to open
-	 * the register.
-	 * - The employee name must not be empty
-	 * - The amount must be a non-negative Decimal
+	 * Validates opening values by calling Register.validateOpen() and returns its result.
 	 *
-	 * @param {String} rawEmployee
-	 * @param {Decimal} amount
-	 * @return {Boolean}
+	 * @param {Object} values (valid keys: employee, cashAmount)
+	 * @return {Object}
 	 */
-	validateValues(rawEmployee, amount) {
-		const employee = rawEmployee ? rawEmployee.trim() : '';
-
-		if (employee === '') {
-			return false;
-		}
-
-		if (!(amount instanceof Decimal) || amount.isNegative()) {
-			return false;
-		}
-
-		return true;
+	validate(values) {
+		return Register.validateOpen(values);
 	}
 
 	render() {
@@ -100,6 +78,7 @@ class OpenRegister extends Component {
 				onOpen={(employee, amount) => { this.onOpen(employee, amount); }}
 				localizer={this.props.localizer}
 				moneyDenominations={this.props.ui.settings.moneyDenominations}
+				validate={values => this.validate(values)}
 			/>
 		);
 	}
