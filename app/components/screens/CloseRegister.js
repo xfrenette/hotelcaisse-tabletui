@@ -76,6 +76,12 @@ class CloseRegister extends Component {
 		POSTAmount: null,
 		cashAmount: null,
 	};
+	/**
+	 * References to some components
+	 *
+	 * @type {Object}
+	 */
+	nodeRefs = {};
 
 	/**
 	 * When mounting, build the denominationsValue and denominationsQuantity objects.
@@ -144,8 +150,28 @@ class CloseRegister extends Component {
 		this.POSTAmount = value;
 	}
 
+	/**
+	 * Listener added on blur on some fields to validate their value when blurring.
+	 *
+	 * @param {String} field
+	 */
 	onFieldBlur(field) {
 		this.validate([field]);
+	}
+
+	/**
+	 * Called by some fields when the field is "submitted"; we then focus the next field.
+	 *
+	 * @param {String} field
+	 */
+	onFieldSubmit(field) {
+		if (field === 'POSTRef') {
+			this.nodeRefs.POSTAmount.focus();
+		}
+
+		if (field === 'POSTAmount') {
+			this.nodeRefs.cashAmount.focus();
+		}
 	}
 
 	/**
@@ -280,22 +306,29 @@ class CloseRegister extends Component {
 								keyboardType="numeric"
 								error={this.inputErrors.POSTRef}
 								onBlur={() => { this.onFieldBlur('POSTRef'); }}
+								onSubmitEditing={() => { this.onFieldSubmit('POSTRef'); }}
+								returnKeyType="next"
 							/>
 						</Field>
 						<Field>
 							<Label>{this.t('closeRegister.fields.POSTAmount')}</Label>
 							<NumberInput
+								ref={(node) => { this.nodeRefs.POSTAmount = node; }}
 								value={this.POSTAmount}
 								type="money"
 								onChangeValue={(value) => { this.onPOSTAmountChange(value); }}
 								localizer={this.props.localizer}
 								error={this.inputErrors.POSTAmount}
 								onBlur={() => { this.onFieldBlur('POSTAmount'); }}
+								onSubmitEditing={() => { this.onFieldSubmit('POSTAmount'); }}
+								selectTextOnFocus
+								returnKeyType="next"
 							/>
 						</Field>
 						<Field>
 							<Label>{this.t('closeRegister.fields.cashAmount')}</Label>
 							<DenominationsInput
+								ref={(node) => { this.nodeRefs.cashAmount = node; }}
 								values={values}
 								localizer={this.props.localizer}
 								onChangeValue={(field, value) => this.onChangeValue(field, value)}
