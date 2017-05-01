@@ -4,11 +4,12 @@ import styleVars from '../../styles/variables';
 
 const propTypes = {
 	style: NativeText.propTypes.style,
-	children: React.PropTypes.node.isRequired,
+	children: React.PropTypes.node,
 };
 
 const defaultProps = {
 	style: null,
+	children: null,
 };
 
 const Text = (props) => {
