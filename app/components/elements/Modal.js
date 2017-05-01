@@ -121,10 +121,10 @@ class Modal extends Component {
 				animationType="none"
 				transparent
 			>
-				<View style={styles.Background}>
+				<View style={styles.background}>
 					<View style={styles.modal} elevation={4}>
 						{ title }
-						<View style={styles.modalContent}>
+						<View style={styles.content}>
 							{ this.props.children }
 						</View>
 						{ actions }
