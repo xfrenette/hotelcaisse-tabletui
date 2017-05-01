@@ -123,7 +123,7 @@ class Console extends Component {
 
 	renderOpenedConsole() {
 		return (
-			<View style={styles.opened}>
+			<View style={styles.opened} elevation={10}>
 				<ScrollView style={styles.entries}>
 					{ this.renderEntries() }
 				</ScrollView>
