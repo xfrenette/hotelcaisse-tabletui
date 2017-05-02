@@ -23,7 +23,7 @@ MainContent.defaultProps = defaultProps;
 const styles = {
 	mainContent: {
 		paddingHorizontal: styleVars.mainContentSidePadding,
-		paddingVertical: 2 * styleVars.horizontalRhythm,
+		paddingVertical: styleVars.verticalRhythm * 2,
 	},
 };
 
