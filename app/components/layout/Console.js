@@ -112,11 +112,13 @@ class Console extends Component {
 
 		return (
 			<View key={index}>
-				<View style={styles.entry}>
+				<Text>
 					<Text style={styles.entryDate}>[{ entry.date.getTime() / 1000 }]</Text>
+					<Text> </Text>
 					<Text style={styles.entryNamespace}>{ entry.namespace }</Text>
+					<Text> </Text>
 					<Text style={style}>{ entry.message }</Text>
-				</View>
+				</Text>
 				{ data }
 			</View>
 		);
@@ -187,22 +189,15 @@ const styles = {
 		padding,
 	},
 
-	entry: {
-		flexDirection: 'row',
-	},
-
 	entryNamespace: {
-		paddingRight: 5,
 		fontWeight: 'bold',
 		color: '#999',
 	},
 
 	entryDate: {
-		paddingRight: 10,
 	},
 
 	entryData: {
-		paddingLeft: 20,
 	},
 
 	actions: {
