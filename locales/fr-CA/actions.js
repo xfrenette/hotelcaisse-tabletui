@@ -6,4 +6,5 @@ export default {
 	add: 'Ajouter',
 	save: 'Enregistrer',
 	delete: 'Supprimer',
+	next: 'Suivant',
 };

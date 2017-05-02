@@ -7,6 +7,7 @@ import Authentication from '../../app/components/screens/Authentication';
 import OpenRegister from '../../app/containers/screens/OpenRegister';
 import CloseRegister from '../../app/containers/screens/CloseRegister';
 import ManageRegister from '../../app/containers/screens/ManageRegister';
+import NewOrder from '../../app/containers/screens/NewOrder';
 import TestScreen from './TestScreen';
 
 export default () => ([
@@ -26,6 +27,7 @@ export default () => ([
 							{ component: OpenRegister, path: '/register/open' },
 							{ component: CloseRegister, path: '/register/close' },
 							{ component: ManageRegister, path: '/register/manage' },
+							{ component: NewOrder, path: '/orders/new' },
 						],
 					},
 				],
