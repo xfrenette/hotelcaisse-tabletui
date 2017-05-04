@@ -209,12 +209,12 @@ class CategorySidebar extends Component {
 		const buttons = [];
 		const style = [styles.buttons];
 
-		subCategories.forEach((subCategory) => {
-			buttons.push(this.renderCategoryButton(subCategory));
-		});
-
 		products.forEach((product) => {
 			buttons.push(this.renderProductButton(product));
+		});
+
+		subCategories.forEach((subCategory) => {
+			buttons.push(this.renderCategoryButton(subCategory));
 		});
 
 		if (buttons.length === 0) {
