@@ -29,13 +29,16 @@ class Sidebar extends Component {
 	}
 
 	render() {
+		const { style, children, ...otherProps } = this.props;
+
 		return (
 			<ScrollView
 				ref={(node) => { this.nodeRefs.scrollView = node; }}
-				style={[styles.scrollview, this.props.style]}
+				style={[styles.scrollview, style]}
 				contentContainerStyle={styles.sidebar}
+				{...otherProps}
 			>
-				{ this.props.children }
+				{ children }
 			</ScrollView>
 		);
 	}

@@ -10,11 +10,14 @@ const baseLineHeight = verticalRhythm;
 const baseBlockMargin = verticalRhythm;
 
 const colors = {
+	black1: '#000',
 	blue1: '#33b5e6',
 	blue2: '#46ccfb',
 	white1: '#ffffff',
 	white2: '#fbfbfb',
 	darkGrey1: '#555555',
+	darkGrey2: '#333',
+	darkGrey3: '#444',
 	grey1: '#e1e1e1',
 	grey2: '#aaaaaa',
 	lightGrey1: '#fafafa',
@@ -22,6 +25,8 @@ const colors = {
 	green2: '#279b36',
 	transparentBlack1: 'rgba(0, 0, 0, 0.4)',
 	red1: '#aa0000',
+	orange1: '#ce9d13',
+	orange2: '#edbf40',
 };
 
 const variables = {

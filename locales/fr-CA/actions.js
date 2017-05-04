@@ -7,4 +7,5 @@ export default {
 	save: 'Enregistrer',
 	delete: 'Supprimer',
 	next: 'Suivant',
+	back: 'Retour',
 };
