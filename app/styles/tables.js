@@ -6,4 +6,7 @@ export default {
 		alignItems: 'flex-start',
 		paddingTop: 1,
 	},
+	header: {
+		fontWeight: 'bold',
+	},
 };
