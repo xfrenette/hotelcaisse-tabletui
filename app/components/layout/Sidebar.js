@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
 import styleVars from '../../styles/variables';
 
@@ -32,14 +32,15 @@ class Sidebar extends Component {
 		const { style, children, ...otherProps } = this.props;
 
 		return (
-			<ScrollView
-				ref={(node) => { this.nodeRefs.scrollView = node; }}
-				style={[styles.scrollview, style]}
-				contentContainerStyle={styles.sidebar}
-				{...otherProps}
-			>
-				{ children }
-			</ScrollView>
+			<View style={[styles.scrollview, style]}>
+				<ScrollView
+					ref={(node) => { this.nodeRefs.scrollView = node; }}
+					contentContainerStyle={styles.sidebar}
+					{...otherProps}
+				>
+					{ children }
+				</ScrollView>
+			</View>
 		);
 	}
 }
@@ -49,7 +50,6 @@ Sidebar.defaultProps = defaultProps;
 
 const styles = {
 	scrollview: {
-		flex: 1,
 		backgroundColor: styleVars.colors.darkGrey1,
 	},
 	sidebar: {
