@@ -5,19 +5,25 @@ import styleVars from '../../styles/variables';
 
 const propTypes = {
 	children: PropTypes.node,
+	style: View.propTypes.style,
 };
 
 const defaultProps = {
 	children: null,
+	style: null,
 };
 
-const Dropdown = props => (
-	<View style={styles.dropdown}>
-		<Picker mode="dropdown" style={styles.picker}>
-			{ props.children }
-		</Picker>
-	</View>
-);
+const Dropdown = (props) => {
+	const { style, children, ...otherProps } = props;
+
+	return (
+		<View style={[styles.dropdown, style]}>
+			<Picker mode="dropdown" style={styles.picker} {...otherProps}>
+				{ children }
+			</Picker>
+		</View>
+	);
+};
 
 Dropdown.Option = Picker.Item;
 Dropdown.propTypes = propTypes;
