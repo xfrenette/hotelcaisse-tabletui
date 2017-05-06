@@ -4,28 +4,34 @@ import { View } from 'react-native';
 import styleVars from '../../../styles/variables';
 
 const propTypes = {
-	children: PropTypes.node.isRequired,
+	children: PropTypes.node,
 	first: PropTypes.bool,
 	last: PropTypes.bool,
+	compact: PropTypes.bool,
+	header: PropTypes.bool,
 	style: View.propTypes.style,
 };
 
 const defaultProps = {
 	first: false,
 	last: false,
+	compact: false,
+	header: false,
 	style: null,
+	children: null,
 };
 
 const Cell = (props) => {
-	const cellStyles = [styles.cell];
+	const cellStyles = [props.compact ? styles.compact : styles.cell];
 
 	if (props.first) {
-		cellStyles.push(styles.cellFirst);
+		cellStyles.push(styles.first);
 	}
 
 	if (props.last) {
-		cellStyles.push(styles.cellLast);
+		cellStyles.push(styles.last);
 	}
+
 
 	cellStyles.push(props.style);
 
@@ -41,15 +47,15 @@ Cell.defaultProps = defaultProps;
 
 const styles = {
 	cell: {
-		flex: 1,
 		paddingHorizontal: styleVars.horizontalRhythm / 2,
 	},
-
-	cellFirst: {
+	compact: {
+		paddingHorizontal: styleVars.horizontalRhythm / 4,
+	},
+	first: {
 		paddingLeft: 0,
 	},
-
-	cellLast: {
+	last: {
 		paddingRight: 0,
 	},
 };
