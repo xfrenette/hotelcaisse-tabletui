@@ -7,23 +7,33 @@ const propTypes = {
 	children: PropTypes.node.isRequired,
 	first: PropTypes.bool,
 	last: PropTypes.bool,
+	header: PropTypes.bool,
+	style: View.propTypes.style,
 };
 
 const defaultProps = {
 	first: false,
 	last: false,
+	header: false,
+	style: null,
 };
 
 const Row = (props) => {
 	const rowStyles = [styles.row];
 
 	if (props.first) {
-		rowStyles.push(styles.rowFirst);
+		rowStyles.push(styles.first);
 	}
 
 	if (props.last) {
-		rowStyles.push(styles.rowLast);
+		rowStyles.push(styles.last);
 	}
+
+	if (props.header) {
+		rowStyles.push(styles.header);
+	}
+
+	rowStyles.push(props.style);
 
 	return (
 		<View style={rowStyles}>
@@ -42,15 +52,20 @@ const styles = {
 		paddingTop: (styleVars.verticalRhythm / 2) - 1,
 		paddingBottom: styleVars.verticalRhythm / 2,
 		flexDirection: 'row',
+		alignItems: 'center',
 	},
 
-	rowFirst: {
+	first: {
 		borderTopWidth: 1,
 		borderTopColor: styleVars.theme.lineColor,
 		paddingTop: (styleVars.verticalRhythm / 2) - 2,
 	},
 
-	rowLast: {
+	last: {
+	},
+
+	header: {
+		borderBottomWidth: 0,
 	},
 };
 
