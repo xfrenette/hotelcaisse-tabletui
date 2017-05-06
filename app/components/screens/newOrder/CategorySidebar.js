@@ -345,7 +345,7 @@ const styles = {
 		marginBottom: styleVars.verticalRhythm,
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingHorizontal: styleVars.horizontalRhythm,
+		paddingHorizontal: 10,
 		backgroundColor: styleVars.theme.mainColor,
 		height: styleVars.verticalRhythm * 3,
 		borderRadius: 4,
@@ -358,7 +358,6 @@ const styles = {
 		color: styleVars.colors.grey2,
 	},
 	product: {
-
 	},
 	category: {
 		backgroundColor: styleVars.colors.orange1,
