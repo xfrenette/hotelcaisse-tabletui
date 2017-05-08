@@ -25,7 +25,8 @@ class NewOrder extends Component {
 		this.newOrder.items.push(item);
 	}
 
-	onItemQuantityChange(item, quantity) {
+	onItemQuantityChange(item, rawQuantity) {
+		const quantity = rawQuantity < 1 ? 1 : rawQuantity;
 		item.quantity = quantity;
 	}
 
