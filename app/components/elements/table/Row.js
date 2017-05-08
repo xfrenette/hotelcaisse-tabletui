@@ -47,17 +47,16 @@ Row.defaultProps = defaultProps;
 
 const styles = {
 	row: {
-		borderBottomWidth: 1,
-		borderBottomColor: styleVars.theme.lineColor,
-		paddingTop: (styleVars.verticalRhythm / 2) - 1,
-		paddingBottom: styleVars.verticalRhythm / 2,
+		borderTopWidth: 1,
+		borderTopColor: styleVars.theme.lineColor,
+		paddingTop: (styleVars.verticalRhythm / 2),
+		paddingBottom: styleVars.verticalRhythm / 2 - 1,
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
 
 	first: {
-		borderTopWidth: 1,
-		borderTopColor: styleVars.theme.lineColor,
+		borderTopWidth: 0,
 		paddingTop: (styleVars.verticalRhythm / 2) - 2,
 	},
 
