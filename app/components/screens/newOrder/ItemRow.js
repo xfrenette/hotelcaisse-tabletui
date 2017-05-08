@@ -9,7 +9,7 @@ import {
 	Text,
 	NumberInput,
 	Dropdown,
-	TrashButton,
+	SwipeDelete,
 } from '../../elements';
 import { Row, Cell } from '../../elements/table';
 
@@ -32,18 +32,43 @@ const defaultProps = {
 
 @observer
 class ItemRow extends Component {
+	/**
+	 * Simple alias to this.props.localizer.t
+	 *
+	 * @param {String} path
+	 * @return {String}
+	 */
+	t(path) {
+		return this.props.localizer.t(path);
+	}
+
+	/**
+	 * Called when the quantity input value changes
+	 *
+	 * @param {Number} quantity
+	 */
 	onQuantityChange(quantity) {
 		if (this.props.onQuantityChange) {
 			this.props.onQuantityChange(quantity);
 		}
 	}
 
+	/**
+	 * Called when the user presses the delete button
+	 */
 	onRemove() {
 		if (this.props.onRemove) {
 			this.props.onRemove();
 		}
 	}
 
+	/**
+	 * Called when the user selects another variant of the parent product (only applicable when the
+	 * product shown is a variant). Receives the uuid of the new variant, but the variant product
+	 * instance will be sent to the onVariantChange function in the props.
+	 *
+	 * @param {String} uuid
+	 */
 	onVariantChange(uuid) {
 		const parentProduct = this.props.item.product.parent;
 		const variant = parentProduct.variants.find(currVariant => currVariant.uuid === uuid);
@@ -57,7 +82,7 @@ class ItemRow extends Component {
 		const item = this.props.item;
 		const product = item.product;
 		const productForName = product.isVariant ? product.parent : product;
-		const unitPrice = this.props.localizer.formatCurrency(item.unitFullPrice.toNumber());
+		const totalPrice = this.props.localizer.formatCurrency(item.total.toNumber());
 		let description = null;
 		let variantsDropdown = null;
 
@@ -86,30 +111,30 @@ class ItemRow extends Component {
 		}
 
 		return (
-			<Row first={this.props.isFirst}>
-				<Cell compact first style={this.props.cellStyles.name}>
-					<View style={styles.productNameAndVariant}>
-						<View style={styles.productNameContainer}>
-							<Text style={styles.productName}>{ productForName.name }</Text>
-							{ description }
+			<SwipeDelete label={this.t('actions.delete')} onDelete={() => { this.onRemove(); }}>
+				<Row first={this.props.isFirst}>
+					<Cell first style={this.props.cellStyles.quantity}>
+						<NumberInput
+							value={item.quantity}
+							showIncrementors
+							selectTextOnFocus
+							onChangeValue={(value) => { this.onQuantityChange(value); }}
+						/>
+					</Cell>
+					<Cell style={this.props.cellStyles.name}>
+						<View style={styles.productNameAndVariant}>
+							<View style={styles.productNameContainer}>
+								<Text style={styles.productName}>{ productForName.name }</Text>
+								{ description }
+							</View>
+							{ variantsDropdown }
 						</View>
-						{ variantsDropdown }
-					</View>
-				</Cell>
-				<Cell compact style={this.props.cellStyles.unitPrice}>
-					<Text>{ unitPrice }</Text>
-				</Cell>
-				<Cell compact style={this.props.cellStyles.quantity}>
-					<NumberInput
-						value={item.quantity}
-						showIncrementors
-						onChangeValue={(value) => { this.onQuantityChange(value); }}
-					/>
-				</Cell>
-				<Cell style={this.props.cellStyles.actions} last>
-					<TrashButton onPress={() => { this.onRemove(); }} />
-				</Cell>
-			</Row>
+					</Cell>
+					<Cell last style={this.props.cellStyles.totalPrice}>
+						<Text style={styles.price}>{ totalPrice }</Text>
+					</Cell>
+				</Row>
+			</SwipeDelete>
 		);
 	}
 }
@@ -130,8 +155,11 @@ const styles = {
 		flex: 1,
 	},
 	productVariantDropdown: {
-		width: 150,
+		width: 175,
 		marginLeft: styleVars.horizontalRhythm,
+	},
+	price: {
+		fontSize: styleVars.bigFontSize,
 	},
 };
 
