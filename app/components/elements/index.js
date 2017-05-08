@@ -10,6 +10,7 @@ import Title from './Title';
 import Modal from './Modal';
 import TrashButton from './TrashButton';
 import BottomBarBackButton from './BottomBarBackButton';
+import SwipeDelete from './SwipeDelete';
 
 export {
 	Button,
@@ -24,4 +25,5 @@ export {
 	Modal,
 	TrashButton,
 	BottomBarBackButton,
+	SwipeDelete,
 };

@@ -25,6 +25,7 @@ const colors = {
 	green2: '#279b36',
 	transparentBlack1: 'rgba(0, 0, 0, 0.4)',
 	red1: '#aa0000',
+	red2: '#cc0000',
 	orange1: '#ce9d13',
 	orange2: '#edbf40',
 };
@@ -67,6 +68,7 @@ const variables = {
 		shadow: colors.grey1,
 		lineColor: colors.grey1,
 		dangerColor: colors.red1,
+		dangerBackgroundColor: colors.red2,
 	},
 };
 
