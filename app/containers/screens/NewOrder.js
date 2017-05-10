@@ -51,6 +51,10 @@ class NewOrder extends Component {
 		this.newOrder.removeCredit(credit);
 	}
 
+	onNoteChange(note) {
+		this.newOrder.note = note;
+	}
+
 	render() {
 		return (
 			<NewOrderScreen
@@ -63,6 +67,7 @@ class NewOrder extends Component {
 				onItemRemove={(item) => { this.onItemRemove(item); }}
 				onCreditRemove={(credit) => { this.onCreditRemove(credit); }}
 				onItemVariantChange={(...attrs) => { this.onItemVariantChange(...attrs); }}
+				onNoteChange={(note) => { this.onNoteChange(note); }}
 				order={this.newOrder}
 			/>
 		);

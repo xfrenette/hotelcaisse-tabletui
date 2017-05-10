@@ -12,6 +12,10 @@ export default {
 			amount: 'Doit être positif',
 		},
 	},
+	note: {
+		label: 'Notes',
+		instructions: 'Les notes sont utilisées uniquement à l\'interne et n\'apparaitront pas sur la facture.',
+	},
 	actions: {
 		addCredit: 'Ajouter un dépôt',
 	},

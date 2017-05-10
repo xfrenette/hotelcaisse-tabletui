@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, TextInput as NativeTextInput } from 'react-native';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
@@ -17,6 +17,7 @@ import {
 	Text,
 	BottomBarBackButton,
 	Title,
+	TextInput,
 } from '../../elements';
 import { Row, Cell } from '../../elements/table';
 import CategorySidebar from './CategorySidebar';
@@ -25,6 +26,7 @@ import Credits from './Credits';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
 import typographyStyles from '../../../styles/typography';
+import layoutStyles from '../../../styles/layout';
 
 const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
@@ -37,6 +39,7 @@ const propTypes = {
 	onItemRemove: PropTypes.func,
 	onCreditRemove: PropTypes.func,
 	onItemVariantChange: PropTypes.func,
+	onNoteChange: PropTypes.func,
 };
 
 const defaultProps = {
@@ -49,6 +52,7 @@ const defaultProps = {
 	onItemRemove: null,
 	onCreditRemove: null,
 	onItemVariantChange: null,
+	onNoteChange: null,
 };
 
 @observer
@@ -139,6 +143,12 @@ class NewOrderScreen extends Component {
 		}
 	}
 
+	onNoteChange(note) {
+		if (this.props.onNoteChange) {
+			this.props.onNoteChange(note);
+		}
+	}
+
 	/**
 	 * Message rendered in the items list when we don't have any items
 	 *
@@ -164,7 +174,6 @@ class NewOrderScreen extends Component {
 
 		return (
 			<View>
-
 				{ items }
 			</View>
 		);
@@ -207,8 +216,8 @@ class NewOrderScreen extends Component {
 		const credits = this.props.order.credits.slice();
 
 		return (
-			<View style={styles.credits}>
-				<Title style={styles.title}>{ this.t('order.credits.label') }</Title>
+			<View style={layoutStyles.section}>
+				<Title style={layoutStyles.title}>{ this.t('order.credits.label') }</Title>
 				<Credits
 					localizer={this.props.localizer}
 					creditValidate={this.props.creditValidate}
@@ -282,9 +291,29 @@ class NewOrderScreen extends Component {
 		return this.components.bottomBar;
 	}
 
+	/**
+	 * Renders the 'notes' section
+	 *
+	 * @return {Component}
+	 */
+	renderNotes() {
+		return (
+			<View style={layoutStyles.section}>
+				<Title style={layoutStyles.title}>{ this.t('order.note.label') }</Title>
+				<TextInput
+					multiline
+					numberOfLines={4}
+					onChangeText={(note) => { this.onNoteChange(note); }}
+				/>
+				<Text style={[typographyStyles.instructions]}>{ this.t('order.note.instructions') }</Text>
+			</View>
+		);
+	}
+
 	render() {
 		const hasItems = !!this.items.length;
 		const shouldShowCredits = hasItems || this.props.order.credits.length > 0;
+		const shouldShowNotes = hasItems || this.props.order.note.length > 0;
 
 		return (
 			<Screen>
@@ -293,9 +322,12 @@ class NewOrderScreen extends Component {
 					<View style={styles.screenContent}>
 						<ScrollView style={styles.screenMain}>
 							<MainContent withSidebar>
-								<Title style={styles.title}>{ this.t('order.items.label') }</Title>
-								{ hasItems ? this.renderItems() : this.renderEmptyItems() }
+								<Title style={layoutStyles.title}>{ this.t('order.items.label') }</Title>
+								<View style={layoutStyles.section}>
+									{ hasItems ? this.renderItems() : this.renderEmptyItems() }
+								</View>
 								{ shouldShowCredits ? this.renderCredits() : null }
+								{ shouldShowNotes ? this.renderNotes() : null }
 							</MainContent>
 						</ScrollView>
 						{ this.renderCategorySidebar() }
@@ -338,9 +370,6 @@ const styles = {
 	},
 	credits: {
 		marginTop: styleVars.baseBlockMargin * 2,
-	},
-	title: {
-		marginBottom: styleVars.baseBlockMargin,
 	},
 };
 
