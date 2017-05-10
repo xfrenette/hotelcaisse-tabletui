@@ -298,7 +298,7 @@ class NewOrderScreen extends Component {
 	 */
 	renderNotes() {
 		return (
-			<View style={layoutStyles.section}>
+			<View>
 				<Title style={layoutStyles.title}>{ this.t('order.note.label') }</Title>
 				<TextInput
 					multiline
@@ -306,6 +306,17 @@ class NewOrderScreen extends Component {
 					onChangeText={(note) => { this.onNoteChange(note); }}
 				/>
 				<Text style={[typographyStyles.instructions]}>{ this.t('order.note.instructions') }</Text>
+			</View>
+		);
+	}
+
+	renderTotalBar() {
+		const total = this.props.order.total;
+		const formattedTotal = this.props.localizer.formatCurrency(total.toNumber());
+
+		return (
+			<View style={styles.totalBar}>
+				<Text style={styles.totalAmount}>{ formattedTotal }</Text>
 			</View>
 		);
 	}
@@ -320,16 +331,19 @@ class NewOrderScreen extends Component {
 				{ this.renderTopBar() }
 				<View style={{ flex: 1 }}>
 					<View style={styles.screenContent}>
-						<ScrollView style={styles.screenMain}>
-							<MainContent withSidebar>
-								<Title style={layoutStyles.title}>{ this.t('order.items.label') }</Title>
-								<View style={layoutStyles.section}>
-									{ hasItems ? this.renderItems() : this.renderEmptyItems() }
-								</View>
-								{ shouldShowCredits ? this.renderCredits() : null }
-								{ shouldShowNotes ? this.renderNotes() : null }
-							</MainContent>
-						</ScrollView>
+						<View style={styles.screenMain}>
+							<ScrollView>
+								<MainContent withSidebar style={styles.mainContent}>
+									<Title style={layoutStyles.title}>{ this.t('order.items.label') }</Title>
+									<View style={layoutStyles.section}>
+										{ hasItems ? this.renderItems() : this.renderEmptyItems() }
+									</View>
+									{ shouldShowCredits ? this.renderCredits() : null }
+									{ shouldShowNotes ? this.renderNotes() : null }
+								</MainContent>
+							</ScrollView>
+							{ this.renderTotalBar() }
+						</View>
 						{ this.renderCategorySidebar() }
 					</View>
 				</View>
@@ -347,8 +361,14 @@ const styles = {
 		flexDirection: 'row',
 		flex: 1,
 	},
+	screenMain: {
+		flex: 1,
+	},
 	screenSidebar: {
 		width: 300,
+	},
+	mainContent: {
+		paddingBottom: styleVars.verticalRhythm * 5,
 	},
 	emptyItems: {
 		flex: 1,
@@ -356,17 +376,27 @@ const styles = {
 	headerCell: {
 		textAlign: 'center',
 	},
-	total: {
+	totalBar: {
 		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-end',
+		height: (styleVars.verticalRhythm * 3) - 1,
+		borderTopWidth: 1,
+		borderTopColor: styleVars.theme.lineColor,
+		backgroundColor: styleVars.colors.transparentWhite1,
+		paddingHorizontal: styleVars.horizontalRhythm,
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		right: 0,
 	},
 	totalAmount: {
-		fontSize: styleVars.verticalRhythm,
-		fontWeight: 'bold',
+		fontSize: styleVars.verticalRhythm * 1.5,
+		lineHeight: styleVars.verticalRhythm * 1.5,
+		color: styleVars.theme.mainColor,
 	},
 	totalLabel: {
-		fontSize: styleVars.smallFontSize,
-		marginRight: 20,
-		fontStyle: 'italic',
+		marginRight: 15,
 	},
 	credits: {
 		marginTop: styleVars.baseBlockMargin * 2,

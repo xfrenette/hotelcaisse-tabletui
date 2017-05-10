@@ -15,6 +15,7 @@ const colors = {
 	blue2: '#46ccfb',
 	white1: '#ffffff',
 	white2: '#fbfbfb',
+	transparentWhite1: 'rgba(255, 255, 255, 0.9)',
 	darkGrey1: '#555555',
 	darkGrey2: '#333',
 	darkGrey3: '#444',

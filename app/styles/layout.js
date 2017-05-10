@@ -11,6 +11,6 @@ export default {
 		marginBottom: styleVars.baseBlockMargin,
 	},
 	section: {
-		marginBottom: styleVars.baseBlockMargin * 2,
+		marginBottom: styleVars.baseBlockMargin * 3,
 	},
 };
