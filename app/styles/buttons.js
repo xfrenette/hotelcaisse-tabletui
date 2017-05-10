@@ -1,5 +1,8 @@
 import vars from './variables';
 
+/**
+ * Buttons styles that can be passed to layout in <Button layout={...} />
+ */
 export default {
 	// All buttons are built on the base
 	default: {
