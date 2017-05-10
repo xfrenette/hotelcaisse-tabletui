@@ -9,6 +9,7 @@ import styleVars from '../../styles/variables';
 
 const propTypes = {
 	style: NativeTextInput.propTypes.style,
+	numberOfLines: NativeTextInput.propTypes.numberOfLines,
 	labelStyle: Text.propTypes.style,
 	label: PropTypes.string,
 	preText: PropTypes.string,
@@ -18,6 +19,7 @@ const propTypes = {
 
 const defaultProps = {
 	style: null,
+	numberOfLines: 1,
 	labelStyle: null,
 	label: null,
 	preText: null,
@@ -38,6 +40,31 @@ class TextInput extends Component {
 	 */
 	focus() {
 		this.textInputNode.focus();
+	}
+
+	getNumberOfLines() {
+		let numberOfLines = this.props.numberOfLines;
+
+		if (typeof numberOfLines === 'number' && numberOfLines > 0) {
+			numberOfLines = Math.round(numberOfLines);
+		} else {
+			numberOfLines = 1;
+		}
+
+		return numberOfLines;
+	}
+
+	getInputStyle() {
+		const style = {
+			...styles.input,
+		};
+		const numberOfLines = this.getNumberOfLines();
+		const baseHeight = styleVars.input.height;
+		const extraHeight = (numberOfLines - 1) * styleVars.verticalRhythm;
+
+		style.height = (baseHeight + extraHeight) - 3;
+
+		return style;
 	}
 
 	renderLabel() {
@@ -91,7 +118,7 @@ class TextInput extends Component {
 				<View style={styles.group}>
 					{ label }
 					<View style={containerStyles}>
-						<View style={styles.input}>
+						<View style={this.getInputStyle()}>
 							{ preTextComponent }
 							<NativeTextInput
 								{...otherProps}
@@ -128,7 +155,6 @@ const styles = {
 		borderColor: styleVars.input.errorColor,
 	},
 	input: {
-		height: styleVars.input.height - 3,
 		backgroundColor: styleVars.input.backgroundColor,
 		marginTop: 1,
 		borderRadius: styleVars.input.borderRadius,
@@ -139,10 +165,10 @@ const styles = {
 	inputText: {
 		fontSize: styleVars.baseFontSize,
 		color: styleVars.mainTextColor,
-		lineHeight: styleVars.verticalRhythm - 2,
+		lineHeight: styleVars.verticalRhythm,
 		borderWidth: 0,
 		includeFontPadding: false,
-		textAlignVertical: 'center',
+		textAlignVertical: 'top',
 		flex: 1,
 		padding: 0,
 	},
