@@ -58,28 +58,30 @@ class TextInput extends Component {
 	}
 
 	render() {
-		const textStyle = [styles.inputText, this.props.style];
-		let preText;
-		let postText;
+		const { style, error, preText, postText, viewStyle, ...otherProps } = this.props;
+		const textStyle = [styles.inputText, style];
+		let preTextComponent;
+		let postTextComponent;
+		console.log(viewStyle);
 		const label = this.renderLabel();
 		const containerStyles = [styles.container];
 
-		if (this.props.error) {
+		if (error) {
 			containerStyles.push(styles.containerError);
 		}
 
-		if (this.props.preText) {
-			preText = (
+		if (preText) {
+			preTextComponent = (
 				<Text style={[styles.sideText, styles.preText]}>
-					{ this.props.preText }
+					{ preText }
 				</Text>
 			);
 		}
 
-		if (this.props.postText) {
-			postText = (
+		if (postText) {
+			postTextComponent = (
 				<Text style={[styles.sideText, styles.postText]}>
-					{ this.props.postText }
+					{ postText }
 				</Text>
 			);
 		}
@@ -90,14 +92,14 @@ class TextInput extends Component {
 					{ label }
 					<View style={containerStyles}>
 						<View style={styles.input}>
-							{ preText }
+							{ preTextComponent }
 							<NativeTextInput
-								{...this.props}
+								{...otherProps}
 								ref={(node) => { this.textInputNode = node; }}
 								underlineColorAndroid={'transparent'}
 								style={textStyle}
 							/>
-							{ postText }
+							{ postTextComponent }
 						</View>
 					</View>
 				</View>
