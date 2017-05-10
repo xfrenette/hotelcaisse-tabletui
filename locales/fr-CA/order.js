@@ -3,6 +3,14 @@ export default {
 	credits: {
 		label: 'Dépôts',
 		empty: 'Pour ajouter un dépôt, appuyez le bouton ci-dessous',
+		fields: {
+			note: 'Description',
+			amount: 'Montant',
+		},
+		errors: {
+			note: 'Ne peut être vide',
+			amount: 'Doit être positif',
+		},
 	},
 	actions: {
 		addCredit: 'Ajouter un dépôt',

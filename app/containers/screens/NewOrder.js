@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { observable } from 'mobx';
-import { inject, observer } from 'mobx-react/native';
+import { inject } from 'mobx-react/native';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Item from 'hotelcaisse-app/dist/business/Item';
+import Credit from 'hotelcaisse-app/dist/business/Credit';
 import NewOrderScreen from '../../components/screens/newOrder/Screen';
 
 @inject('localizer', 'business', 'uuidGenerator')
@@ -18,7 +18,11 @@ class NewOrder extends Component {
 		this.newOrder = new Order(this.props.uuidGenerator.generate());
 	}
 
-	onAddProduct(product) {
+	creditValidate(values) {
+		return Credit.validate(values);
+	}
+
+	onProductAdd(product) {
 		const productToAdd = product.hasVariants ? product.variants[0] : product;
 		const item = new Item(this.props.uuidGenerator.generate());
 		item.product = productToAdd;
@@ -38,14 +42,26 @@ class NewOrder extends Component {
 		item.product = variant;
 	}
 
+	onCreditAdd() {
+		const newCredit = new Credit(this.props.uuidGenerator.generate());
+		this.newOrder.credits.push(newCredit);
+	}
+
+	onCreditRemove(credit) {
+		this.newOrder.removeCredit(credit);
+	}
+
 	render() {
 		return (
 			<NewOrderScreen
 				localizer={this.props.localizer}
 				rootProductCategory={this.props.business.rootProductCategory}
-				onAddProduct={(product) => { this.onAddProduct(product); }}
+				creditValidate={values => this.creditValidate(values)}
+				onProductAdd={(product) => { this.onProductAdd(product); }}
+				onCreditAdd={() => { this.onCreditAdd(); }}
 				onItemQuantityChange={(...attrs) => { this.onItemQuantityChange(...attrs); }}
 				onItemRemove={(item) => { this.onItemRemove(item); }}
+				onCreditRemove={(credit) => { this.onCreditRemove(credit); }}
 				onItemVariantChange={(...attrs) => { this.onItemVariantChange(...attrs); }}
 				order={this.newOrder}
 			/>

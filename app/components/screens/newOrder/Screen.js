@@ -21,6 +21,7 @@ import {
 import { Row, Cell } from '../../elements/table';
 import CategorySidebar from './CategorySidebar';
 import ItemRow from './ItemRow';
+import Credits from './Credits';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
 import typographyStyles from '../../../styles/typography';
@@ -29,18 +30,24 @@ const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
 	rootProductCategory: PropTypes.instanceOf(ProductCategory),
 	localizer: PropTypes.instanceOf(Localizer),
-	onAddProduct: PropTypes.func,
+	creditValidate: PropTypes.func,
+	onProductAdd: PropTypes.func,
+	onCreditAdd: PropTypes.func,
 	onItemQuantityChange: PropTypes.func,
 	onItemRemove: PropTypes.func,
+	onCreditRemove: PropTypes.func,
 	onItemVariantChange: PropTypes.func,
 };
 
 const defaultProps = {
 	rootProductCategory: null,
 	localizer: null,
-	onAddProduct: null,
+	creditValidate: null,
+	onProductAdd: null,
+	onCreditAdd: null,
 	onItemQuantityChange: null,
 	onItemRemove: null,
+	onCreditRemove: null,
 	onItemVariantChange: null,
 };
 
@@ -79,9 +86,9 @@ class NewOrderScreen extends Component {
 	 *
 	 * @param {Product} product
 	 */
-	onAddProduct(product) {
-		if (this.props.onAddProduct) {
-			this.props.onAddProduct(product);
+	onProductAdd(product) {
+		if (this.props.onProductAdd) {
+			this.props.onProductAdd(product);
 		}
 	}
 
@@ -108,6 +115,12 @@ class NewOrderScreen extends Component {
 		}
 	}
 
+	onCreditRemove(credit) {
+		if (this.props.onCreditRemove) {
+			this.props.onCreditRemove(credit);
+		}
+	}
+
 	/**
 	 * When another variant of an item is selected
 	 *
@@ -117,6 +130,12 @@ class NewOrderScreen extends Component {
 	onItemVariantChange(item, variant) {
 		if (this.props.onItemVariantChange) {
 			this.props.onItemVariantChange(item, variant);
+		}
+	}
+
+	onCreditAdd() {
+		if (this.props.onCreditAdd) {
+			this.props.onCreditAdd();
 		}
 	}
 
@@ -185,40 +204,20 @@ class NewOrderScreen extends Component {
 	 * @return {Component}
 	 */
 	renderCredits() {
-		const credits = this.props.order.credits;
-		const hasCredits = !!credits.length;
-		let creditsLines = null;
-
-		if (hasCredits) {
-			creditsLines = credits.map(
-				(credit, index) => this.renderCredit(credit, index === 0)
-			);
-		} else {
-			creditsLines = (
-				<View style={styles.emptyCredits}>
-					<Text style={typographyStyles.empty}>{ this.t('order.credits.empty') }</Text>
-				</View>
-			);
-		}
+		const credits = this.props.order.credits.slice();
 
 		return (
 			<View style={styles.credits}>
 				<Title style={styles.title}>{ this.t('order.credits.label') }</Title>
-				{ creditsLines }
-				<View style={styles.actions}>
-					<Button title={this.t('order.actions.addCredit')} />
-				</View>
+				<Credits
+					localizer={this.props.localizer}
+					creditValidate={this.props.creditValidate}
+					onCreditAdd={() => { this.onCreditAdd(); }}
+					onCreditRemove={(credit) => { this.onCreditRemove(credit); }}
+					credits={credits}
+				/>
 			</View>
 		);
-	}
-
-	/**
-	 * Renders a single credit line
-	 *
-	 * @return {Component}
-	 */
-	renderCredit() {
-
 	}
 
 	/**
@@ -252,7 +251,7 @@ class NewOrderScreen extends Component {
 					rootProductCategory={this.props.rootProductCategory}
 					backButtonLabel={this.t('actions.back')}
 					emptyLabel={this.t('order.categories.empty')}
-					onProductPress={(product) => { this.onAddProduct(product); }}
+					onProductPress={(product) => { this.onProductAdd(product); }}
 				/>
 			);
 		}
@@ -285,6 +284,7 @@ class NewOrderScreen extends Component {
 
 	render() {
 		const hasItems = !!this.items.length;
+		const shouldShowCredits = hasItems || this.props.order.credits.length > 0;
 
 		return (
 			<Screen>
@@ -295,7 +295,7 @@ class NewOrderScreen extends Component {
 							<MainContent withSidebar>
 								<Title style={styles.title}>{ this.t('order.items.label') }</Title>
 								{ hasItems ? this.renderItems() : this.renderEmptyItems() }
-								{ hasItems ? this.renderCredits() : null }
+								{ shouldShowCredits ? this.renderCredits() : null }
 							</MainContent>
 						</ScrollView>
 						{ this.renderCategorySidebar() }
@@ -321,8 +321,6 @@ const styles = {
 	emptyItems: {
 		flex: 1,
 	},
-	emptyCredits: {
-	},
 	headerCell: {
 		textAlign: 'center',
 	},
@@ -340,10 +338,6 @@ const styles = {
 	},
 	credits: {
 		marginTop: styleVars.baseBlockMargin * 2,
-	},
-	actions: {
-		alignItems: 'flex-start',
-		marginTop: styleVars.baseBlockMargin,
 	},
 	title: {
 		marginBottom: styleVars.baseBlockMargin,
