@@ -158,12 +158,19 @@ class Credits extends Component {
 			this.noteErrors.set(credit.uuid, this.t('order.credits.errors.note'));
 		} else {
 			this.noteErrors.delete(credit.uuid);
+			this.onNoteChange(credit, value);
 		}
 	}
 
 	onAmountChange(credit, amount) {
 		if (this.props.onAmountChange) {
 			this.props.onAmountChange(credit, amount);
+		}
+	}
+
+	onNoteChange(credit, note) {
+		if (this.props.onNoteChange) {
+			this.props.onNoteChange(credit, note);
 		}
 	}
 
@@ -259,7 +266,7 @@ const cellStyles = {
 	amount: {
 		width: 200,
 	},
-}
+};
 
 Credits.propTypes = propTypes;
 Credits.defaultProps = defaultProps;

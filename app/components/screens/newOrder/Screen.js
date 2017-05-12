@@ -42,6 +42,7 @@ const propTypes = {
 	onItemVariantChange: PropTypes.func,
 	onNoteChange: PropTypes.func,
 	onCreditAmountChange: PropTypes.func,
+	onCreditNoteChange: PropTypes.func,
 };
 
 const defaultProps = {
@@ -56,6 +57,7 @@ const defaultProps = {
 	onItemVariantChange: null,
 	onNoteChange: null,
 	onCreditAmountChange: null,
+	onCreditNoteChange: null,
 };
 
 @observer
@@ -222,6 +224,7 @@ class NewOrderScreen extends Component {
 					onCreditAdd={() => { this.onCreditAdd(); }}
 					onCreditRemove={this.props.onCreditRemove}
 					onAmountChange={this.props.onCreditAmountChange}
+					onNoteChange={this.props.onCreditNoteChange}
 					credits={credits}
 				/>
 			</View>
