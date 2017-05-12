@@ -8,4 +8,5 @@ export default {
 	delete: 'Supprimer',
 	next: 'Suivant',
 	back: 'Retour',
+	leave: 'Quitter',
 };

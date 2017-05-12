@@ -5,7 +5,7 @@ import Item from 'hotelcaisse-app/dist/business/Item';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
 import NewOrderScreen from '../../components/screens/newOrder/Screen';
 
-@inject('localizer', 'business', 'uuidGenerator')
+@inject('localizer', 'business', 'uuidGenerator', 'router')
 class NewOrder extends Component {
 	/**
 	 * The new Order we will create in this screen.
@@ -63,6 +63,10 @@ class NewOrder extends Component {
 		this.newOrder.note = note;
 	}
 
+	onLeave() {
+		this.props.router.goBack();
+	}
+
 	render() {
 		return (
 			<NewOrderScreen
@@ -78,6 +82,7 @@ class NewOrder extends Component {
 				onCreditNoteChange={(...attrs) => { this.onCreditNoteChange(...attrs); }}
 				onItemVariantChange={(...attrs) => { this.onItemVariantChange(...attrs); }}
 				onNoteChange={(note) => { this.onNoteChange(note); }}
+				onLeave={() => { this.onLeave(); }}
 				order={this.newOrder}
 			/>
 		);

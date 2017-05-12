@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, TextInput as NativeTextInput } from 'react-native';
+import { View, ScrollView, Alert, BackHandler } from 'react-native';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
@@ -43,6 +43,7 @@ const propTypes = {
 	onNoteChange: PropTypes.func,
 	onCreditAmountChange: PropTypes.func,
 	onCreditNoteChange: PropTypes.func,
+	onLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -58,6 +59,7 @@ const defaultProps = {
 	onNoteChange: null,
 	onCreditAmountChange: null,
 	onCreditNoteChange: null,
+	onLeave: null,
 };
 
 @observer
@@ -65,6 +67,7 @@ class NewOrderScreen extends Component {
 	components = {
 		items: {},
 	};
+	backHandler = null;
 
 	/**
 	 * Returns the items in the Order
@@ -74,6 +77,27 @@ class NewOrderScreen extends Component {
 	@computed
 	get items() {
 		return this.props.order.items;
+	}
+
+	componentDidMount() {
+		this.addBackHandler();
+	}
+
+	componentWillUnmount() {
+		this.removeBackHandler();
+	}
+
+	addBackHandler() {
+		this.backHandler = () => {
+			this.onLeave();
+			return true;
+		};
+
+		BackHandler.addEventListener('hardwareBackPress', this.backHandler);
+	}
+
+	removeBackHandler() {
+		BackHandler.removeEventListener('hardwareBackPress', this.backHandler);
 	}
 
 	/**
@@ -145,6 +169,27 @@ class NewOrderScreen extends Component {
 	onNoteChange(note) {
 		if (this.props.onNoteChange) {
 			this.props.onNoteChange(note);
+		}
+	}
+
+	onLeave() {
+		Alert.alert(
+			null,
+			this.t('messages.dataLostIfQuit'),
+			[
+				{ text: this.t('actions.cancel') },
+				{
+					text: this.t('actions.leave'),
+					onPress: () => { this.leave(); },
+				},
+			],
+			{ cancelable: true }
+		);
+	}
+
+	leave() {
+		if (this.props.onLeave) {
+			this.props.onLeave();
 		}
 	}
 
@@ -241,7 +286,7 @@ class NewOrderScreen extends Component {
 			this.components.topBar = (
 				<TopBar
 					title={this.t('manageRegister.title')}
-					onPressHome={() => { this.onFinish(); }}
+					onPressHome={() => { this.onLeave(); }}
 				/>
 			);
 		}
@@ -281,6 +326,7 @@ class NewOrderScreen extends Component {
 				<BottomBar>
 					<BottomBarBackButton
 						title={this.t('actions.cancel')}
+						onPress={() => { this.onLeave(); }}
 					/>
 					<Button
 						title={this.t('actions.next')}
