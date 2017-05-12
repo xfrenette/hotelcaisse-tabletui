@@ -120,12 +120,6 @@ class NewOrderScreen extends Component {
 		}
 	}
 
-	onCreditRemove(credit) {
-		if (this.props.onCreditRemove) {
-			this.props.onCreditRemove(credit);
-		}
-	}
-
 	/**
 	 * When another variant of an item is selected
 	 *
@@ -224,7 +218,6 @@ class NewOrderScreen extends Component {
 					localizer={this.props.localizer}
 					creditValidate={this.props.creditValidate}
 					onCreditAdd={() => { this.onCreditAdd(); }}
-					onCreditRemove={(credit) => { this.onCreditRemove(credit); }}
 					credits={credits}
 				/>
 			</View>
