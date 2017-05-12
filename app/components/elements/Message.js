@@ -6,11 +6,13 @@ import Text from './Text';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
+	style: View.propTypes.style,
 	type: PropTypes.oneOf(['info', 'warning', 'error']),
 	children: PropTypes.node.isRequired,
 };
 
 const defaultProps = {
+	style: null,
 	type: 'info',
 };
 
@@ -39,7 +41,7 @@ const Message = (props) => {
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, props.style]}>
 			{ icon }
 			<View style={viewStyle}>
 				<Text style={textStyle}>{ props.children }</Text>
@@ -60,12 +62,8 @@ const colors = {
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
-		marginBottom: styleVars.baseBlockMargin * 2,
-		left: -27,
 	},
 	message: {
-		borderLeftWidth: 4,
-		paddingLeft: 10,
 		paddingVertical: styleVars.verticalRhythm / 2,
 		overflow: 'visible',
 		flex: 1,
