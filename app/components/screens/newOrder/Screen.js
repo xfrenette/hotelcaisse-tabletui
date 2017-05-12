@@ -285,7 +285,7 @@ class NewOrderScreen extends Component {
 		if (!this.components.topBar) {
 			this.components.topBar = (
 				<TopBar
-					title={this.t('manageRegister.title')}
+					title={this.t('order.new.title')}
 					onPressHome={() => { this.onLeave(); }}
 				/>
 			);

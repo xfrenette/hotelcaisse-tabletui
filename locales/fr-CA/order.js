@@ -1,5 +1,8 @@
 export default {
 	total: 'Total',
+	new: {
+		title: 'Nouvelle inscription',
+	},
 	credits: {
 		label: 'Dépôts',
 		empty: 'Pour ajouter un dépôt, appuyez le bouton ci-dessous',
