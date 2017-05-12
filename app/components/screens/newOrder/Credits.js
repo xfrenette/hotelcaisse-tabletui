@@ -43,6 +43,9 @@ class Credits extends Component {
 	noteErrors = new Map();
 	@observable
 	amountErrors = new Map();
+	nodeRefs = {
+		amounts: {},
+	};
 
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -174,6 +177,12 @@ class Credits extends Component {
 		}
 	}
 
+	onNoteSubmit(credit) {
+		const key = credit.uuid;
+		const amountField = this.nodeRefs.amounts[key];
+		amountField.focus();
+	}
+
 	renderCredit(credit, isFirst) {
 		const amountError = this.amountErrors.get(credit.uuid);
 		const noteError = this.noteErrors.get(credit.uuid);
@@ -191,10 +200,14 @@ class Credits extends Component {
 							onChangeText={(note) => { this.updateCreditFields(credit, { note }); }}
 							onBlur={() => { this.onNoteBlur(credit); }}
 							error={noteError}
+							returnKeyType="next"
+							autoFocus
+							onSubmitEditing={() => { this.onNoteSubmit(credit); }}
 						/>
 					</Cell>
 					<Cell last style={cellStyles.amount}>
 						<NumberInput
+							ref={(node) => { this.nodeRefs.amounts[credit.uuid] = node; }}
 							label={this.t('order.credits.fields.amount')}
 							value={0}
 							type="money"
