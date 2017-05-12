@@ -18,6 +18,7 @@ import {
 	BottomBarBackButton,
 	Title,
 	TextInput,
+	Message,
 } from '../../elements';
 import { Row, Cell } from '../../elements/table';
 import CategorySidebar from './CategorySidebar';
@@ -175,6 +176,7 @@ class NewOrderScreen extends Component {
 		return (
 			<View>
 				{ items }
+				<Message type="info">{ this.t('messages.swipeLeftToDelete') }</Message>
 			</View>
 		);
 	}
