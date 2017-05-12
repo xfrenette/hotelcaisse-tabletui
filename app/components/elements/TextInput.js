@@ -89,7 +89,6 @@ class TextInput extends Component {
 		const textStyle = [styles.inputText, style];
 		let preTextComponent;
 		let postTextComponent;
-		console.log(viewStyle);
 		const label = this.renderLabel();
 		const containerStyles = [styles.container];
 
