@@ -14,6 +14,7 @@ import {
 	Text,
 	NumberInput,
 	SwipeDelete,
+	Message,
 } from '../../elements';
 import { Row, Cell } from '../../elements/table';
 
@@ -141,6 +142,7 @@ class Credits extends Component {
 			this.amountErrors.set(credit.uuid, this.t('order.credits.errors.amount'));
 		} else {
 			this.amountErrors.delete(credit.uuid);
+			this.onAmountChange(credit, value);
 		}
 	}
 
@@ -156,6 +158,12 @@ class Credits extends Component {
 			this.noteErrors.set(credit.uuid, this.t('order.credits.errors.note'));
 		} else {
 			this.noteErrors.delete(credit.uuid);
+		}
+	}
+
+	onAmountChange(credit, amount) {
+		if (this.props.onAmountChange) {
+			this.props.onAmountChange(credit, amount);
 		}
 	}
 
@@ -201,8 +209,14 @@ class Credits extends Component {
 		let creditsLines = null;
 
 		if (hasCredits) {
-			creditsLines = credits.map(
+			const creditsRows = credits.map(
 				(credit, index) => this.renderCredit(credit, index === 0)
+			);
+			creditsLines = (
+				<View>
+					{ creditsRows }
+					<Message type="info">{ this.t('messages.swipeLeftToDelete') }</Message>
+				</View>
 			);
 		} else {
 			creditsLines = (
