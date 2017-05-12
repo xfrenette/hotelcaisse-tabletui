@@ -41,6 +41,7 @@ const propTypes = {
 	onCreditRemove: PropTypes.func,
 	onItemVariantChange: PropTypes.func,
 	onNoteChange: PropTypes.func,
+	onCreditAmountChange: PropTypes.func,
 };
 
 const defaultProps = {
@@ -54,6 +55,7 @@ const defaultProps = {
 	onCreditRemove: null,
 	onItemVariantChange: null,
 	onNoteChange: null,
+	onCreditAmountChange: null,
 };
 
 @observer
@@ -218,6 +220,8 @@ class NewOrderScreen extends Component {
 					localizer={this.props.localizer}
 					creditValidate={this.props.creditValidate}
 					onCreditAdd={() => { this.onCreditAdd(); }}
+					onCreditRemove={this.props.onCreditRemove}
+					onAmountChange={this.props.onCreditAmountChange}
 					credits={credits}
 				/>
 			</View>

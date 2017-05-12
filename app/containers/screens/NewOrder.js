@@ -51,6 +51,10 @@ class NewOrder extends Component {
 		this.newOrder.removeCredit(credit);
 	}
 
+	onCreditAmountChange(credit, amount) {
+		credit.amount = amount;
+	}
+
 	onNoteChange(note) {
 		this.newOrder.note = note;
 	}
@@ -66,6 +70,7 @@ class NewOrder extends Component {
 				onItemQuantityChange={(...attrs) => { this.onItemQuantityChange(...attrs); }}
 				onItemRemove={(item) => { this.onItemRemove(item); }}
 				onCreditRemove={(credit) => { this.onCreditRemove(credit); }}
+				onCreditAmountChange={(...attrs) => { this.onCreditAmountChange(...attrs); }}
 				onItemVariantChange={(...attrs) => { this.onItemVariantChange(...attrs); }}
 				onNoteChange={(note) => { this.onNoteChange(note); }}
 				order={this.newOrder}
