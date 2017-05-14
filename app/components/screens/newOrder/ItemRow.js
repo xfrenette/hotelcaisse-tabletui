@@ -129,10 +129,10 @@ class ItemRow extends Component {
 
 	renderPrice() {
 		const item = this.props.item;
-		const totalPrice = this.props.localizer.formatCurrency(item.total.toNumber());
+		const unitFullPrice = this.props.localizer.formatCurrency(item.unitFullPrice.toNumber());
 
 		return (
-			<Text style={styles.price}>{ totalPrice }</Text>
+			<Text style={styles.price}>{ unitFullPrice }</Text>
 		);
 	}
 
