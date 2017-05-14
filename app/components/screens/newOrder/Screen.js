@@ -23,6 +23,7 @@ import {
 import { Row, Cell } from '../../elements/table';
 import CategorySidebar from './CategorySidebar';
 import ItemRow from './ItemRow';
+import CustomItemRow from './CustomItemRow';
 import Credits from './Credits';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
@@ -46,6 +47,7 @@ const propTypes = {
 	onCreditAmountChange: PropTypes.func,
 	onCreditNoteChange: PropTypes.func,
 	onCustomProductNameChange: PropTypes.func,
+	onCustomProductPriceChange: PropTypes.func,
 	customProductValidate: PropTypes.func,
 	onLeave: PropTypes.func,
 };
@@ -66,6 +68,7 @@ const defaultProps = {
 	onCreditAmountChange: null,
 	onCreditNoteChange: null,
 	onCustomProductNameChange: null,
+	onCustomProductPriceChange: null,
 	customProductValidate: null,
 	onLeave: null,
 };
@@ -241,20 +244,34 @@ class NewOrderScreen extends Component {
 	 */
 	renderItem(item, isFirst) {
 		const uuid = item.uuid;
+		const isCustom = item.product.isCustom;
+		const RowComponent = isCustom ? CustomItemRow : ItemRow;
+		let props = null;
+
+		if (isCustom) {
+			// Props specific to CustomItemRow
+			props = {
+				onNameChange: this.props.onCustomProductNameChange,
+				onPriceChange: this.props.onCustomProductPriceChange,
+				validate: this.props.customProductValidate,
+			};
+		} else {
+			// Props specific to ItemRow
+			props = {
+				onVariantChange: (variant) => { this.onItemVariantChange(item, variant); },
+			};
+		}
 
 		if (!this.components.items[uuid]) {
 			this.components.items[uuid] = (
-				<ItemRow
+				<RowComponent
 					key={uuid}
 					item={item}
 					isFirst={isFirst}
 					localizer={this.props.localizer}
 					onQuantityChange={(qty) => { this.onItemQuantityChange(item, qty); }}
-					onCustomProductNameChange={this.props.onCustomProductNameChange}
-					onCustomProductPriceChange={this.props.onCustomProductPriceChange}
 					onRemove={() => { this.onItemRemove(item); }}
-					onVariantChange={(variant) => { this.onItemVariantChange(item, variant); }}
-					customProductValidate={this.props.customProductValidate}
+					{...props}
 				/>
 			);
 		}

@@ -32,5 +32,9 @@ export default {
 		fields: {
 			customProductName: 'Nom du produit (obligatoire)',
 		},
+		errors: {
+			name: 'Ne peut être vide',
+			price: 'Doit être positif',
+		},
 	},
 };
