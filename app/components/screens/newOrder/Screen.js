@@ -30,11 +30,13 @@ import typographyStyles from '../../../styles/typography';
 import layoutStyles from '../../../styles/layout';
 
 const propTypes = {
+	allowCustomProduct: PropTypes.bool,
 	order: PropTypes.instanceOf(Order).isRequired,
 	rootProductCategory: PropTypes.instanceOf(ProductCategory),
 	localizer: PropTypes.instanceOf(Localizer),
 	creditValidate: PropTypes.func,
 	onProductAdd: PropTypes.func,
+	onCustomProductAdd: PropTypes.func,
 	onCreditAdd: PropTypes.func,
 	onItemQuantityChange: PropTypes.func,
 	onItemRemove: PropTypes.func,
@@ -43,14 +45,18 @@ const propTypes = {
 	onNoteChange: PropTypes.func,
 	onCreditAmountChange: PropTypes.func,
 	onCreditNoteChange: PropTypes.func,
+	onCustomProductNameChange: PropTypes.func,
+	customProductValidate: PropTypes.func,
 	onLeave: PropTypes.func,
 };
 
 const defaultProps = {
+	allowCustomProduct: false,
 	rootProductCategory: null,
 	localizer: null,
 	creditValidate: null,
 	onProductAdd: null,
+	onCustomProductAdd: null,
 	onCreditAdd: null,
 	onItemQuantityChange: null,
 	onItemRemove: null,
@@ -59,6 +65,8 @@ const defaultProps = {
 	onNoteChange: null,
 	onCreditAmountChange: null,
 	onCreditNoteChange: null,
+	onCustomProductNameChange: null,
+	customProductValidate: null,
 	onLeave: null,
 };
 
@@ -240,11 +248,13 @@ class NewOrderScreen extends Component {
 					key={uuid}
 					item={item}
 					isFirst={isFirst}
-					cellStyles={cellStyles}
 					localizer={this.props.localizer}
 					onQuantityChange={(qty) => { this.onItemQuantityChange(item, qty); }}
+					onCustomProductNameChange={this.props.onCustomProductNameChange}
+					onCustomProductPriceChange={this.props.onCustomProductPriceChange}
 					onRemove={() => { this.onItemRemove(item); }}
 					onVariantChange={(variant) => { this.onItemVariantChange(item, variant); }}
+					customProductValidate={this.props.customProductValidate}
 				/>
 			);
 		}
@@ -304,10 +314,13 @@ class NewOrderScreen extends Component {
 			this.components.categorySidebar = (
 				<CategorySidebar
 					style={styles.screenSidebar}
+					showCustomProduct={this.props.allowCustomProduct}
 					rootProductCategory={this.props.rootProductCategory}
 					backButtonLabel={this.t('actions.back')}
 					emptyLabel={this.t('order.categories.empty')}
+					customProductLabel={this.t('order.customProduct')}
 					onProductPress={(product) => { this.onProductAdd(product); }}
+					onCustomProductPress={this.props.onCustomProductAdd}
 				/>
 			);
 		}
@@ -448,22 +461,6 @@ const styles = {
 	},
 	credits: {
 		marginTop: styleVars.baseBlockMargin * 2,
-	},
-};
-
-const cellStyles = {
-	name: {
-		flex: 1,
-	},
-	totalPrice: {
-		width: 85,
-		alignItems: 'flex-end',
-	},
-	quantity: {
-		width: 120,
-	},
-	actions: {
-		width: 30,
 	},
 };
 

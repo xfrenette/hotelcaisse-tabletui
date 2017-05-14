@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react/native';
+import Decimal from 'decimal.js';
 import Order from 'hotelcaisse-app/dist/business/Order';
+import Product from 'hotelcaisse-app/dist/business/Product';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
 import NewOrderScreen from '../../components/screens/newOrder/Screen';
@@ -27,6 +29,13 @@ class NewOrder extends Component {
 		const item = new Item(this.props.uuidGenerator.generate());
 		item.product = productToAdd;
 		this.newOrder.items.push(item);
+	}
+
+	onCustomProductAdd() {
+		const customProduct = new Product();
+		customProduct.uuid = this.props.uuidGenerator.generate();
+		customProduct.isCustom = true;
+		this.onProductAdd(customProduct);
 	}
 
 	onItemQuantityChange(item, rawQuantity) {
@@ -63,6 +72,14 @@ class NewOrder extends Component {
 		this.newOrder.note = note;
 	}
 
+	onCustomProductNameChange(product, name) {
+		product.name = name;
+	}
+
+	onCustomProductPriceChange(product, price) {
+		product.price = price;
+	}
+
 	onLeave() {
 		this.props.router.goBack();
 	}
@@ -70,10 +87,13 @@ class NewOrder extends Component {
 	render() {
 		return (
 			<NewOrderScreen
+				order={this.newOrder}
+				allowCustomProduct
 				localizer={this.props.localizer}
 				rootProductCategory={this.props.business.rootProductCategory}
 				creditValidate={values => this.creditValidate(values)}
 				onProductAdd={(product) => { this.onProductAdd(product); }}
+				onCustomProductAdd={() => { this.onCustomProductAdd(); }}
 				onCreditAdd={() => { this.onCreditAdd(); }}
 				onItemQuantityChange={(...attrs) => { this.onItemQuantityChange(...attrs); }}
 				onItemRemove={(item) => { this.onItemRemove(item); }}
@@ -82,8 +102,10 @@ class NewOrder extends Component {
 				onCreditNoteChange={(...attrs) => { this.onCreditNoteChange(...attrs); }}
 				onItemVariantChange={(...attrs) => { this.onItemVariantChange(...attrs); }}
 				onNoteChange={(note) => { this.onNoteChange(note); }}
+				onCustomProductNameChange={(...attrs) => { this.onCustomProductNameChange(...attrs); }}
+				onCustomProductPriceChange={(...attrs) => { this.onCustomProductPriceChange(...attrs); }}
+				customProductValidate={Product.validate}
 				onLeave={() => { this.onLeave(); }}
-				order={this.newOrder}
 			/>
 		);
 	}

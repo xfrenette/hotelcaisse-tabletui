@@ -25,8 +25,12 @@ export default {
 	categories: {
 		empty: 'Cette catégorie est vide',
 	},
+	customProduct: 'Produit spécial',
 	items: {
 		label: 'Items',
 		empty: 'Pour débuter, ajoutez un item depuis les produits à droite.',
+		fields: {
+			customProductName: 'Nom du produit (obligatoire)',
+		},
 	},
 };

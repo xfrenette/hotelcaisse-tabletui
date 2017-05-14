@@ -13,16 +13,22 @@ import typographyStyles from '../../../styles/typography';
 
 const propTypes = {
 	style: Sidebar.propTypes.style,
+	showCustomProduct: PropTypes.bool,
 	backButtonLabel: PropTypes.string.isRequired,
 	emptyLabel: PropTypes.string.isRequired,
+	customProductLabel: PropTypes.string.isRequired,
 	rootProductCategory: PropTypes.instanceOf(ProductCategory),
 	onProductPress: PropTypes.func,
+	onCustomProductPress: PropTypes.func,
 };
 
 const defaultProps = {
 	style: null,
+	showCustomProduct: false,
 	rootProductCategory: null,
+	customProductLabel: '',
 	onProductPress: null,
+	onCustomProductPress: null,
 };
 
 @observer
@@ -184,6 +190,15 @@ class CategorySidebar extends Component {
 	}
 
 	/**
+	 * When we press the "custom product" button
+	 */
+	onCustomProductPress() {
+		if (this.props.onCustomProductPress) {
+			this.props.onCustomProductPress();
+		}
+	}
+
+	/**
 	 * When we press back, go back one step in the categories.
 	 */
 	onBackPress() {
@@ -216,6 +231,10 @@ class CategorySidebar extends Component {
 		subCategories.forEach((subCategory) => {
 			buttons.push(this.renderCategoryButton(subCategory));
 		});
+
+		if (this.isRootCategory && this.props.showCustomProduct) {
+			buttons.push(this.renderCustomProductButton());
+		}
 
 		if (buttons.length === 0) {
 			const emptyStyle = [typographyStyles.empty, styles.emptyText];
@@ -274,6 +293,27 @@ class CategorySidebar extends Component {
 			>
 				<View style={[styles.button, styles.product, widthStyle]}>
 					<Text style={styles.buttonText}>{ product.name }</Text>
+				</View>
+			</TouchableNativeFeedback>
+		);
+	}
+
+	/**
+	 * Renders a special product button that allows adding a custom item
+	 *
+	 * @return {Component}
+	 */
+	renderCustomProductButton() {
+		const widthStyle = { width: this.buttonWidth };
+
+		return (
+			<TouchableNativeFeedback
+				key="__custom-product__"
+				background={TouchableNativeFeedback.Ripple(styleVars.colors.blue2, false)}
+				onPress={() => { this.onCustomProductPress(); }}
+			>
+				<View style={[styles.button, styles.customProduct, widthStyle]}>
+					<Text style={styles.buttonText}>{ this.props.customProductLabel }</Text>
 				</View>
 			</TouchableNativeFeedback>
 		);
@@ -361,7 +401,9 @@ const styles = {
 	},
 	category: {
 		backgroundColor: styleVars.colors.orange1,
-		zIndex: 2,
+	},
+	customProduct: {
+		backgroundColor: styleVars.colors.green1,
 	},
 	subCategoryIcon: {
 		fontSize: 20,
