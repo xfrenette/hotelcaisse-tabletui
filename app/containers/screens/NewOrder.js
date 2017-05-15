@@ -7,7 +7,7 @@ import Item from 'hotelcaisse-app/dist/business/Item';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
 import NewOrderScreen from '../../components/screens/newOrder/Screen';
 
-@inject('localizer', 'business', 'uuidGenerator', 'router')
+@inject('localizer', 'business', 'uuidGenerator', 'router', 'ui')
 class NewOrder extends Component {
 	/**
 	 * The new Order we will create in this screen.
@@ -15,6 +15,20 @@ class NewOrder extends Component {
 	 * @type {[type]}
 	 */
 	newOrder = null;
+
+	/**
+	 * Simple alias to this.props.localizer.t
+	 *
+	 * @param {String} path
+	 * @return {String}
+	 */
+	t(path) {
+		if (this.props.localizer) {
+			return this.props.localizer.t(path);
+		}
+
+		return path;
+	}
 
 	componentWillMount() {
 		this.newOrder = new Order(this.props.uuidGenerator.generate());
@@ -84,6 +98,19 @@ class NewOrder extends Component {
 		this.props.router.goBack();
 	}
 
+	onNext() {
+		const res = this.newOrder.validate();
+
+		if (res === undefined) {
+			this.props.router.push('/order/customer-and-rooms');
+		} else {
+			this.props.ui.showErrorAlert(
+				this.t('order.editItems.error.title'),
+				this.t('order.editItems.error.message')
+			);
+		}
+	}
+
 	render() {
 		return (
 			<NewOrderScreen
@@ -106,6 +133,7 @@ class NewOrder extends Component {
 				onCustomProductPriceChange={(...attrs) => { this.onCustomProductPriceChange(...attrs); }}
 				customProductValidate={Product.validate}
 				onLeave={() => { this.onLeave(); }}
+				onNext={() => { this.onNext(); }}
 			/>
 		);
 	}

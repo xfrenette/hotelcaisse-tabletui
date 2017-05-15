@@ -37,4 +37,10 @@ export default {
 			price: 'Doit être positif',
 		},
 	},
+	editItems: {
+		error: {
+			title: 'Erreur',
+			message: 'Certains champs sont en erreur. Veuillez les corriger.',
+		},
+	},
 };

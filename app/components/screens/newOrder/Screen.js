@@ -50,6 +50,7 @@ const propTypes = {
 	onCustomProductPriceChange: PropTypes.func,
 	customProductValidate: PropTypes.func,
 	onLeave: PropTypes.func,
+	onNext: PropTypes.func,
 };
 
 const defaultProps = {
@@ -71,6 +72,7 @@ const defaultProps = {
 	onCustomProductPriceChange: null,
 	customProductValidate: null,
 	onLeave: null,
+	onNext: null,
 };
 
 @observer
@@ -196,6 +198,12 @@ class NewOrderScreen extends Component {
 			],
 			{ cancelable: true }
 		);
+	}
+
+	onNextPress() {
+		if (this.props.onNext) {
+			this.props.onNext();
+		}
 	}
 
 	leave() {
@@ -361,6 +369,7 @@ class NewOrderScreen extends Component {
 					<Button
 						title={this.t('actions.next')}
 						layout={buttonLayouts.primary}
+						onPress={() => { this.onNextPress(); }}
 					/>
 				</BottomBar>
 			);
