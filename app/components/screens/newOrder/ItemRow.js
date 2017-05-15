@@ -41,10 +41,20 @@ class ItemRow extends Component {
 		return this.props.localizer.t(path);
 	}
 
+	/**
+	 * Returns the style to apply to the <Row> element
+	 *
+	 * @return {Object}
+	 */
 	get rowStyle() {
 		return null;
 	}
 
+	/**
+	 * Returns the style to apply to the <Cell> for the price
+	 *
+	 * @return {Object}
+	 */
 	get priceCellStyle() {
 		return cellStyles.totalPrice;
 	}
@@ -85,6 +95,11 @@ class ItemRow extends Component {
 		}
 	}
 
+	/**
+	 * Renders the cell content containing the name and, if applicable, the variant dropdown.
+	 *
+	 * @return {Component}
+	 */
 	renderNameAndVariant() {
 		const item = this.props.item;
 		const product = item.product;
@@ -127,6 +142,11 @@ class ItemRow extends Component {
 		);
 	}
 
+	/**
+	 * Renders the Cell content for the price
+	 *
+	 * @return {Component}
+	 */
 	renderPrice() {
 		const item = this.props.item;
 		const unitFullPrice = this.props.localizer.formatCurrency(item.unitFullPrice.toNumber());

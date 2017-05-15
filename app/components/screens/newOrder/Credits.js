@@ -38,11 +38,32 @@ const defaultProps = {
 
 @observer
 class Credits extends Component {
+	/**
+	 * Values of the fields of each credit. Key is the credit uuid and each value is an object of
+	 * values for each field.
+	 *
+	 * @type {Object}
+	 */
 	creditsFields = {};
+	/**
+	 * Errors for the 'note' fields
+	 *
+	 * @type {Map}
+	 */
 	@observable
 	noteErrors = new Map();
+	/**
+	 * Errors for the 'amount' fields
+	 *
+	 * @type {Map}
+	 */
 	@observable
 	amountErrors = new Map();
+	/**
+	 * References to nodes
+	 *
+	 * @type {Object}
+	 */
 	nodeRefs = {
 		amounts: {},
 	};
@@ -85,6 +106,13 @@ class Credits extends Component {
 		return shouldUpdate;
 	}
 
+	/**
+	 * Saves the value of a field(s) of a credit.
+	 *
+	 * @param {Credit} credit
+	 * @param {Object} fields
+
+	 */
 	updateCreditFields(credit, fields) {
 		const key = credit.uuid;
 
@@ -98,6 +126,13 @@ class Credits extends Component {
 		}
 	}
 
+	/**
+	 * Returns the saved value of a field of a specific credit.
+	 *
+	 * @param {Credit} credit
+	 * @param {String} field
+	 * @return {mixed}
+	 */
 	getCreditField(credit, field) {
 		const key = credit.uuid;
 
@@ -108,6 +143,13 @@ class Credits extends Component {
 		return this.creditsFields[key][field];
 	}
 
+	/**
+	 * Returns the amount field value of a Credit as a Decimal. Returns null if no valid amount is
+	 * set.
+	 *
+	 * @param {Credit} credit
+	 * @return {Decimal}
+	 */
 	getCreditAmountAsDecimal(credit) {
 		const amount = this.getCreditField(credit, 'amount');
 
@@ -127,19 +169,28 @@ class Credits extends Component {
 		}
 	}
 
+	/**
+	 * Called when we press the "add credit" button
+	 */
 	onCreditAdd() {
 		if (this.props.onCreditAdd) {
 			this.props.onCreditAdd();
 		}
 	}
 
+	/**
+	 * When the amount field is blurred, we validate its value. If invalid, we set the error
+	 * message, else we call onAmountChange.
+	 *
+	 * @param {Credit} credit
+	 */
 	onAmountBlur(credit) {
-		if (!this.props.creditValidate) {
-			return;
-		}
-
 		const value = this.getCreditAmountAsDecimal(credit);
-		const res = this.props.creditValidate({ amount: value });
+		let res;
+
+		if (this.props.creditValidate) {
+			res = this.props.creditValidate({ amount: value });
+		}
 
 		if (res) {
 			this.amountErrors.set(credit.uuid, this.t('order.credits.errors.amount'));
@@ -149,13 +200,19 @@ class Credits extends Component {
 		}
 	}
 
+	/**
+	 * When the note field is blurred, we validate its value. If invalid, we set the error
+	 * message, else we call onNoteChange.
+	 *
+	 * @param {Credit} credit
+	 */
 	onNoteBlur(credit) {
-		if (!this.props.creditValidate) {
-			return;
-		}
-
 		const value = this.getCreditField(credit, 'note');
-		const res = this.props.creditValidate({ note: value });
+		let res;
+
+		if (this.props.creditValidate) {
+			res = this.props.creditValidate({ note: value });
+		}
 
 		if (res) {
 			this.noteErrors.set(credit.uuid, this.t('order.credits.errors.note'));
@@ -165,24 +222,48 @@ class Credits extends Component {
 		}
 	}
 
+	/**
+	 * When the amount changes. Must be valid.
+	 *
+	 * @param {Credit} credit
+	 * @param {Decimal} amount
+	 */
 	onAmountChange(credit, amount) {
 		if (this.props.onAmountChange) {
 			this.props.onAmountChange(credit, amount);
 		}
 	}
 
+	/**
+	 * When the note changes. Must be valid.
+	 *
+	 * @param {Credit} credit
+	 * @param {String} note
+	 */
 	onNoteChange(credit, note) {
 		if (this.props.onNoteChange) {
 			this.props.onNoteChange(credit, note);
 		}
 	}
 
+	/**
+	 * When we "submit" the note field, we focus the amount field
+	 *
+	 * @param {Credit} credit
+	 */
 	onNoteSubmit(credit) {
 		const key = credit.uuid;
 		const amountField = this.nodeRefs.amounts[key];
 		amountField.focus();
 	}
 
+	/**
+	 * Renders a single credit row
+	 *
+	 * @param {Credit} credit
+	 * @param {Boolean} isFirst
+	 * @return {Component}
+	 */
 	renderCredit(credit, isFirst) {
 		const amountError = this.amountErrors.get(credit.uuid);
 		const noteError = this.noteErrors.get(credit.uuid);

@@ -25,19 +25,61 @@ const defaultProps = {
 	onPriceChange: null,
 };
 
+/**
+ * This class extends ItemRow, so see this class for other methods (including the render())
+ */
 @observer
 class CustomItemRow extends ItemRow {
-	nodeRefs = {
-		priceField: {},
-	};
+	/**
+	 * References to different nodes
+	 *
+	 * @type {Object}
+	 */
+	nodeRefs = {};
+	/**
+	 * Value of the name field
+	 *
+	 * @type {String}
+	 */
 	name = null;
+	/**
+	 * Value of the price field
+	 *
+	 * @type {Number}
+	 */
 	price = null;
+	/**
+	 * Error message for the fields
+	 *
+	 * @type {Object}
+	 */
 	@observable
 	errors = {
 		name: null,
 		price: null,
 	};
 
+	/**
+	 * @see parent
+	 */
+	get rowStyle() {
+		return styles.rowCustom;
+	}
+
+	/**
+	 * @see parent
+	 */
+	get priceCellStyle() {
+		return cellStyles.totalPriceCustom;
+	}
+
+	/**
+	 * Validates the values for a custom product. Returns undefined if valid, else an object with
+	 * keys of invalid fields.
+	 *
+	 * @param {Object} values
+	 * @return {Object}
+	 */
 	validate(values) {
 		if (this.props.validate) {
 			return this.props.validate(values);
@@ -46,20 +88,19 @@ class CustomItemRow extends ItemRow {
 		return undefined;
 	}
 
-	get rowStyle() {
-		return styles.rowCustom;
-	}
-
-	get priceCellStyle() {
-		return cellStyles.totalPriceCustom;
-	}
-
-	onNameSubmit(item) {
-		const priceField = this.nodeRefs.priceField[item.uuid];
+	/**
+	 * When we "submit" the name field, we focus the price field.
+	 */
+	onNameSubmit() {
+		const priceField = this.nodeRefs.priceField;
 		priceField.focus();
 	}
 
-	onNameBlur(item) {
+	/**
+	 * When we blur the name field, we validate it. If invalid, set the error message, else call
+	 * onNameChange().
+	 */
+	onNameBlur() {
 		const newName = this.name;
 		const validation = this.validate({ name: newName });
 
@@ -67,11 +108,15 @@ class CustomItemRow extends ItemRow {
 			this.errors.name = this.t('order.items.errors.name');
 		} else {
 			this.errors.name = null;
-			this.onNameChange(item, newName);
+			this.onNameChange(newName);
 		}
 	}
 
-	onPriceBlur(item) {
+	/**
+	 * When we blur the price field, we validate it. If invalid, set the error message, else call
+	 * onPriceChange().
+	 */
+	onPriceBlur() {
 		let newPrice = this.price;
 
 		if (typeof newPrice === 'number') {
@@ -81,54 +126,74 @@ class CustomItemRow extends ItemRow {
 		const validation = this.validate({ price: newPrice });
 
 		if (validation) {
-			this.onPriceChange(item, null);
+			this.onPriceChange(null);
 			this.errors.price = this.t('order.items.errors.price');
 		} else {
 			this.errors.price = null;
-			this.onPriceChange(item, newPrice);
+			this.onPriceChange(newPrice);
 		}
 	}
 
-	onNameChange(item, newName) {
+	/**
+	 * When the name changes. Must be valid.
+	 *
+	 * @param {String} newName
+	 */
+	onNameChange(newName) {
 		if (this.props.onNameChange) {
-			this.props.onNameChange(item.product, newName);
+			this.props.onNameChange(newName);
 		}
 	}
 
-	onPriceChange(item, newPrice) {
+	/**
+	 * When the price changes. Must be valid.
+	 *
+	 * @param {Decimal} newPrice
+	 */
+	onPriceChange(newPrice) {
 		if (this.props.onPriceChange) {
-			this.props.onPriceChange(item.product, newPrice);
+			this.props.onPriceChange(newPrice);
 		}
 	}
 
+	/**
+	 * Renders the name input field
+	 *
+	 * @see parent
+	 * @return {Component}
+	 */
 	renderNameAndVariant() {
-		const item = this.props.item;
-
 		return (
 			<TextInput
 				autoFocus
 				error={this.errors.name}
 				returnKeyType="next"
-				onSubmitEditing={() => { this.onNameSubmit(item); }}
-				onBlur={() => { this.onNameBlur(item); }}
+				onSubmitEditing={() => { this.onNameSubmit(); }}
+				onBlur={() => { this.onNameBlur(); }}
 				onChangeText={(text) => { this.name = text; }}
 				placeholder={this.t('order.items.fields.customProductName')}
 			/>
 		);
 	}
 
+	/**
+	 * Renders the price input field.
+	 *
+	 * @see parent
+	 * @return {Component}
+	 */
 	renderPrice() {
 		const item = this.props.item;
 		const product = item.product;
 
 		return (
 			<NumberInput
-				ref={(node) => { this.nodeRefs.priceField[item.uuid] = node; }}
+				ref={(node) => { this.nodeRefs.priceField = node; }}
 				localizer={this.props.localizer}
 				type="money"
 				error={this.errors.price}
 				onChangeValue={(value) => { this.price = value; }}
-				onBlur={() => { this.onPriceBlur(item); }}
+				onBlur={() => { this.onPriceBlur(); }}
 				value={product.price ? product.price.toNumber() : null}
 				selectTextOnFocus
 			/>

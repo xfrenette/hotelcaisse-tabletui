@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, ScrollView, Alert, BackHandler } from 'react-native';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer, inject } from 'mobx-react/native';
 import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
@@ -36,21 +36,21 @@ const propTypes = {
 	rootProductCategory: PropTypes.instanceOf(ProductCategory),
 	localizer: PropTypes.instanceOf(Localizer),
 	creditValidate: PropTypes.func,
+	customProductValidate: PropTypes.func,
+	onItemRemove: PropTypes.func,
+	onItemQuantityChange: PropTypes.func,
+	onItemVariantChange: PropTypes.func,
 	onProductAdd: PropTypes.func,
 	onCustomProductAdd: PropTypes.func,
-	onCreditAdd: PropTypes.func,
-	onItemQuantityChange: PropTypes.func,
-	onItemRemove: PropTypes.func,
-	onCreditRemove: PropTypes.func,
-	onItemVariantChange: PropTypes.func,
-	onNoteChange: PropTypes.func,
-	onCreditAmountChange: PropTypes.func,
-	onCreditNoteChange: PropTypes.func,
 	onCustomProductNameChange: PropTypes.func,
 	onCustomProductPriceChange: PropTypes.func,
-	customProductValidate: PropTypes.func,
-	onLeave: PropTypes.func,
+	onCreditAdd: PropTypes.func,
+	onCreditRemove: PropTypes.func,
+	onCreditAmountChange: PropTypes.func,
+	onCreditNoteChange: PropTypes.func,
+	onNoteChange: PropTypes.func,
 	onNext: PropTypes.func,
+	onLeave: PropTypes.func,
 };
 
 const defaultProps = {
@@ -58,28 +58,39 @@ const defaultProps = {
 	rootProductCategory: null,
 	localizer: null,
 	creditValidate: null,
+	customProductValidate: null,
+	onItemRemove: null,
+	onItemQuantityChange: null,
+	onItemVariantChange: null,
 	onProductAdd: null,
 	onCustomProductAdd: null,
-	onCreditAdd: null,
-	onItemQuantityChange: null,
-	onItemRemove: null,
-	onCreditRemove: null,
-	onItemVariantChange: null,
-	onNoteChange: null,
-	onCreditAmountChange: null,
-	onCreditNoteChange: null,
 	onCustomProductNameChange: null,
 	onCustomProductPriceChange: null,
-	customProductValidate: null,
-	onLeave: null,
+	onCreditAdd: null,
+	onCreditRemove: null,
+	onCreditAmountChange: null,
+	onCreditNoteChange: null,
+	onNoteChange: null,
 	onNext: null,
+	onLeave: null,
 };
 
+@inject('ui')
 @observer
 class NewOrderScreen extends Component {
+	/**
+	 * Cache of some components.
+	 *
+	 * @type {Object}
+	 */
 	components = {
 		items: {},
 	};
+	/**
+	 * Callback for the custom back handler of this screen.
+	 *
+	 * @type {Function}
+	 */
 	backHandler = null;
 
 	/**
@@ -92,14 +103,23 @@ class NewOrderScreen extends Component {
 		return this.props.order.items;
 	}
 
+	/**
+	 * When we mount, we add the back handler
+	 */
 	componentDidMount() {
 		this.addBackHandler();
 	}
 
+	/**
+	 * When unmounting, we remove the back handler
+	 */
 	componentWillUnmount() {
 		this.removeBackHandler();
 	}
 
+	/**
+	 * Adds the back handler that calls onLeave
+	 */
 	addBackHandler() {
 		this.backHandler = () => {
 			this.onLeave();
@@ -109,6 +129,9 @@ class NewOrderScreen extends Component {
 		BackHandler.addEventListener('hardwareBackPress', this.backHandler);
 	}
 
+	/**
+	 * Removes the custom back handler
+	 */
 	removeBackHandler() {
 		BackHandler.removeEventListener('hardwareBackPress', this.backHandler);
 	}
@@ -173,18 +196,54 @@ class NewOrderScreen extends Component {
 		}
 	}
 
+	/**
+	 * When the "Add credit" button is pressed.
+	 */
 	onCreditAdd() {
 		if (this.props.onCreditAdd) {
 			this.props.onCreditAdd();
 		}
 	}
 
+	/**
+	 * When the order's note field changes
+	 *
+	 * @param {String} note
+	 */
 	onNoteChange(note) {
 		if (this.props.onNoteChange) {
 			this.props.onNoteChange(note);
 		}
 	}
 
+	/**
+	 * When the name of a custom product changes.
+	 *
+	 * @param {Product} product
+	 * @param {String} name
+	 */
+	onCustomProductNameChange(product, name) {
+		if (this.props.onCustomProductNameChange) {
+			this.props.onCustomProductNameChange(product, name);
+		}
+	}
+
+	/**
+	 * When the price of a custom product changes.
+	 *
+	 * @param {Product} product
+	 * @param {Decimal} price
+	 */
+	onCustomProductPriceChange(product, price) {
+		if (this.props.onCustomProductPriceChange) {
+			this.props.onCustomProductPriceChange(product, price);
+		}
+	}
+
+
+	/**
+	 * When we try to leave the screen, we show an alert warning data could be lost.
+	 */
 	onLeave() {
 		Alert.alert(
 			null,
@@ -200,12 +259,35 @@ class NewOrderScreen extends Component {
 		);
 	}
 
+	/**
+	 * When we press the "Next" button, to go to the next screen, we validate the order. If it is not
+	 * valid, we show an error.
+	 */
 	onNextPress() {
+		const res = this.props.order.validate();
+
+		if (res === undefined) {
+			this.onNext();
+		} else {
+			this.props.ui.showErrorAlert(
+				this.t('order.editItems.error.title'),
+				this.t('order.editItems.error.message')
+			);
+		}
+	}
+
+	/**
+	 * Go to the next screen.
+	 */
+	onNext() {
 		if (this.props.onNext) {
 			this.props.onNext();
 		}
 	}
 
+	/**
+	 * Leave the screen
+	 */
 	leave() {
 		if (this.props.onLeave) {
 			this.props.onLeave();
@@ -257,10 +339,12 @@ class NewOrderScreen extends Component {
 		let props = null;
 
 		if (isCustom) {
+			const product = item.product;
+
 			// Props specific to CustomItemRow
 			props = {
-				onNameChange: this.props.onCustomProductNameChange,
-				onPriceChange: this.props.onCustomProductPriceChange,
+				onNameChange: (name) => { this.onCustomProductNameChange(product, name); },
+				onPriceChange: (price) => { this.onCustomProductPriceChange(product, price); },
 				validate: this.props.customProductValidate,
 			};
 		} else {
@@ -397,6 +481,11 @@ class NewOrderScreen extends Component {
 		);
 	}
 
+	/**
+	 * Renders the bar with the total
+	 *
+	 * @return {Component}
+	 */
 	renderTotalBar() {
 		const total = this.props.order.total;
 		const formattedTotal = this.props.localizer.formatCurrency(total.toNumber());
