@@ -45,6 +45,8 @@ module.exports = {
 	app,
 	logger,
 	routes: createRoutes(),
+	// initialRoute: '/orders/new',
+	initialRoute: '/orders/customer-roomselections',
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',
