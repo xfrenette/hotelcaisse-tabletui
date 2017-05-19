@@ -510,8 +510,10 @@ class NewOrderScreen extends Component {
 						<View style={styles.screenMain}>
 							<ScrollView>
 								<MainContent withSidebar style={styles.mainContent}>
-									<Title style={layoutStyles.title}>{ this.t('order.items.label') }</Title>
 									<View style={layoutStyles.section}>
+										<Title style={layoutStyles.title}>
+											{ this.t('order.items.label') }
+										</Title>
 										{ hasItems ? this.renderItems() : this.renderEmptyItems() }
 									</View>
 									{ shouldShowCredits ? this.renderCredits() : null }
