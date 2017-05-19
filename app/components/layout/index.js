@@ -4,6 +4,7 @@ import Screen from './Screen';
 import TopBar from './TopBar';
 import Console from './Console';
 import Sidebar from './Sidebar';
+import Container from './Container';
 
 export {
 	BottomBar,
@@ -12,4 +13,5 @@ export {
 	TopBar,
 	Console,
 	Sidebar,
+	Container,
 };
