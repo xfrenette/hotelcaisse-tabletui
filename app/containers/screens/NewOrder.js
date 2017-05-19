@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react/native';
-import Decimal from 'decimal.js';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Product from 'hotelcaisse-app/dist/business/Product';
 import Item from 'hotelcaisse-app/dist/business/Item';
@@ -171,7 +170,10 @@ class NewOrder extends Component {
 	 * @return {[type]}
 	 */
 	onNext() {
-		this.props.router.push('/order/customer-and-rooms');
+		this.props.router.push(
+			'/orders/customer-roomselections',
+			{ order: this.newOrder }
+		);
 	}
 
 	render() {
