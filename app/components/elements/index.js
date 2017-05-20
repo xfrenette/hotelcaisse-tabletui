@@ -11,6 +11,7 @@ import Modal from './Modal';
 import TrashButton from './TrashButton';
 import BottomBarBackButton from './BottomBarBackButton';
 import SwipeDelete from './SwipeDelete';
+import Field from './Field';
 
 export {
 	Button,
@@ -26,4 +27,5 @@ export {
 	TrashButton,
 	BottomBarBackButton,
 	SwipeDelete,
+	Field,
 };
