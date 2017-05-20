@@ -7,26 +7,32 @@ import {
 	Button,
 	BottomBarBackButton,
 	Title,
-} from '../elements';
+} from '../../elements';
 import {
 	TopBar,
 	BottomBar,
 	Screen,
 	MainContent,
 	Container,
-} from '../layout';
-import buttonLayouts from '../../styles/buttons';
-import layoutStyles from '../../styles/layout';
+} from '../../layout';
+import CustomerFields from './CustomerFields';
+import buttonLayouts from '../../../styles/buttons';
+import layoutStyles from '../../../styles/layout';
 
 const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
+	customerFields: PropTypes.shape({
+		fields: PropTypes.array,
+		labels: PropTypes.object,
+	}),
 };
 
 const defaultProps = {
+	customerFields: { fields: [], labels: {} },
 };
 
-class CustomerRoomSelections extends Component {
+class CustomerRoomSelectionsScreen extends Component {
 
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -51,6 +57,10 @@ class CustomerRoomSelections extends Component {
 								<Title style={layoutStyles.title}>
 									{ this.t('customer.section.title') }
 								</Title>
+								<CustomerFields
+									customerFields={this.props.customerFields}
+									fieldErrorMessage={this.t('errors.fieldInvalidValue')}
+								/>
 							</View>
 							<View style={layoutStyles.section}>
 								<Title style={layoutStyles.title}>
@@ -74,7 +84,7 @@ class CustomerRoomSelections extends Component {
 	}
 }
 
-CustomerRoomSelections.propTypes = propTypes;
-CustomerRoomSelections.defaultProps = defaultProps;
+CustomerRoomSelectionsScreen.propTypes = propTypes;
+CustomerRoomSelectionsScreen.defaultProps = defaultProps;
 
-export default CustomerRoomSelections;
+export default CustomerRoomSelectionsScreen;

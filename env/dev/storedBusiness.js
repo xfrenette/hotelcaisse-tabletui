@@ -4,7 +4,7 @@ import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
 import Product from 'hotelcaisse-app/dist/business/Product';
 import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
-import { TextField, EmailField, SelectField } from 'hotelcaisse-app/dist/fields';
+import { TextField, EmailField, SelectField, PhoneField } from 'hotelcaisse-app/dist/fields';
 
 /**
  * Returns a Business instance that is the "locally saved" Business instance when the app starts.
@@ -86,9 +86,10 @@ business.products = [product1, product2, product3, product11, product12];
 
 const nameField = new TextField();
 nameField.uuid = 'name-field';
+nameField.required = true;
 const emailField = new EmailField();
 emailField.uuid = 'email-field';
-const phoneField = new TextField();
+const phoneField = new PhoneField();
 phoneField.uuid = 'phone-field';
 const memberIdField = new TextField();
 memberIdField.uuid = 'memberIdField-field';
@@ -101,7 +102,7 @@ countrySelect.values = {
 };
 
 business.customerFields = {
-	fields: [nameField, emailField, phoneField, memberIdField, countrySelect],
+	fields: [nameField, emailField, countrySelect, phoneField, memberIdField],
 	labels: {
 		'name-field': 'Nom complet',
 		'email-field': 'Courriel',

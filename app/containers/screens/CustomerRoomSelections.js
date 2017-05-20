@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
-import Screen from '../../components/screens/CustomerRoomSelections';
+import Screen from '../../components/screens/customerRoomSelections/Screen';
 
-@inject('localizer', 'uuidGenerator')
+@inject('localizer', 'uuidGenerator', 'business')
 @observer
 class CustomerRoomSelections extends Component {
 	order = null;
@@ -15,10 +15,13 @@ class CustomerRoomSelections extends Component {
 	}
 
 	render() {
+		const customerFields = this.props.business.customerFields;
+
 		return (
 			<Screen
 				order={this.order}
 				localizer={this.props.localizer}
+				customerFields={customerFields}
 			/>
 		);
 	}
