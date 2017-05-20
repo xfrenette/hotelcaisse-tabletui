@@ -13,9 +13,9 @@ class TestReader {
 					resolve(this.data);
 				}, this.delay);
 			});
-		} else {
-			return Promise.resolve(this.data);
 		}
+
+		return Promise.resolve(this.data);
 	}
 }
 
