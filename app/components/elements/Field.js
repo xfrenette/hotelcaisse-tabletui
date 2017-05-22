@@ -89,6 +89,7 @@ class Field extends Component {
 				ref={(node) => { this.inputNode = node; }}
 				onChangeValue={this.props.onChangeValue}
 				error={this.props.error}
+				showIncrementors
 				{...this.otherProps}
 			/>
 		);
@@ -121,6 +122,8 @@ class Field extends Component {
 				return this.renderEmailField();
 			case 'PhoneField':
 				return this.renderPhoneField();
+			case 'NumberField':
+				return this.renderNumberField();
 			default:
 				return this.renderTextField();
 		}
