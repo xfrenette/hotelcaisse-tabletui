@@ -3,8 +3,9 @@ import Business from 'hotelcaisse-app/dist/business/Business';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
 import Product from 'hotelcaisse-app/dist/business/Product';
-import Register, { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
-import { TextField, EmailField, SelectField, PhoneField } from 'hotelcaisse-app/dist/fields';
+import Register from 'hotelcaisse-app/dist/business/Register';
+import Room from 'hotelcaisse-app/dist/business/Room';
+import { TextField, EmailField, SelectField, PhoneField, NumberField } from 'hotelcaisse-app/dist/fields';
 
 /**
  * Returns a Business instance that is the "locally saved" Business instance when the app starts.
@@ -100,6 +101,12 @@ countrySelect.values = {
 	usa: 'États-Unis',
 	france: 'France',
 };
+const nbAdultsField = new NumberField();
+nbAdultsField.uuid = 'nb-adults-field';
+const nbTeensField = new NumberField();
+nbTeensField.uuid = 'nb-teens-field';
+const nbChildrenField = new NumberField();
+nbChildrenField.uuid = 'nb-children-field';
 
 business.customerFields = {
 	fields: [nameField, emailField, countrySelect, phoneField, memberIdField],
@@ -114,5 +121,21 @@ business.customerFields = {
 		name: 'name-field',
 	},
 };
+
+business.roomSelectionFields = {
+	fields: [nbAdultsField, nbTeensField, nbChildrenField],
+	labels: {
+		'nb-adults-field': 'Adultes (18+)',
+		'nb-teens-field': 'Enfants 7-17',
+		'nb-children-field': 'Enfants 0-6',
+	},
+};
+
+for (let i = 1; i <= 6; i += 1) {
+	const room = new Room();
+	room.uuid = `room_${i}`;
+	room.name = `Chambre ${i}`;
+	business.rooms.push(room);
+}
 
 export default business;
