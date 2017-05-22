@@ -72,7 +72,7 @@ class CustomerFields extends Component {
 	onFieldBlur(field) {
 		const value = this.fieldValues.get(field.uuid);
 		const res = field.validate(value);
-console.log(value, res);
+
 		if (res) {
 			this.fieldErrors.set(field.uuid, this.props.fieldErrorMessage);
 		} else {
