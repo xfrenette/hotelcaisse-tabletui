@@ -12,6 +12,7 @@ import TrashButton from './TrashButton';
 import BottomBarBackButton from './BottomBarBackButton';
 import SwipeDelete from './SwipeDelete';
 import Field from './Field';
+import DatePicker from './DatePicker';
 
 export {
 	Button,
@@ -28,4 +29,5 @@ export {
 	BottomBarBackButton,
 	SwipeDelete,
 	Field,
+	DatePicker,
 };
