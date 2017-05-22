@@ -8,7 +8,6 @@ const propTypes = {
 	first: PropTypes.bool,
 	last: PropTypes.bool,
 	compact: PropTypes.bool,
-	header: PropTypes.bool,
 	style: View.propTypes.style,
 };
 
@@ -16,7 +15,6 @@ const defaultProps = {
 	first: false,
 	last: false,
 	compact: false,
-	header: false,
 	style: null,
 	children: null,
 };
