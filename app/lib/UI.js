@@ -94,7 +94,7 @@ class UI {
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI
 	 * params (all optional, but might not work if not present):
 	 * - routes
-	 * - initialRoute (string, optional) Mainly used when developping
+	 * - initialRoutes (array<String>, optional) Mainly used when developping
 	 * - auth
 	 * - locale (string)
 	 * - strings (object for Localizer)
@@ -133,8 +133,9 @@ class UI {
 	initRouter() {
 		const historyConfig = {};
 
-		if (this.settings.initialRoute) {
-			historyConfig.initialEntries = [this.settings.initialRoute];
+		if (this.settings.initialRoutes) {
+			historyConfig.initialEntries = this.settings.initialRoutes;
+			historyConfig.initialIndex = this.settings.initialRoutes.length - 1;
 		}
 
 		this.router = new RouterStore();
