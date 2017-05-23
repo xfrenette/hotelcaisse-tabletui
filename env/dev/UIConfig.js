@@ -3,6 +3,7 @@ import BusinessAutoload from 'hotelcaisse-app/dist/plugins/autoload/Business';
 import { serialize } from 'serializr';
 import createRoutes from './routes';
 import storedBusiness from './storedBusiness';
+import testOrder from './testOrder';
 import UILogger from '../../app/lib/UILogger';
 import TestAuth from '../../tests/mock/TestAuth';
 import TestReader from '../../tests/mock/TestReader';
@@ -39,6 +40,10 @@ const appConfig = {
 };
 
 const app = new Application(appConfig);
+const currentPath = {
+	pathname: '/orders/review-payments',
+	state: { order: testOrder },
+};
 
 // module.exports instead of export because it is an optional require in index.*
 module.exports = {
@@ -46,7 +51,7 @@ module.exports = {
 	logger,
 	routes: createRoutes(),
 	// initialRoutes: ['/test'],
-	initialRoutes: ['/', '/orders/customer-roomselections'],
+	initialRoutes: ['/', '/orders/customer-roomselections', currentPath],
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',
