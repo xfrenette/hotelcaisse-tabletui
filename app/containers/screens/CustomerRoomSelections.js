@@ -23,6 +23,10 @@ class CustomerRoomSelections extends Component {
 		this.props.router.goBack();
 	}
 
+	onNext() {
+		this.props.router.push('/orders/review-payments', { order: this.order });
+	}
+
 	onAddRoomSelection() {
 		const roomSelection = new RoomSelection();
 		roomSelection.uuid = this.props.uuidGenerator.generate();
@@ -48,6 +52,7 @@ class CustomerRoomSelections extends Component {
 				onDeleteRoomSelection={(rs) => { this.onDeleteRoomSelection(rs); }}
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}
+				onNext={() => { this.onNext(); }}
 			/>
 		);
 	}

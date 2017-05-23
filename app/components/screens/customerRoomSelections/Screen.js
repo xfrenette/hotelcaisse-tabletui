@@ -38,6 +38,7 @@ const propTypes = {
 	onDeleteRoomSelection: PropTypes.func,
 	onPressHome: PropTypes.func,
 	onReturn: PropTypes.func,
+	onNext: PropTypes.func,
 };
 
 const defaultProps = {
@@ -48,6 +49,7 @@ const defaultProps = {
 	onDeleteRoomSelection: null,
 	onPressHome: null,
 	onReturn: null,
+	onNext: null,
 };
 
 @observer
@@ -106,6 +108,7 @@ class CustomerRoomSelectionsScreen extends Component {
 					<Button
 						title={this.t('actions.next')}
 						layout={buttonLayouts.primary}
+						onPress={this.props.onNext}
 					/>
 				</BottomBar>
 			</Screen>
