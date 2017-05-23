@@ -5,7 +5,7 @@ import Order from 'hotelcaisse-app/dist/business/Order';
 import RoomSelection from 'hotelcaisse-app/dist/business/RoomSelection';
 import Screen from '../../components/screens/customerRoomSelections/Screen';
 
-@inject('localizer', 'uuidGenerator', 'business')
+@inject('localizer', 'uuidGenerator', 'business', 'router')
 @observer
 class CustomerRoomSelections extends Component {
 	order = null;
@@ -13,6 +13,14 @@ class CustomerRoomSelections extends Component {
 	componentWillMount() {
 		const order = get(this.props, 'location.state.order', null);
 		this.order = order || new Order(this.props.uuidGenerator.generate());
+	}
+
+	onPressHome() {
+		this.props.router.replace('/');
+	}
+
+	onReturn() {
+		this.props.router.goBack();
 	}
 
 	onAddRoomSelection() {
@@ -38,6 +46,8 @@ class CustomerRoomSelections extends Component {
 				roomSelectionFields={roomSelectionFields}
 				onAddRoomSelection={() => { this.onAddRoomSelection(); }}
 				onDeleteRoomSelection={(rs) => { this.onDeleteRoomSelection(rs); }}
+				onPressHome={() => { this.onPressHome(); }}
+				onReturn={() => { this.onReturn(); }}
 			/>
 		);
 	}

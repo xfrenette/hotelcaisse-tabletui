@@ -36,6 +36,8 @@ const propTypes = {
 	}),
 	onAddRoomSelection: PropTypes.func,
 	onDeleteRoomSelection: PropTypes.func,
+	onPressHome: PropTypes.func,
+	onReturn: PropTypes.func,
 };
 
 const defaultProps = {
@@ -44,6 +46,8 @@ const defaultProps = {
 	roomSelectionFields: { fields: [], labels: {} },
 	onAddRoomSelection: null,
 	onDeleteRoomSelection: null,
+	onPressHome: null,
+	onReturn: null,
 };
 
 @observer
@@ -64,6 +68,7 @@ class CustomerRoomSelectionsScreen extends Component {
 			<Screen>
 				<TopBar
 					title={this.t('customerRoomSelections.title')}
+					onPressHome={this.props.onPressHome}
 				/>
 				<ScrollView>
 					<MainContent>
@@ -96,6 +101,7 @@ class CustomerRoomSelectionsScreen extends Component {
 				<BottomBar>
 					<BottomBarBackButton
 						title={this.t('actions.back')}
+						onPress={this.props.onReturn}
 					/>
 					<Button
 						title={this.t('actions.next')}
