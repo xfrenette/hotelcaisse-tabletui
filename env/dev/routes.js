@@ -9,6 +9,7 @@ import CloseRegister from '../../app/containers/screens/CloseRegister';
 import ManageRegister from '../../app/containers/screens/ManageRegister';
 import NewOrder from '../../app/containers/screens/NewOrder';
 import CustomerRoomSelections from '../../app/containers/screens/CustomerRoomSelections';
+import ReviewAndPayments from '../../app/containers/screens/ReviewAndPayments';
 import TestScreen from './TestScreen';
 
 export default () => ([
@@ -30,6 +31,7 @@ export default () => ([
 							{ component: ManageRegister, path: '/register/manage' },
 							{ component: NewOrder, path: '/orders/new' },
 							{ component: CustomerRoomSelections, path: '/orders/customer-roomselections' },
+							{ component: ReviewAndPayments, path: '/orders/review-payments' },
 						],
 					},
 				],
