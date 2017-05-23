@@ -10,9 +10,11 @@ import {
 	Message,
 	Text,
 	Dropdown,
+	DatePicker,
 	SwipeDelete,
 } from '../../elements';
 import { Row, Cell } from '../../elements/table';
+import { Label } from '../../elements/form';
 import typographyStyles from '../../../styles/typography';
 import tableStyles from '../../../styles/tables';
 import styleVars from '../../../styles/variables';
@@ -78,6 +80,7 @@ class RoomSelections extends Component {
 
 		return (
 			<View>
+				{ this.renderDatePickers() }
 				{ this.renderTableHeaderRow() }
 				{ roomSelections }
 				<Message type="info">{ this.t('messages.swipeLeftToDelete') }</Message>
@@ -99,6 +102,21 @@ class RoomSelections extends Component {
 					{ this.renderRoomSelectionFields() }
 				</Row>
 			</SwipeDelete>
+		);
+	}
+
+	renderDatePickers() {
+		return (
+			<View style={styles.datepickers}>
+				<View style={styles.datepicker}>
+					<Label>{this.t('roomSelections.checkin')}</Label>
+					<DatePicker />
+				</View>
+				<View style={styles.datepicker}>
+					<Label>{this.t('roomSelections.checkout')}</Label>
+					<DatePicker />
+				</View>
+			</View>
 		);
 	}
 
@@ -186,6 +204,15 @@ const styles = {
 		marginTop: styleVars.verticalRhythm,
 		alignItems: 'flex-start',
 	},
+	datepickers: {
+		flexDirection: 'row',
+		marginHorizontal: -styleVars.horizontalRhythm,
+		marginBottom: styleVars.verticalRhythm,
+	},
+	datepicker: {
+		flex: 1,
+		marginHorizontal: styleVars.horizontalRhythm,
+	},
 };
 
 const cellStyles = {
@@ -197,7 +224,7 @@ const cellStyles = {
 	},
 	field: {
 		flex: 1,
-	}
+	},
 };
 
 RoomSelections.propTypes = propTypes;

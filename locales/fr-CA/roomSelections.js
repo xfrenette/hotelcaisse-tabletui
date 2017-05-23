@@ -9,4 +9,6 @@ export default {
 	table: {
 		name: 'Chambre',
 	},
+	checkin: 'Date d\'arrivée',
+	checkout: 'Date de départ',
 };
