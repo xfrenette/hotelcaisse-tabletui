@@ -361,6 +361,7 @@ class CategorySidebar extends Component {
 			<Sidebar
 				ref={(node) => { this.nodeRefs.sidebar = node; }}
 				style={this.props.style}
+				dark
 				onLayout={({ nativeEvent }) => { this.sidebarWidth = nativeEvent.layout.width; }}
 			>
 				{ back }

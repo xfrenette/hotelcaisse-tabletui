@@ -5,11 +5,13 @@ import styleVars from '../../styles/variables';
 
 const propTypes = {
 	style: ScrollView.propTypes.style,
+	dark: PropTypes.bool,
 	children: PropTypes.node,
 };
 
 const defaultProps = {
 	style: null,
+	dark: false,
 	children: null,
 };
 
@@ -30,9 +32,14 @@ class Sidebar extends Component {
 
 	render() {
 		const { style, children, ...otherProps } = this.props;
+		const containerStyles = [style];
+
+		if (this.props.dark) {
+			containerStyles.push(styles.dark);
+		}
 
 		return (
-			<View style={[styles.scrollview, style]}>
+			<View style={containerStyles}>
 				<ScrollView
 					ref={(node) => { this.nodeRefs.scrollView = node; }}
 					contentContainerStyle={styles.sidebar}
@@ -49,7 +56,7 @@ Sidebar.propTypes = propTypes;
 Sidebar.defaultProps = defaultProps;
 
 const styles = {
-	scrollview: {
+	dark: {
 		backgroundColor: styleVars.colors.darkGrey1,
 	},
 	sidebar: {
