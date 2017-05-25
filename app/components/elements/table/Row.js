@@ -9,6 +9,7 @@ const propTypes = {
 	last: PropTypes.bool,
 	header: PropTypes.bool,
 	style: View.propTypes.style,
+	lined: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -16,10 +17,15 @@ const defaultProps = {
 	last: false,
 	header: false,
 	style: null,
+	lined: true,
 };
 
 const Row = (props) => {
 	const rowStyles = [styles.row];
+
+	if (props.lined) {
+		rowStyles.push(styles.lined);
+	}
 
 	if (props.first) {
 		rowStyles.push(styles.first);
@@ -47,12 +53,15 @@ Row.defaultProps = defaultProps;
 
 const styles = {
 	row: {
-		borderTopWidth: 1,
-		borderTopColor: styleVars.theme.lineColor,
 		paddingTop: (styleVars.verticalRhythm / 2),
-		paddingBottom: styleVars.verticalRhythm / 2 - 1,
+		paddingBottom: (styleVars.verticalRhythm / 2) - 1,
 		flexDirection: 'row',
 		alignItems: 'center',
+	},
+
+	lined: {
+		borderTopWidth: 1,
+		borderTopColor: styleVars.theme.lineColor,
 	},
 
 	first: {
