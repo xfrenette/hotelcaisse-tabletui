@@ -5,6 +5,7 @@ import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
 import Product from 'hotelcaisse-app/dist/business/Product';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import Room from 'hotelcaisse-app/dist/business/Room';
+import TransactionMode from 'hotelcaisse-app/dist/business/TransactionMode';
 import { TextField, EmailField, SelectField, PhoneField, NumberField } from 'hotelcaisse-app/dist/fields';
 
 /**
@@ -137,5 +138,10 @@ for (let i = 1; i <= 6; i += 1) {
 	room.name = `Chambre ${i}`;
 	business.rooms.push(room);
 }
+
+business.transactionModes.push(new TransactionMode('tm1', 'Argent'));
+business.transactionModes.push(new TransactionMode('tm2', 'Visa'));
+business.transactionModes.push(new TransactionMode('tm3', 'Mastercard'));
+business.transactionModes.push(new TransactionMode('tm4', 'Interac'));
 
 export default business;
