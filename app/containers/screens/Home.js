@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react/native';
 import { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Register';
-import HomeScreen from '../../components/screens/Home';
+import HomeScreen from '../../components/screens/home/Screen';
 
-@inject('business', 'router')
+@inject('business', 'router', 'localizer')
 @observer
 class Home extends Component {
-	onLinkPressed(key) {
+	/**
+	 * When a button is pressed, we redirect to the associated path
+	 *
+	 * @param {String} key
+	 */
+	onButtonPress(key) {
 		let path = null;
 
 		switch (key) {
@@ -38,6 +43,11 @@ class Home extends Component {
 		}
 	}
 
+	/**
+	 * Utility function to go to a path
+	 *
+	 * @param {String} path
+	 */
 	goToPath(path) {
 		if (this.props.router) {
 			this.props.router.push(path);
@@ -51,8 +61,9 @@ class Home extends Component {
 
 		return (
 			<HomeScreen
+				localizer={this.props.localizer}
 				registerState={registerState}
-				onLinkPressed={(key) => { this.onLinkPressed(key); }}
+				onButtonPress={(key) => { this.onButtonPress(key); }}
 			/>
 		);
 	}

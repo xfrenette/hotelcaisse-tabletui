@@ -1,6 +1,7 @@
 import actions from './actions';
 import messages from './messages';
 import errors from './errors';
+import home from './home';
 import openRegister from './openRegister';
 import closeRegister from './closeRegister';
 import manageRegister from './manageRegister';
@@ -13,6 +14,7 @@ export default {
 	actions,
 	messages,
 	errors,
+	home,
 	openRegister,
 	closeRegister,
 	manageRegister,
