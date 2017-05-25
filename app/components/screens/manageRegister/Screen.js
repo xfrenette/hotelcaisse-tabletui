@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, View, Alert } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { observer, inject } from 'mobx-react/native';
-import { observable } from 'mobx';
-import Decimal from 'decimal.js';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import {
 	Button,
 	Title,
 	Text,
-	NumberInput,
-	TextInput,
-	Modal,
-	Message,
 	TrashButton,
 } from '../../elements';
-import { Field, Label } from '../../elements/form';
 import { Row, Cell } from '../../elements/table';
 import {
 	TopBar,
@@ -28,10 +21,11 @@ import buttonLayouts from '../../../styles/buttons';
 import styleVars from '../../../styles/variables';
 import tableStyles from '../../../styles/tables';
 import typographyStyles from '../../../styles/typography';
+import AddModal from './AddModal';
 
 const propTypes = {
 	onFinish: PropTypes.func,
-	onAddCashMovement: PropTypes.func,
+	onAdd: PropTypes.func,
 	onDeleteCashMovement: PropTypes.func,
 	validate: PropTypes.func,
 	cashMovements: PropTypes.arrayOf(PropTypes.instanceOf(CashMovement)),
@@ -40,7 +34,7 @@ const propTypes = {
 
 const defaultProps = {
 	onFinish: null,
-	onAddCashMovement: null,
+	onAdd: null,
 	onDeleteCashMovement: null,
 	validate: null,
 	cashMovements: [],
@@ -48,35 +42,22 @@ const defaultProps = {
 
 @inject('ui')
 @observer
-class ManageRegister extends Component {
+class ManageRegisterScreen extends Component {
 	/**
-	 * Variable holding current state of modal.
-	 * - type (string): 'in' or 'out'
-	 * - note (string): note currently being entered
-	 * - amount (number): amount currently being entered
-	 * - inputErrors (object): error message for each field (null if no error, else an error message)
-	 *
-	 * @type {Object}
-	 */
-	@observable
-	modalData = {
-		type: null,
-		note: null,
-		amount: null,
-		inputErrors: {
-			note: null,
-			amount: null,
-		},
-	};
-	/**
-	 * References to node elements
+	 * References to React Nodes
 	 *
 	 * @type {Object}
 	 */
 	nodeRefs = {};
+	/**
+	 * Reference to the add modal
+	 *
+	 * @type {Node}
+	 */
+	addModal = null;
 
 	/**
-	 * Called when press the "cancel" button.
+	 * Called when press the "finish" button.
 	 */
 	onFinish() {
 		if (this.props.onFinish) {
@@ -88,7 +69,6 @@ class ManageRegister extends Component {
 	 * Called when pressing the "add out" button. Shows the modal.
 	 */
 	onAddOut() {
-		this.modalData.type = 'out';
 		this.showModal();
 	}
 
@@ -96,7 +76,6 @@ class ManageRegister extends Component {
 	 * Called when pressing the "add in" button. Shows the modal.
 	 */
 	onAddIn() {
-		this.modalData.type = 'in';
 		this.showModal();
 	}
 
@@ -113,85 +92,9 @@ class ManageRegister extends Component {
 	/**
 	 * Shows the modal
 	 */
-	showModal() {
-		this.resetModal();
-		this.nodeRefs.addModal.show();
-	}
-
-	/**
-	 * Resets all the fields used in the modal
-	 */
-	resetModal() {
-		this.modalData.note = null;
-		this.modalData.amount = null;
-		this.modalData.inputErrors.note = null;
-		this.modalData.inputErrors.amount = null;
-	}
-
-	/**
-	 * Shows the confirmation alert to delete a CashMovement. If the user confirms, calls
-	 * onConfirmDelete().
-	 *
-	 * @param {CashMovement} cashMovement
-	 */
-	showDeleteConfirm(cashMovement) {
-		const deleteCallback = () => {
-			this.onConfirmDelete(cashMovement);
-		};
-
-		Alert.alert(
-			this.t('manageRegister.deletion.title'),
-			this.t('manageRegister.deletion.message'),
-			[
-				{ text: this.t('actions.cancel') },
-				{ text: this.t('actions.delete'), onPress: deleteCallback },
-			]
-		);
-	}
-
-	/**
-	 * Hides the modal
-	 */
-	hideModal() {
-		this.nodeRefs.addModal.hide();
-	}
-
-	/**
-	 * When a button of the modal is pressed. Receives the key of the button as parameter.
-	 *
-	 * @param {String} key
-	 */
-	onModalActionPress(key) {
-		if (key === 'cancel') {
-			this.hideModal();
-		}
-
-		if (key === 'save') {
-			this.onModalSave();
-		}
-	}
-
-	/**
-	 * Called when the user clicks the "Save" button in the modal. Will validate the data and, if
-	 * valid, will call onAddCashMovement. Will then hide the modal and show a Toaster.
-	 */
-	onModalSave() {
-		if (!this.validate(['note', 'amount'])) {
-			return;
-		}
-
-		const type = this.modalData.type;
-		const note = this.modalData.note;
-		const amount = this.getModalAmountAsDecimal();
-
-		if (this.props.onAddCashMovement) {
-			this.props.onAddCashMovement(type, note, amount);
-		}
-
-		this.hideModal();
-
-		const toastMessageKey = `manageRegister.add${type === 'in' ? 'In' : 'Out'}.success`;
-		this.props.ui.showToast(this.t(toastMessageKey));
+	showModal(type) {
+		this.addModal.reset();
+		this.addModal.show(type);
 	}
 
 	/**
@@ -214,75 +117,6 @@ class ManageRegister extends Component {
 	}
 
 	/**
-	 * Listener added on blur on some fields to validate their value when blurring.
-	 *
-	 * @param {String} field
-	 */
-	onFieldBlur(field) {
-		this.validate([field]);
-	}
-
-	/**
-	 * Receives a list of fields to validate (see this.inputErrors for valid field names) and, if a
-	 * validate function is defined in the props, will call it to validate only those fields. Will
-	 * then call setErrors() with the resulting validation. This function returns a boolean that is
-	 * true if no validation errors were found (or if no validate function in the props).
-	 *
-	 * @param {Array} fields
-	 * @return {Boolean}
-	 */
-	validate(fields) {
-		if (!this.props.validate) {
-			return true;
-		}
-
-		const values = {};
-
-		if (fields.indexOf('note') !== -1) {
-			values.note = this.modalData.note;
-		}
-
-		if (fields.indexOf('amount') !== -1) {
-			values.amount = this.getModalAmountAsDecimal();
-		}
-
-		const result = this.props.validate(values);
-		this.setErrors(fields, result);
-
-		return result === undefined;
-	}
-
-	/**
-	 * From a list of fields that were validated and the validation result, updates values in
-	 * this.inputErrors with null (no error) or a localized error message.
-	 *
-	 * @param {Array} fields
-	 * @param {Object} errors
-	 */
-	setErrors(fields, errors = {}) {
-		fields.forEach((field) => {
-			if (errors[field]) {
-				this.modalData.inputErrors[field] = this.t(`manageRegister.inputErrors.${field}`);
-			} else {
-				this.modalData.inputErrors[field] = null;
-			}
-		});
-	}
-
-	/**
-	 * Returns the amount value in the modal as a decimal. If no amount is set, returns null.
-	 *
-	 * @return {Decimal}
-	 */
-	getModalAmountAsDecimal() {
-		if (typeof this.modalData.amount === 'number') {
-			return new Decimal(this.modalData.amount);
-		}
-
-		return null;
-	}
-
-	/**
 	 * Returns all CashMovement of a certain type ('in' or 'out')
 	 *
 	 * @param {String} type 'in' or 'out'
@@ -296,78 +130,6 @@ class ManageRegister extends Component {
 
 			return cashMovement.amount.isNegative();
 		});
-	}
-
-	/**
-	 * Puts the focus in the specified field
-	 *
-	 * @type {String} field   Key of the field in the nodeRefs object
-	 */
-	focusField(field) {
-		this.nodeRefs[field].focus();
-	}
-
-	/**
-	 * Renders the modal to add a cash movement. Title and content are dynamic based on
-	 * this.modalData.
-	 *
-	 * @return {Component}
-	 */
-	renderAddModal() {
-		let message = null;
-
-		const titleTransKey = this.modalData.type === 'in'
-			? this.t('manageRegister.addIn.title')
-			: this.t('manageRegister.addOut.title');
-
-		const actions = {
-			cancel: this.t('actions.cancel'),
-			save: this.t('actions.save'),
-		};
-
-		if (this.modalData.errorMessage) {
-			message = (
-				<Message type="error">{ this.modalData.errorMessage }</Message>
-			);
-		}
-
-		return (
-			<Modal
-				ref={(modal) => { this.nodeRefs.addModal = modal; }}
-				title={titleTransKey}
-				actions={actions}
-				onActionPress={(key) => { this.onModalActionPress(key); }}
-				onShow={() => { this.focusField('amountInput'); }}
-			>
-				{ message }
-				<Label>{ this.t('manageRegister.fields.amount') }</Label>
-				<Field>
-					<NumberInput
-						ref={(node) => { this.nodeRefs.amountInput = node; }}
-						value={this.modalData.amount}
-						type="money" localizer={this.props.localizer}
-						onChangeValue={(value) => { this.modalData.amount = value; }}
-						error={this.modalData.inputErrors.amount}
-						onBlur={() => { this.onFieldBlur('amount'); }}
-						selectTextOnFocus
-						onSubmitEditing={() => { this.focusField('noteInput'); }}
-						returnKeyType="next"
-					/>
-				</Field>
-				<Label>{ this.t('manageRegister.fields.note') }</Label>
-				<Field>
-					<TextInput
-						ref={(node) => { this.nodeRefs.noteInput = node; }}
-						value={this.modalData.note}
-						onChangeText={(text) => { this.modalData.note = text; }}
-						autoCapitalize="sentences"
-						error={this.modalData.inputErrors.note}
-						onBlur={() => { this.onFieldBlur('note'); }}
-						returnKeyType="done"
-					/>
-				</Field>
-			</Modal>
-		);
 	}
 
 	/**
@@ -476,7 +238,12 @@ class ManageRegister extends Component {
 							</View>
 						</View>
 					</MainContent>
-					{ this.renderAddModal() }
+					<AddModal
+						ref={(node) => { this.addModal = node; }}
+						localizer={this.props.localizer}
+						validate={this.props.validate}
+						onAdd={this.props.onAdd}
+					/>
 				</ScrollView>
 				<BottomBar>
 					<View />
@@ -490,9 +257,6 @@ class ManageRegister extends Component {
 		);
 	}
 }
-
-ManageRegister.propTypes = propTypes;
-ManageRegister.defaultProps = defaultProps;
 
 const styles = {
 	inOutColumns: {
@@ -531,4 +295,7 @@ const styles = {
 	},
 };
 
-export default ManageRegister;
+ManageRegisterScreen.propTypes = propTypes;
+ManageRegisterScreen.defaultProps = defaultProps;
+
+export default ManageRegisterScreen;

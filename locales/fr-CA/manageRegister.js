@@ -4,21 +4,21 @@ export default {
 		addOut: 'Ajouter une sortie',
 		addIn: 'Ajouter une entrée',
 	},
-	fields: {
-		amount: 'Montant',
-		note: 'Description',
-	},
-	inputErrors: {
-		amount: 'Veuillez entrer un montant valide',
-		note: 'Veuillez spécifier une description valide',
-	},
-	addIn: {
-		title: 'Ajout d\'une entrée d\'argent',
-		success: 'Entrée d\'argent enregistrée',
-	},
-	addOut: {
-		title: 'Ajout d\'une sortie d\'argent',
-		success: 'Sortie d\'argent enregistrée',
+	modal: {
+		title: 'Nouvelle opération',
+		types: {
+			in: 'Entrée d\'argent',
+			out: 'Sortie d\'argent',
+		},
+		fields: {
+			type: 'Type d\'opération',
+			amount: 'Montant',
+			note: 'Description',
+		},
+		errors: {
+			amount: 'Veuillez entrer un montant valide',
+			note: 'Veuillez spécifier une description valide',
+		},
 	},
 	moneyOut: {
 		title: 'Sorties d\'argent',
@@ -27,10 +27,6 @@ export default {
 	moneyIn: {
 		title: 'Entrées d\'argent',
 		empty: 'Aucune entrée',
-	},
-	errors: {
-		emptyDescription: 'Veuillez spécifier une description',
-		invalidAmount: 'Veuillez spécifier un montant valide',
 	},
 	deletion: {
 		title: 'Supprimer',

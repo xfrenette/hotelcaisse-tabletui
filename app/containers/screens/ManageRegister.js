@@ -48,7 +48,7 @@ class ManageRegister extends Component {
 	 * @param {String} note
 	 * @param {Decimal} rawAmount
 	 */
-	onAddCashMovement(type, note, rawAmount) {
+	onAdd(type, note, rawAmount) {
 		let amount = rawAmount;
 
 		if (type === 'out') {
@@ -68,17 +68,6 @@ class ManageRegister extends Component {
 		this.props.business.deviceRegister.removeCashMovement(cashMovement);
 	}
 
-	/**
-	 * Validates values to create a new CashMovement by calling CashMovement.validate() and returns
-	 * its result.
-	 *
-	 * @param {Object} values (valid keys: amount, note)
-	 * @return {Object}
-	 */
-	validate(values) {
-		return CashMovement.validate(values);
-	}
-
 	render() {
 		const cashMovements = this.props.business.deviceRegister.cashMovements.slice();
 
@@ -86,10 +75,10 @@ class ManageRegister extends Component {
 			<Screen
 				onFinish={() => { this.onFinish(); }}
 				localizer={this.props.localizer}
-				onAddCashMovement={(...params) => { this.onAddCashMovement(...params); }}
+				onAdd={(...params) => { this.onAdd(...params); }}
 				onDeleteCashMovement={(cashMovement) => { this.onDeleteCashMovement(cashMovement); }}
 				cashMovements={cashMovements}
-				validate={values => this.validate(values)}
+				validate={CashMovement.validate}
 			/>
 		);
 	}
