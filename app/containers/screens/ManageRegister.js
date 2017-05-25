@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react/native';
-import Decimal from 'decimal.js';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
-import ManageRegisterScreen from '../../components/screens/ManageRegister';
+import Screen from '../../components/screens/manageRegister/Screen';
 
 @inject('router', 'business', 'localizer', 'uuidGenerator')
 @observer
@@ -84,7 +83,7 @@ class ManageRegister extends Component {
 		const cashMovements = this.props.business.deviceRegister.cashMovements.slice();
 
 		return (
-			<ManageRegisterScreen
+			<Screen
 				onFinish={() => { this.onFinish(); }}
 				localizer={this.props.localizer}
 				onAddCashMovement={(...params) => { this.onAddCashMovement(...params); }}

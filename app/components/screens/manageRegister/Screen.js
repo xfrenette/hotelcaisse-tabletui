@@ -15,19 +15,19 @@ import {
 	Modal,
 	Message,
 	TrashButton,
-} from '../elements';
-import { Field, Label } from '../elements/form';
-import { Row, Cell } from '../elements/table';
+} from '../../elements';
+import { Field, Label } from '../../elements/form';
+import { Row, Cell } from '../../elements/table';
 import {
 	TopBar,
 	BottomBar,
 	Screen,
 	MainContent,
-} from '../layout';
-import buttonLayouts from '../../styles/buttons';
-import styleVars from '../../styles/variables';
-import tableStyles from '../../styles/tables';
-import typographyStyles from '../../styles/typography';
+} from '../../layout';
+import buttonLayouts from '../../../styles/buttons';
+import styleVars from '../../../styles/variables';
+import tableStyles from '../../../styles/tables';
+import typographyStyles from '../../../styles/typography';
 
 const propTypes = {
 	onFinish: PropTypes.func,
