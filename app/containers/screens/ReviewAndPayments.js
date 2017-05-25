@@ -4,7 +4,7 @@ import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Screen from '../../components/screens/reviewAndPayments/Screen';
 
-@inject('localizer', 'uuidGenerator', 'router')
+@inject('localizer', 'uuidGenerator', 'router', 'business')
 @observer
 class ReviewAndPayments extends Component {
 	order = null;
@@ -30,6 +30,7 @@ class ReviewAndPayments extends Component {
 			<Screen
 				order={this.order}
 				localizer={this.props.localizer}
+				transactionModes={this.props.business.transactionModes}
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}
 				onSave={() => { this.onSave(); }}

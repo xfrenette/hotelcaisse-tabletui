@@ -3,6 +3,9 @@ export default {
 	new: {
 		title: 'Nouvelle inscription',
 	},
+	balance: {
+		toPay: 'À payer',
+	},
 	credits: {
 		label: 'Dépôts',
 		empty: 'Pour ajouter un dépôt, appuyez le bouton ci-dessous',
@@ -15,12 +18,23 @@ export default {
 			amount: 'Doit être positif',
 		},
 	},
+	payments: {
+		label: 'Paiements',
+		modal: {
+			title: 'Enregistrer le paiement',
+		},
+		fields: {
+			mode: 'Mode de paiement',
+			amount: 'Montant',
+		},
+	},
 	note: {
 		label: 'Notes',
 		instructions: 'Les notes sont utilisées uniquement à l\'interne et n\'apparaitront pas sur la facture.',
 	},
 	actions: {
 		addCredit: 'Ajouter un dépôt',
+		addPayment: 'Enregistrer le paiement',
 	},
 	categories: {
 		empty: 'Cette catégorie est vide',
@@ -36,6 +50,10 @@ export default {
 			name: 'Ne peut être vide',
 			price: 'Doit être positif',
 		},
+		qty: 'Qté',
+		unitPrice: 'Prix',
+		subtotal: 'Sous-total',
+		total: 'Total',
 	},
 	editItems: {
 		error: {

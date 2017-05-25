@@ -11,4 +11,6 @@ export default {
 	},
 	checkin: 'Date d\'arrivée',
 	checkout: 'Date de départ',
+	checkinShort: 'Arrivée',
+	checkoutShort: 'Départ',
 };
