@@ -269,6 +269,7 @@ class AddModal extends Component {
 						autoCapitalize="sentences"
 						error={this.errors.note}
 						onBlur={() => { this.onFieldBlur('note'); }}
+						onSubmitEditing={() => { this.onSave(); }}
 						returnKeyType="done"
 					/>
 				</View>

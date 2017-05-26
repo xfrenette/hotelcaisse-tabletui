@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ScrollView, View } from 'react-native';
-import { observer, inject } from 'mobx-react/native';
+import { observer } from 'mobx-react/native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import {
 	Button,
-	Title,
+	Message,
 	Text,
-	TrashButton,
+	Title,
 } from '../../elements';
 import { Row, Cell } from '../../elements/table';
 import {
@@ -16,17 +16,19 @@ import {
 	BottomBar,
 	Screen,
 	MainContent,
+	Container,
 } from '../../layout';
 import buttonLayouts from '../../../styles/buttons';
-import styleVars from '../../../styles/variables';
 import tableStyles from '../../../styles/tables';
+import layoutStyles from '../../../styles/layout';
 import typographyStyles from '../../../styles/typography';
 import AddModal from './AddModal';
+import CashMovementRow from './CashMovementRow';
 
 const propTypes = {
 	onFinish: PropTypes.func,
 	onAdd: PropTypes.func,
-	onDeleteCashMovement: PropTypes.func,
+	onDelete: PropTypes.func,
 	validate: PropTypes.func,
 	cashMovements: PropTypes.arrayOf(PropTypes.instanceOf(CashMovement)),
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
@@ -35,12 +37,11 @@ const propTypes = {
 const defaultProps = {
 	onFinish: null,
 	onAdd: null,
-	onDeleteCashMovement: null,
+	onDelete: null,
 	validate: null,
 	cashMovements: [],
 };
 
-@inject('ui')
 @observer
 class ManageRegisterScreen extends Component {
 	/**
@@ -49,12 +50,6 @@ class ManageRegisterScreen extends Component {
 	 * @type {Object}
 	 */
 	nodeRefs = {};
-	/**
-	 * Reference to the add modal
-	 *
-	 * @type {Node}
-	 */
-	addModal = null;
 
 	/**
 	 * Called when press the "finish" button.
@@ -66,17 +61,14 @@ class ManageRegisterScreen extends Component {
 	}
 
 	/**
-	 * Called when pressing the "add out" button. Shows the modal.
+	 * Called when we delete a CashMovement
+	 *
+	 * @param {CashMovement} cashMovement
 	 */
-	onAddOut() {
-		this.showModal();
-	}
-
-	/**
-	 * Called when pressing the "add in" button. Shows the modal.
-	 */
-	onAddIn() {
-		this.showModal();
+	onDelete(cashMovement) {
+		if (this.props.onDelete) {
+			this.props.onDelete(cashMovement);
+		}
 	}
 
 	/**
@@ -92,119 +84,74 @@ class ManageRegisterScreen extends Component {
 	/**
 	 * Shows the modal
 	 */
-	showModal(type) {
-		this.addModal.reset();
-		this.addModal.show(type);
+	showModal() {
+		this.nodeRefs.addModal.reset();
+		this.nodeRefs.addModal.show();
 	}
 
 	/**
-	 * Called when the user presses the trash icon of a CashMovement line.
+	 * Renders the rows of the cash movements table
 	 *
-	 * @param {CashMovement} cashMovement
+	 * @return {Node}
 	 */
-	onPressDeleteCashMovement(cashMovement) {
-		this.showDeleteConfirm(cashMovement);
-	}
-	/**
-	 * Called when the user confirms the suppression in the confirm alert.
-	 *
-	 * @param {CashMovement} cashMovement
-	 */
-	onConfirmDelete(cashMovement) {
-		if (this.props.onDeleteCashMovement) {
-			this.props.onDeleteCashMovement(cashMovement);
-		}
+	renderRows() {
+		return this.props.cashMovements.map(cashMovement => (
+			<CashMovementRow
+				key={cashMovement.uuid}
+				cashMovement={cashMovement}
+				localizer={this.props.localizer}
+				cellStyles={cellStyles}
+				onDelete={() => { this.props.onDelete(cashMovement); }}
+			/>
+		));
 	}
 
 	/**
-	 * Returns all CashMovement of a certain type ('in' or 'out')
+	 * Renders the empty message
 	 *
-	 * @param {String} type 'in' or 'out'
-	 * @return {Array}
+	 * @return {Node}
 	 */
-	getCashMovements(type) {
-		return this.props.cashMovements.filter((cashMovement) => {
-			if (type === 'in') {
-				return cashMovement.amount.isPositive();
-			}
-
-			return cashMovement.amount.isNegative();
-		});
-	}
-
-	/**
-	 * Renders the rows of CashMovement
-	 *
-	 * @param {Array} cashMovements
-	 * @return {Component}
-	 */
-	renderCashMovementRows(cashMovements) {
-		const rows = cashMovements.map((cashMovement, i) => {
-			const isLast = i === cashMovements.length - 1;
-			return this.renderCashMovementRow(cashMovement, isLast);
-		});
-
+	renderEmpty() {
 		return (
-			<View>{ rows }</View>
+			<Text style={typographyStyles.empty}>
+				{ this.t('manageRegister.table.empty') }
+			</Text>
 		);
 	}
 
 	/**
-	 * Renders a single row of CashMovement.
+	 * Renders the table of cash movements
 	 *
-	 * @param {CashMovement} cashMovement
-	 * @param {Boolean} isLast
-	 * @return {Component}
+	 * @return {Node}
 	 */
-	renderCashMovementRow(cashMovement, isLast) {
-		const absAmount = cashMovement.amount.abs().toNumber();
-		const formattedAmount = this.props.localizer.formatCurrency(absAmount);
-
+	renderTable() {
 		return (
-			<Row key={cashMovement.uuid} last={isLast}>
-				<Cell first><Text>{ cashMovement.note }</Text></Cell>
-				<Cell style={styles.priceCol}><Text>{ formattedAmount }</Text></Cell>
-				<Cell last style={tableStyles.cellDelete}>
-					<TrashButton onPress={() => { this.onPressDeleteCashMovement(cashMovement); }} />
-				</Cell>
-			</Row>
+			<View>
+				<Row first>
+					<Cell first style={cellStyles.time}>
+						<Text style={tableStyles.header}>
+							{ this.t('manageRegister.table.cols.time') }
+						</Text>
+					</Cell>
+					<Cell style={cellStyles.note}>
+						<Text style={tableStyles.header}>
+							{ this.t('manageRegister.table.cols.note') }
+						</Text>
+					</Cell>
+					<Cell last style={cellStyles.amount}>
+						<Text style={tableStyles.header}>
+							{ this.t('manageRegister.table.cols.amount') }
+						</Text>
+					</Cell>
+				</Row>
+				{ this.renderRows() }
+				<Message type="info">{ this.t('messages.swipeLeftToDelete') }</Message>
+			</View>
 		);
 	}
 
 	render() {
-		const movementsIn = this.getCashMovements('in');
-		const movementsOut = this.getCashMovements('out');
-
-		let movementsInRows = null;
-		let movementsOutRows = null;
-
-		if (!movementsIn.length) {
-			movementsInRows = (
-				<View style={styles.emptyMessage}>
-					<Text style={typographyStyles.empty}>{ this.t('manageRegister.moneyIn.empty') }</Text>
-				</View>
-			);
-		} else {
-			movementsInRows = (
-				<View style={styles.cashMovementsTable}>
-					{ this.renderCashMovementRows(movementsIn) }
-				</View>
-			);
-		}
-
-		if (!movementsOut.length) {
-			movementsOutRows = (
-				<View style={styles.emptyMessage}>
-					<Text style={typographyStyles.empty}>{ this.t('manageRegister.moneyOut.empty') }</Text>
-				</View>
-			);
-		} else {
-			movementsOutRows = (
-				<View style={styles.cashMovementsTable}>
-					{ this.renderCashMovementRows(movementsOut) }
-				</View>
-			);
-		}
+		const hasCashMovements = this.props.cashMovements.length > 0;
 
 		return (
 			<Screen>
@@ -214,32 +161,21 @@ class ManageRegisterScreen extends Component {
 				/>
 				<ScrollView>
 					<MainContent>
-						<View style={styles.inOutColumns}>
-							<View style={[styles.inOutColumn, styles.inOutColumnFirst]}>
-								<Title>{ this.t('manageRegister.moneyOut.title') }</Title>
-								{ movementsOutRows }
-								<View style={styles.actions}>
-									<Button
-										title={this.t('manageRegister.actions.addOut')}
-										onPress={() => { this.onAddOut(); }}
-									/>
-								</View>
+						<Container layout="oneColCentered">
+							<Title style={layoutStyles.title}>{ this.t('manageRegister.table.title') }</Title>
+							<View style={layoutStyles.block}>
+								{ hasCashMovements ? this.renderTable() : this.renderEmpty() }
 							</View>
-
-							<View style={[styles.inOutColumn, styles.inOutColumnLast]}>
-								<Title>{ this.t('manageRegister.moneyIn.title') }</Title>
-								{ movementsInRows }
-								<View style={styles.actions}>
-									<Button
-										title={this.t('manageRegister.actions.addIn')}
-										onPress={() => { this.onAddIn(); }}
-									/>
-								</View>
+							<View style={styles.actions}>
+								<Button
+									title={this.t('manageRegister.actions.add')}
+									onPress={() => { this.showModal(); }}
+								/>
 							</View>
-						</View>
+						</Container>
 					</MainContent>
 					<AddModal
-						ref={(node) => { this.addModal = node; }}
+						ref={(node) => { this.nodeRefs.addModal = node; }}
 						localizer={this.props.localizer}
 						validate={this.props.validate}
 						onAdd={this.props.onAdd}
@@ -259,39 +195,21 @@ class ManageRegisterScreen extends Component {
 }
 
 const styles = {
-	inOutColumns: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
+	actions: {
+		alignItems: 'flex-start',
 	},
+};
 
-	inOutColumn: {
-		marginHorizontal: styleVars.horizontalRhythm,
+const cellStyles = {
+	time: {
+		width: 80,
+	},
+	note: {
 		flex: 1,
 	},
-
-	inOutColumnFirst: {
-		marginLeft: 0,
-	},
-
-	inOutColumnLast: {
-		marginRight: 0,
-	},
-
-	actions: {
-		flexDirection: 'row',
-	},
-
-	priceCol: {
+	amount: {
+		width: 160,
 		alignItems: 'flex-end',
-		flex: 0,
-	},
-
-	cashMovementsTable: {
-		marginBottom: styleVars.baseBlockMargin,
-	},
-
-	emptyMessage: {
-		marginVertical: styleVars.baseBlockMargin,
 	},
 };
 

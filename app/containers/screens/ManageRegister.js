@@ -64,7 +64,7 @@ class ManageRegister extends Component {
 	 *
 	 * @param {CashMovement} cashMovement
 	 */
-	onDeleteCashMovement(cashMovement) {
+	onDelete(cashMovement) {
 		this.props.business.deviceRegister.removeCashMovement(cashMovement);
 	}
 
@@ -76,7 +76,7 @@ class ManageRegister extends Component {
 				onFinish={() => { this.onFinish(); }}
 				localizer={this.props.localizer}
 				onAdd={(...params) => { this.onAdd(...params); }}
-				onDeleteCashMovement={(cashMovement) => { this.onDeleteCashMovement(cashMovement); }}
+				onDelete={(cashMovement) => { this.onDelete(cashMovement); }}
 				cashMovements={cashMovements}
 				validate={CashMovement.validate}
 			/>
