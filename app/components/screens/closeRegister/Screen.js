@@ -22,7 +22,7 @@ import {
 	Container,
 } from '../../layout';
 import buttonLayouts from '../../../styles/buttons';
-import layoutStyles from '../../../styles/layout';
+import formStyles from '../../../styles/form';
 
 const propTypes = {
 	moneyDenominations: PropTypes.array.isRequired,
@@ -309,15 +309,17 @@ class CloseRegisterScreen extends Component {
 				<ScrollView>
 					<MainContent>
 						<Container layout="oneColCentered">
-							<View style={layoutStyles.section}>
-								<Title style={layoutStyles.title}>{ this.t('closeRegister.POSTBatch') }</Title>
+							<View style={formStyles.field}>
+								<Label>
+									{ this.t('closeRegister.POSTBatch') }
+								</Label>
 								<Group>
 									<View>
-										<Label>{ this.t('closeRegister.fields.POSTRef') }</Label>
 										<TextInput
 											value={this.POSTRef}
 											onChangeText={(value) => { this.onPOSTRefChange(value); }}
 											preText="#"
+											label={this.t('closeRegister.fields.POSTRef')}
 											keyboardType="numeric"
 											error={this.inputErrors.POSTRef}
 											onBlur={() => { this.onFieldBlur('POSTRef'); }}
@@ -326,11 +328,11 @@ class CloseRegisterScreen extends Component {
 										/>
 									</View>
 									<View>
-										<Label>{ this.t('closeRegister.fields.POSTAmount') }</Label>
 										<NumberInput
 											ref={(node) => { this.nodeRefs.POSTAmount = node; }}
 											value={this.POSTAmount}
 											type="money"
+											label={this.t('closeRegister.fields.POSTAmount')}
 											onChangeValue={(value) => { this.onPOSTAmountChange(value); }}
 											localizer={this.props.localizer}
 											error={this.inputErrors.POSTAmount}
@@ -343,7 +345,9 @@ class CloseRegisterScreen extends Component {
 								</Group>
 							</View>
 							<View>
-								<Title style={layoutStyles.title}>{ this.t('closeRegister.fields.cashAmount') }</Title>
+								<Label>
+									{ this.t('closeRegister.fields.cashAmount') }
+								</Label>
 								<DenominationsInput
 									ref={(node) => { this.nodeRefs.cashAmount = node; }}
 									values={values}
