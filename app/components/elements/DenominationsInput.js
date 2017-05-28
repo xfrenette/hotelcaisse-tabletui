@@ -6,8 +6,6 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { Text, NumberInput } from './index';
 import styleVars from '../../styles/variables';
 
-const nbCols = 3;
-
 const propTypes = {
 	values: PropTypes.arrayOf(
 		PropTypes.shape({
@@ -18,6 +16,7 @@ const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer),
 	totalLabel: PropTypes.string,
 	total: PropTypes.string,
+	cols: PropTypes.number,
 	error: PropTypes.string,
 	returnKeyType: PropTypes.string,
 	onChangeValue: PropTypes.func,
@@ -28,6 +27,7 @@ const defaultProps = {
 	localizer: null,
 	totalLabel: null,
 	total: null,
+	cols: 3,
 	error: null,
 	returnKeyType: null,
 	onChangeValue: null,
@@ -270,7 +270,7 @@ class DenominationsInput extends Component {
 				renderedField = this.getCachedFieldComponent(field);
 			}
 
-			const rowIndex = Math.floor(index / nbCols);
+			const rowIndex = Math.floor(index / this.props.cols);
 
 			if (!fieldsInRows[rowIndex]) {
 				fieldsInRows[rowIndex] = [];
@@ -282,7 +282,7 @@ class DenominationsInput extends Component {
 		const fieldRows = fieldsInRows.map((rowFields, index) => {
 			const fillers = [];
 
-			for (let i = 0; i < nbCols - rowFields.length; i += 1) {
+			for (let i = 0; i < this.props.cols - rowFields.length; i += 1) {
 				fillers.push(<View style={styles.field} key={`filler${i}`} />);
 			}
 
