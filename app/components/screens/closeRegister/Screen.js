@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import { observable, computed } from 'mobx';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
@@ -11,15 +11,18 @@ import {
 	NumberInput,
 	DenominationsInput,
 	BottomBarBackButton,
+	Title,
 } from '../../elements';
-import { Field, Label } from '../../elements/form';
+import { Group, Label } from '../../elements/form';
 import {
 	TopBar,
 	BottomBar,
 	Screen,
 	MainContent,
+	Container,
 } from '../../layout';
 import buttonLayouts from '../../../styles/buttons';
+import layoutStyles from '../../../styles/layout';
 
 const propTypes = {
 	moneyDenominations: PropTypes.array.isRequired,
@@ -101,6 +104,13 @@ class CloseRegisterScreen extends Component {
 	}
 
 	/**
+	 * When unmounting, delete the node ref cache
+	 */
+	componentWillUnmount() {
+		this.nodeRefs = {};
+	}
+
+	/**
 	 * Called when one of the denomination in DenominationsInput changed value.
 	 *
 	 * @param {Object} denomination Denomination object
@@ -115,7 +125,7 @@ class CloseRegisterScreen extends Component {
 	 */
 	onCancel() {
 		if (this.props.onCancel) {
-			this.props.onCancel(this.t('closeRegister.messages.closingCanceled'));
+			this.props.onCancel();
 		}
 	}
 
@@ -176,8 +186,8 @@ class CloseRegisterScreen extends Component {
 	}
 
 	/**
-	 * Returns an object to be passed to DenominationsInput containing all the denominations and their
-	 * quantity.
+	 * Returns an object to be passed to DenominationsInput containing all the denominations and
+	 * their quantity.
 	 *
 	 * @return {Object}
 	 */
@@ -298,46 +308,54 @@ class CloseRegisterScreen extends Component {
 				/>
 				<ScrollView>
 					<MainContent>
-						<Field>
-							<Label>{this.t('closeRegister.fields.POSTRef')}</Label>
-							<TextInput
-								value={this.POSTRef}
-								onChangeText={(value) => { this.onPOSTRefChange(value); }}
-								preText="#"
-								keyboardType="numeric"
-								error={this.inputErrors.POSTRef}
-								onBlur={() => { this.onFieldBlur('POSTRef'); }}
-								onSubmitEditing={() => { this.onFieldSubmit('POSTRef'); }}
-								returnKeyType="next"
-							/>
-						</Field>
-						<Field>
-							<Label>{this.t('closeRegister.fields.POSTAmount')}</Label>
-							<NumberInput
-								ref={(node) => { this.nodeRefs.POSTAmount = node; }}
-								value={this.POSTAmount}
-								type="money"
-								onChangeValue={(value) => { this.onPOSTAmountChange(value); }}
-								localizer={this.props.localizer}
-								error={this.inputErrors.POSTAmount}
-								onBlur={() => { this.onFieldBlur('POSTAmount'); }}
-								onSubmitEditing={() => { this.onFieldSubmit('POSTAmount'); }}
-								selectTextOnFocus
-								returnKeyType="next"
-							/>
-						</Field>
-						<Field>
-							<Label>{this.t('closeRegister.fields.cashAmount')}</Label>
-							<DenominationsInput
-								ref={(node) => { this.nodeRefs.cashAmount = node; }}
-								values={values}
-								localizer={this.props.localizer}
-								onChangeValue={(field, value) => this.onChangeValue(field, value)}
-								total={total}
-								totalLabel={this.t('closeRegister.fields.total')}
-								error={this.inputErrors.cashAmount}
-							/>
-						</Field>
+						<Container layout="oneColCentered">
+							<View style={layoutStyles.section}>
+								<Title style={layoutStyles.title}>{ this.t('closeRegister.POSTBatch') }</Title>
+								<Group>
+									<View>
+										<Label>{ this.t('closeRegister.fields.POSTRef') }</Label>
+										<TextInput
+											value={this.POSTRef}
+											onChangeText={(value) => { this.onPOSTRefChange(value); }}
+											preText="#"
+											keyboardType="numeric"
+											error={this.inputErrors.POSTRef}
+											onBlur={() => { this.onFieldBlur('POSTRef'); }}
+											onSubmitEditing={() => { this.onFieldSubmit('POSTRef'); }}
+											returnKeyType="next"
+										/>
+									</View>
+									<View>
+										<Label>{ this.t('closeRegister.fields.POSTAmount') }</Label>
+										<NumberInput
+											ref={(node) => { this.nodeRefs.POSTAmount = node; }}
+											value={this.POSTAmount}
+											type="money"
+											onChangeValue={(value) => { this.onPOSTAmountChange(value); }}
+											localizer={this.props.localizer}
+											error={this.inputErrors.POSTAmount}
+											onBlur={() => { this.onFieldBlur('POSTAmount'); }}
+											onSubmitEditing={() => { this.onFieldSubmit('POSTAmount'); }}
+											selectTextOnFocus
+											returnKeyType="next"
+										/>
+									</View>
+								</Group>
+							</View>
+							<View>
+								<Title style={layoutStyles.title}>{ this.t('closeRegister.fields.cashAmount') }</Title>
+								<DenominationsInput
+									ref={(node) => { this.nodeRefs.cashAmount = node; }}
+									values={values}
+									localizer={this.props.localizer}
+									cols={4}
+									onChangeValue={(field, value) => this.onChangeValue(field, value)}
+									total={total}
+									totalLabel={this.t('closeRegister.fields.total')}
+									error={this.inputErrors.cashAmount}
+								/>
+							</View>
+						</Container>
 					</MainContent>
 				</ScrollView>
 				<BottomBar>

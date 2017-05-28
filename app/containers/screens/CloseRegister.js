@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react/native';
 import Register from 'hotelcaisse-app/dist/business/Register';
-import Decimal from 'decimal.js';
 import CloseRegisterScreen from '../../components/screens/closeRegister/Screen';
 
 @inject('router', 'business', 'localizer', 'ui')
@@ -28,12 +27,8 @@ class CloseRegister extends Component {
 	 *
 	 * @param {String} message
 	 */
-	onCancel(message) {
+	onCancel() {
 		this.props.router.replace('/');
-
-		if (message) {
-			this.props.ui.showToast(message);
-		}
 	}
 
 	/**
