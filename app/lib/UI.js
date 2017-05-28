@@ -89,6 +89,15 @@ class UI {
 	 * @type {UUIDGenerator}
 	 */
 	uuidGenerator = null;
+	/**
+	 * Contains the Order that is currently being created. When the user starts a new Order, we want
+	 * to allow her to quit the creation process to come back later, so we save it here. It is
+	 * defined when we press the "new order" button on home and it clears when we end the creation
+	 * process.
+	 *
+	 * @type {Order}
+	 */
+	orderDraft = null;
 
 	/**
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI
