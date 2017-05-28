@@ -24,7 +24,7 @@ Label.defaultProps = defaultProps;
 const styles = {
 	label: {
 		fontWeight: 'bold',
-		marginVertical: styleVars.verticalRhythm / 2,
+		marginBottom: styleVars.verticalRhythm / 2,
 		color: styleVars.theme.mainColor,
 	},
 };
