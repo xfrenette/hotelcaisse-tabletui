@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import { observable, computed } from 'mobx';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
@@ -10,15 +10,17 @@ import {
 	TextInput,
 	DenominationsInput,
 	BottomBarBackButton,
-} from '../elements';
-import { Field, Label } from '../elements/form';
+} from '../../elements';
+import { Label } from '../../elements/form';
 import {
 	TopBar,
 	BottomBar,
 	Screen,
 	MainContent,
-} from '../layout';
-import buttonLayouts from '../../styles/buttons';
+	Container,
+} from '../../layout';
+import buttonLayouts from '../../../styles/buttons';
+import formStyles from '../../../styles/form';
 
 const propTypes = {
 	moneyDenominations: PropTypes.array.isRequired,
@@ -92,6 +94,13 @@ class OpenRegister extends Component {
 	}
 
 	/**
+	 * When unmounting, clear the cache of nodes
+	 */
+	componentWillUnmount() {
+		this.nodeRefs = {};
+	}
+
+	/**
 	 * Called when one of the denomination in DenominationsInput changed value.
 	 *
 	 * @param {Object} denomination Denomination object
@@ -106,7 +115,7 @@ class OpenRegister extends Component {
 	 */
 	onCancel() {
 		if (this.props.onCancel) {
-			this.props.onCancel(this.t('openRegister.messages.openingCanceled'));
+			this.props.onCancel();
 		}
 	}
 
@@ -115,11 +124,12 @@ class OpenRegister extends Component {
 	 * onOpen in the props.
 	 */
 	onOpenRegister() {
-		const valid = this.validate(['employee', 'cashAmount']);
-		if (valid) {
-			if (this.props.onOpen) {
-				this.props.onOpen(this.employee, this.getTotalAmount());
-			}
+		if (!this.validate(['employee', 'cashAmount'])) {
+			return;
+		}
+
+		if (this.props.onOpen) {
+			this.props.onOpen(this.employee, this.getTotalAmount());
 		}
 	}
 
@@ -252,32 +262,34 @@ class OpenRegister extends Component {
 				/>
 				<ScrollView>
 					<MainContent>
-						<Field>
-							<Label>{this.t('openRegister.fields.employee')}</Label>
-							<TextInput
-								value={this.employee}
-								onChangeText={(value) => { this.onEmployeeChange(value); }}
-								autoCapitalize="words"
-								error={this.inputErrors.employee}
-								onBlur={() => { this.onEmployeeBlur(); }}
-								autoFocus
-								onSubmitEditing={() => { this.focusCashAmount(); }}
-								returnKeyType="next"
-							/>
-						</Field>
-						<Field>
-							<Label>{this.t('openRegister.fields.cashAmount')}</Label>
-							<DenominationsInput
-								ref={(node) => { this.nodeRefs.cashAmount = node; }}
-								values={values}
-								localizer={this.props.localizer}
-								onChangeValue={(field, value) => this.onChangeValue(field, value)}
-								total={total}
-								totalLabel={this.t('openRegister.fields.total')}
-								error={this.inputErrors.cashAmount}
-								returnKeyType="done"
-							/>
-						</Field>
+						<Container layout="oneColCentered">
+							<View style={formStyles.field}>
+								<Label>{this.t('openRegister.fields.employee')}</Label>
+								<TextInput
+									value={this.employee}
+									onChangeText={(value) => { this.onEmployeeChange(value); }}
+									autoCapitalize="words"
+									error={this.inputErrors.employee}
+									onBlur={() => { this.onEmployeeBlur(); }}
+									onSubmitEditing={() => { this.focusCashAmount(); }}
+									returnKeyType="next"
+								/>
+							</View>
+							<View>
+								<Label>{this.t('openRegister.fields.cashAmount')}</Label>
+								<DenominationsInput
+									ref={(node) => { this.nodeRefs.cashAmount = node; }}
+									values={values}
+									localizer={this.props.localizer}
+									onChangeValue={(field, value) => this.onChangeValue(field, value)}
+									total={total}
+									totalLabel={this.t('openRegister.fields.total')}
+									error={this.inputErrors.cashAmount}
+									returnKeyType="done"
+									cols={4}
+								/>
+							</View>
+						</Container>
 					</MainContent>
 				</ScrollView>
 				<BottomBar>

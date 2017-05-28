@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react/native';
 import Register from 'hotelcaisse-app/dist/business/Register';
-import OpenRegisterScreen from '../../components/screens/OpenRegister';
+import OpenRegisterScreen from '../../components/screens/openRegister/Screen';
 
 @inject('router', 'business', 'localizer', 'ui', 'uuidGenerator')
 class OpenRegister extends Component {
@@ -43,12 +43,8 @@ class OpenRegister extends Component {
 	 *
 	 * @param {String} message
 	 */
-	onCancel(message) {
+	onCancel() {
 		this.props.router.replace('/');
-
-		if (message) {
-			this.props.ui.showToast(message);
-		}
 	}
 
 	/**
