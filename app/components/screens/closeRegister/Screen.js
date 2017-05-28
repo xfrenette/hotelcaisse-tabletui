@@ -11,15 +11,15 @@ import {
 	NumberInput,
 	DenominationsInput,
 	BottomBarBackButton,
-} from '../elements';
-import { Field, Label } from '../elements/form';
+} from '../../elements';
+import { Field, Label } from '../../elements/form';
 import {
 	TopBar,
 	BottomBar,
 	Screen,
 	MainContent,
-} from '../layout';
-import buttonLayouts from '../../styles/buttons';
+} from '../../layout';
+import buttonLayouts from '../../../styles/buttons';
 
 const propTypes = {
 	moneyDenominations: PropTypes.array.isRequired,
@@ -36,7 +36,7 @@ const defaultProps = {
 };
 
 @observer
-class CloseRegister extends Component {
+class CloseRegisterScreen extends Component {
 	/**
 	 * Value of the "POSTRef" field
 	 *
@@ -356,7 +356,7 @@ class CloseRegister extends Component {
 	}
 }
 
-CloseRegister.propTypes = propTypes;
-CloseRegister.defaultProps = defaultProps;
+CloseRegisterScreen.propTypes = propTypes;
+CloseRegisterScreen.defaultProps = defaultProps;
 
-export default CloseRegister;
+export default CloseRegisterScreen;
