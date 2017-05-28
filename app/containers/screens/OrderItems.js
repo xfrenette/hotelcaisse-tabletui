@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react/native';
+import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Product from 'hotelcaisse-app/dist/business/Product';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
-import NewOrderScreen from '../../components/screens/newOrder/Screen';
+import OrderItemsScreen from '../../components/screens/order-items/Screen';
 
 @inject('localizer', 'business', 'uuidGenerator', 'router', 'ui')
-class NewOrder extends Component {
+class OrderItems extends Component {
 	/**
 	 * The new Order we will create in this screen.
 	 *
 	 * @type {[type]}
 	 */
-	newOrder = null;
+	order = null;
 
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -30,10 +31,11 @@ class NewOrder extends Component {
 	}
 
 	/**
-	 * When mounting, create the new order
+	 * When mounting, retrieves the Order from the location's state
 	 */
 	componentWillMount() {
-		this.newOrder = new Order(this.props.uuidGenerator.generate());
+		const order = get(this.props, 'location.state.order', null);
+		this.order = order || new Order(this.props.uuidGenerator.generate());
 	}
 
 	/**
@@ -46,7 +48,7 @@ class NewOrder extends Component {
 		const productToAdd = product.hasVariants ? product.variants[0] : product;
 		const item = new Item(this.props.uuidGenerator.generate());
 		item.product = productToAdd;
-		this.newOrder.items.push(item);
+		this.order.items.push(item);
 	}
 
 	/**
@@ -76,7 +78,7 @@ class NewOrder extends Component {
 	 * @param {Item} item
 	 */
 	onItemRemove(item) {
-		this.newOrder.removeItem(item);
+		this.order.removeItem(item);
 	}
 
 	/**
@@ -95,7 +97,7 @@ class NewOrder extends Component {
 	 */
 	onCreditAdd() {
 		const newCredit = new Credit(this.props.uuidGenerator.generate());
-		this.newOrder.credits.push(newCredit);
+		this.order.credits.push(newCredit);
 	}
 
 	/**
@@ -104,7 +106,7 @@ class NewOrder extends Component {
 	 * @param {Credit} credit
 	 */
 	onCreditRemove(credit) {
-		this.newOrder.removeCredit(credit);
+		this.order.removeCredit(credit);
 	}
 
 	/**
@@ -133,7 +135,7 @@ class NewOrder extends Component {
 	 * @param {String} note
 	 */
 	onNoteChange(note) {
-		this.newOrder.note = note;
+		this.order.note = note;
 	}
 
 	/**
@@ -172,14 +174,14 @@ class NewOrder extends Component {
 	onNext() {
 		this.props.router.push(
 			'/orders/customer-roomselections',
-			{ order: this.newOrder }
+			{ order: this.order }
 		);
 	}
 
 	render() {
 		return (
-			<NewOrderScreen
-				order={this.newOrder}
+			<OrderItemsScreen
+				order={this.order}
 				allowCustomProduct
 				localizer={this.props.localizer}
 				rootProductCategory={this.props.business.rootProductCategory}
@@ -204,4 +206,4 @@ class NewOrder extends Component {
 	}
 }
 
-export default NewOrder;
+export default OrderItems;

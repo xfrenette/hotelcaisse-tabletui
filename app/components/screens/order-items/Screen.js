@@ -77,7 +77,7 @@ const defaultProps = {
 
 @inject('ui')
 @observer
-class NewOrderScreen extends Component {
+class OrderItemsScreen extends Component {
 	/**
 	 * Cache of some components.
 	 *
@@ -531,8 +531,8 @@ class NewOrderScreen extends Component {
 	}
 }
 
-NewOrderScreen.propTypes = propTypes;
-NewOrderScreen.defaultProps = defaultProps;
+OrderItemsScreen.propTypes = propTypes;
+OrderItemsScreen.defaultProps = defaultProps;
 
 const styles = {
 	screenContent: {
@@ -581,4 +581,4 @@ const styles = {
 	},
 };
 
-export default NewOrderScreen;
+export default OrderItemsScreen;

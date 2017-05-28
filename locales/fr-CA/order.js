@@ -35,6 +35,8 @@ export default {
 	actions: {
 		addCredit: 'Ajouter un dépôt',
 		addPayment: 'Enregistrer le paiement',
+		startNew: 'Nouvelle',
+		continue: 'Continuer',
 	},
 	categories: {
 		empty: 'Cette catégorie est vide',
@@ -59,6 +61,14 @@ export default {
 		error: {
 			title: 'Erreur',
 			message: 'Certains champs sont en erreur. Veuillez les corriger.',
+		},
+	},
+	continueDraft: {
+		title: 'Inscription en cours',
+		message: 'Une inscription est déjà en cours, souhaitez-vous la continuer ou en créer une nouvelle ?',
+		actions: {
+			continue: 'Continuer',
+			new: 'Nouvelle',
 		},
 	},
 };

@@ -7,7 +7,7 @@ import Authentication from '../../app/components/screens/Authentication';
 import OpenRegister from '../../app/containers/screens/OpenRegister';
 import CloseRegister from '../../app/containers/screens/CloseRegister';
 import ManageRegister from '../../app/containers/screens/ManageRegister';
-import NewOrder from '../../app/containers/screens/NewOrder';
+import OrderItems from '../../app/containers/screens/OrderItems';
 import CustomerRoomSelections from '../../app/containers/screens/CustomerRoomSelections';
 import ReviewAndPayments from '../../app/containers/screens/ReviewAndPayments';
 import TestScreen from './TestScreen';
@@ -29,7 +29,7 @@ export default () => ([
 							{ component: OpenRegister, path: '/register/open' },
 							{ component: CloseRegister, path: '/register/close' },
 							{ component: ManageRegister, path: '/register/manage' },
-							{ component: NewOrder, path: '/orders/new' },
+							{ component: OrderItems, path: '/order/items' },
 							{ component: CustomerRoomSelections, path: '/orders/customer-roomselections' },
 							{ component: ReviewAndPayments, path: '/orders/review-payments' },
 						],
