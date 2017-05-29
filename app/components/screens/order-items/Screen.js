@@ -90,6 +90,13 @@ class OrderItemsScreen extends Component {
 	 * @type {Function}
 	 */
 	backHandler = null;
+	/**
+	 * Set to true to prevent autofocus when creating new custom item. Used when creating the
+	 * existing custom items.
+	 *
+	 * @type {Boolean}
+	 */
+	blockAutoFocus = false;
 
 	/**
 	 * Returns the items in the Order
@@ -102,16 +109,18 @@ class OrderItemsScreen extends Component {
 	}
 
 	/**
-	 * Initializes the components object when mounting.
+	 * Initializes the components object when mounting. Prevent autoFocus.
 	 */
 	componentWillMount() {
+		this.blockAutoFocus = true;
 		this.components.items = {};
 	}
 
 	/**
-	 * When we mount, we add the back handler
+	 * When we mount, we add the back handler. Re-allow autoFocus.
 	 */
 	componentDidMount() {
+		this.blockAutoFocus = false;
 		this.addBackHandler();
 	}
 
@@ -351,6 +360,7 @@ class OrderItemsScreen extends Component {
 			props = {
 				onNameChange: (name) => { this.onCustomProductNameChange(product, name); },
 				onPriceChange: (price) => { this.onCustomProductPriceChange(product, price); },
+				autoFocus: !this.blockAutoFocus,
 				validate: this.props.customProductValidate,
 			};
 		} else {
