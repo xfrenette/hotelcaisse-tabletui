@@ -186,6 +186,7 @@ class CustomItemRow extends ItemRow {
 		return (
 			<TextInput
 				autoFocus={this.props.autoFocus}
+				autoCapitalize="sentences"
 				error={this.errors.name}
 				returnKeyType="next"
 				value={this.name}
