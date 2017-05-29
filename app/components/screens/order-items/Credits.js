@@ -32,6 +32,28 @@ const defaultProps = {
 
 class Credits extends Component {
 	/**
+	 * Set to true to prevent autofocus when creating new credits. Used when creating the existing
+	 * credits.
+	 *
+	 * @type {Boolean}
+	 */
+	blockAutoFocus = false;
+
+	/**
+	 * Before we start rendering credits, we prevent autofocus
+	 */
+	componentWillMount() {
+		this.blockAutoFocus = true;
+	}
+
+	/**
+	 * Once credits are rendered, we resume autofocus
+	 */
+	componentDidMount() {
+		this.blockAutoFocus = false;
+	}
+
+	/**
 	 * Simple alias to this.props.localizer.t
 	 *
 	 * @param {String} path
@@ -94,6 +116,7 @@ class Credits extends Component {
 		return (
 			<CreditRow
 				key={credit.uuid}
+				autoFocus={!this.blockAutoFocus}
 				credit={credit}
 				localizer={this.props.localizer}
 				isFirst={isFirst}

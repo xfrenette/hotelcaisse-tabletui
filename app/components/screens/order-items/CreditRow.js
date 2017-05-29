@@ -16,6 +16,7 @@ const propTypes = {
 	credit: PropTypes.instanceOf(Credit).isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	isFirst: PropTypes.bool,
+	autoFocus: PropTypes.bool,
 	onRemove: PropTypes.func,
 	validate: PropTypes.func,
 	onNoteChange: PropTypes.func,
@@ -24,6 +25,7 @@ const propTypes = {
 
 const defaultProps = {
 	isFirst: false,
+	autoFocus: false,
 	onRemove: null,
 	validate: null,
 	onNoteChange: null,
@@ -199,6 +201,7 @@ class CreditRow extends Component {
 							onBlur={() => { this.onNoteBlur(); }}
 							error={noteError}
 							value={this.note}
+							autoFocus={this.props.autoFocus}
 							returnKeyType="next"
 							autoCapitalize="sentences"
 							onSubmitEditing={() => { this.onNoteSubmit(); }}
