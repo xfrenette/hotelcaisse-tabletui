@@ -14,12 +14,14 @@ import ItemRow from './ItemRow';
 const propTypes = {
 	item: PropTypes.instanceOf(Item).isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
+	autoFocus: PropTypes.bool,
 	validate: PropTypes.func,
 	onNameChange: PropTypes.func,
 	onPriceChange: PropTypes.func,
 };
 
 const defaultProps = {
+	autoFocus: true,
 	validate: null,
 	onNameChange: null,
 	onPriceChange: null,
@@ -41,12 +43,14 @@ class CustomItemRow extends ItemRow {
 	 *
 	 * @type {String}
 	 */
+	@observable
 	name = null;
 	/**
 	 * Value of the price field
 	 *
 	 * @type {Number}
 	 */
+	@observable
 	price = null;
 	/**
 	 * Error message for the fields
@@ -58,6 +62,22 @@ class CustomItemRow extends ItemRow {
 		name: null,
 		price: null,
 	};
+
+	/**
+	 * Set initial values
+	 */
+	componentWillMount() {
+		const product = this.props.item.product;
+		this.name = product.name;
+		this.price = product.price ? product.price.toNumber() : 0;
+	}
+
+	/**
+	 * Clear the node cache
+	 */
+	componentWillUnmount() {
+		this.nodeRefs = {};
+	}
 
 	/**
 	 * @see parent
@@ -165,9 +185,10 @@ class CustomItemRow extends ItemRow {
 	renderNameAndVariant() {
 		return (
 			<TextInput
-				autoFocus
+				autoFocus={this.props.autoFocus}
 				error={this.errors.name}
 				returnKeyType="next"
+				value={this.name}
 				onSubmitEditing={() => { this.onNameSubmit(); }}
 				onBlur={() => { this.onNameBlur(); }}
 				onChangeText={(text) => { this.name = text; }}
@@ -183,9 +204,6 @@ class CustomItemRow extends ItemRow {
 	 * @return {Component}
 	 */
 	renderPrice() {
-		const item = this.props.item;
-		const product = item.product;
-
 		return (
 			<NumberInput
 				ref={(node) => { this.nodeRefs.priceField = node; }}
@@ -194,7 +212,7 @@ class CustomItemRow extends ItemRow {
 				error={this.errors.price}
 				onChangeValue={(value) => { this.price = value; }}
 				onBlur={() => { this.onPriceBlur(); }}
-				value={product.price ? product.price.toNumber() : null}
+				value={this.price}
 				selectTextOnFocus
 			/>
 		);
