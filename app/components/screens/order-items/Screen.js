@@ -83,9 +83,7 @@ class OrderItemsScreen extends Component {
 	 *
 	 * @type {Object}
 	 */
-	components = {
-		items: {},
-	};
+	components = {};
 	/**
 	 * Callback for the custom back handler of this screen.
 	 *
@@ -104,6 +102,13 @@ class OrderItemsScreen extends Component {
 	}
 
 	/**
+	 * Initializes the components object when mounting.
+	 */
+	componentWillMount() {
+		this.components.items = {};
+	}
+
+	/**
 	 * When we mount, we add the back handler
 	 */
 	componentDidMount() {
@@ -111,10 +116,11 @@ class OrderItemsScreen extends Component {
 	}
 
 	/**
-	 * When unmounting, we remove the back handler
+	 * When unmounting, we remove the back handler and clear the components cache
 	 */
 	componentWillUnmount() {
 		this.removeBackHandler();
+		this.components = {};
 	}
 
 	/**
@@ -384,7 +390,7 @@ class OrderItemsScreen extends Component {
 				<Title style={layoutStyles.title}>{ this.t('order.credits.label') }</Title>
 				<Credits
 					localizer={this.props.localizer}
-					creditValidate={this.props.creditValidate}
+					validate={this.props.creditValidate}
 					onCreditAdd={() => { this.onCreditAdd(); }}
 					onCreditRemove={this.props.onCreditRemove}
 					onAmountChange={this.props.onCreditAmountChange}
