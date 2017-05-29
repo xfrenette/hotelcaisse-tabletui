@@ -475,6 +475,7 @@ class OrderItemsScreen extends Component {
 					multiline
 					numberOfLines={4}
 					onChangeText={(note) => { this.onNoteChange(note); }}
+					value={this.props.order.note}
 				/>
 				<Text style={[typographyStyles.instructions]}>{ this.t('order.note.instructions') }</Text>
 			</View>
