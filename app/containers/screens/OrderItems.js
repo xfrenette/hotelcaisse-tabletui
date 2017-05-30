@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { inject } from 'mobx-react/native';
+import { computed } from 'mobx';
+import { observer, inject } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Product from 'hotelcaisse-app/dist/business/Product';
@@ -7,7 +8,24 @@ import Item from 'hotelcaisse-app/dist/business/Item';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
 import OrderItemsScreen from '../../components/screens/order-items/Screen';
 
+/**
+ * Returns array of elements of sourceArray that are not in filteringArray. A strict equality
+ * comparison is used.
+ *
+ * @param {Array} sourceArray
+ * @param {Array} filteringArray
+ * @return {Array}
+ */
+function elementsNotIn(sourceArray, filteringArray) {
+	if (filteringArray.length === 0) {
+		return [...sourceArray];
+	}
+
+	return sourceArray.filter(item => filteringArray.indexOf(item) === -1);
+}
+
 @inject('localizer', 'business', 'uuidGenerator', 'router', 'ui')
+@observer
 class OrderItems extends Component {
 	/**
 	 * The new Order we will create in this screen.
@@ -15,6 +33,32 @@ class OrderItems extends Component {
 	 * @type {[type]}
 	 */
 	order = null;
+	orderIsNew = true;
+	fixedItems = [];
+
+	@computed
+	get newItems() {
+		return elementsNotIn(this.order.items.slice(), this.fixedItems);
+	}
+
+	/**
+	 * When mounting, retrieves the Order from the location's state
+	 */
+	componentWillMount() {
+		const order = get(this.props, 'location.state.order', null);
+		this.order = order || new Order(this.props.uuidGenerator.generate());
+		this.orderIsNew = get(this.props, 'location.state.new', this.orderIsNew);
+
+		if (!this.orderIsNew) {
+			this.updateFixedItems();
+		}
+	}
+
+	updateFixedItems() {
+		this.fixedItems = [
+			...this.order.items,
+		];
+	}
 
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -28,14 +72,6 @@ class OrderItems extends Component {
 		}
 
 		return path;
-	}
-
-	/**
-	 * When mounting, retrieves the Order from the location's state
-	 */
-	componentWillMount() {
-		const order = get(this.props, 'location.state.order', null);
-		this.order = order || new Order(this.props.uuidGenerator.generate());
 	}
 
 	/**
@@ -181,7 +217,13 @@ class OrderItems extends Component {
 	render() {
 		return (
 			<OrderItemsScreen
-				order={this.order}
+				newItems={this.newItems}
+				fixedItems={this.fixedItems}
+				credits={this.order.credits.slice()}
+				note={this.order.note}
+				total={this.order.total.toNumber()}
+				orderIsNew={this.orderIsNew}
+				validate={() => this.order.validate()}
 				allowCustomProduct
 				localizer={this.props.localizer}
 				rootProductCategory={this.props.business.rootProductCategory}

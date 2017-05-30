@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, ScrollView, Alert, BackHandler } from 'react-native';
-import { computed } from 'mobx';
-import { observer, inject } from 'mobx-react/native';
+import { inject } from 'mobx-react/native';
 import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
-import Order from 'hotelcaisse-app/dist/business/Order';
+import Item from 'hotelcaisse-app/dist/business/Item';
+import Credit from 'hotelcaisse-app/dist/business/Credit';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import {
 	TopBar,
@@ -24,6 +24,7 @@ import { Row, Cell } from '../../elements/table';
 import CategorySidebar from './CategorySidebar';
 import ItemRow from './ItemRow';
 import CustomItemRow from './CustomItemRow';
+import FixedItemRow from './FixedItemRow';
 import Credits from './Credits';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
@@ -31,9 +32,14 @@ import typographyStyles from '../../../styles/typography';
 import layoutStyles from '../../../styles/layout';
 
 const propTypes = {
-	allowCustomProduct: PropTypes.bool,
-	order: PropTypes.instanceOf(Order).isRequired,
+	newItems: PropTypes.arrayOf(PropTypes.instanceOf(Item)),
+	fixedItems: PropTypes.arrayOf(PropTypes.instanceOf(Item)),
+	credits: PropTypes.arrayOf(PropTypes.instanceOf(Credit)),
+	note: PropTypes.string,
+	orderIsNew: PropTypes.bool,
+	validate: PropTypes.func,
 	rootProductCategory: PropTypes.instanceOf(ProductCategory),
+	allowCustomProduct: PropTypes.bool,
 	localizer: PropTypes.instanceOf(Localizer),
 	creditValidate: PropTypes.func,
 	customProductValidate: PropTypes.func,
@@ -54,8 +60,14 @@ const propTypes = {
 };
 
 const defaultProps = {
-	allowCustomProduct: false,
+	newItems: [],
+	fixedItems: [],
+	credits: [],
+	note: '',
+	orderIsNew: true,
+	validate: () => undefined,
 	rootProductCategory: null,
+	allowCustomProduct: false,
 	localizer: null,
 	creditValidate: null,
 	customProductValidate: null,
@@ -76,7 +88,6 @@ const defaultProps = {
 };
 
 @inject('ui')
-@observer
 class OrderItemsScreen extends Component {
 	/**
 	 * Cache of some components.
@@ -97,16 +108,6 @@ class OrderItemsScreen extends Component {
 	 * @type {Boolean}
 	 */
 	blockAutoFocus = false;
-
-	/**
-	 * Returns the items in the Order
-	 *
-	 * @return {Array<Item>}
-	 */
-	@computed
-	get items() {
-		return this.props.order.items;
-	}
 
 	/**
 	 * Initializes the components object when mounting. Prevent autoFocus.
@@ -279,7 +280,7 @@ class OrderItemsScreen extends Component {
 	 * valid, we show an error.
 	 */
 	onNextPress() {
-		const res = this.props.order.validate();
+		const res = this.props.validate();
 
 		if (res === undefined) {
 			this.onNext();
@@ -312,7 +313,7 @@ class OrderItemsScreen extends Component {
 	/**
 	 * Message rendered in the items list when we don't have any items
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderEmptyItems() {
 		return (
@@ -325,16 +326,48 @@ class OrderItemsScreen extends Component {
 	}
 
 	/**
-	 * List of items
+	 * Renders the "fixed" items, if applicable
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
-	renderItems() {
-		const items = this.items.map((item, index) => this.renderItem(item, index === 0));
+	renderFixedItems() {
+		if (!this.props.fixedItems.length) {
+			return null;
+		}
+
+		const fixedItems = this.props.fixedItems.map((item, index) => (
+			<FixedItemRow
+				key={item.uuid}
+				item={item}
+				isFirst={index === 0}
+				localizer={this.props.localizer}
+				deletable={false}
+			/>
+		));
+
+		return (
+			<View style={layoutStyles.section}>
+				<Title style={layoutStyles.title}>
+					{ this.t('order.items.labelFixed') }
+				</Title>
+				{ fixedItems }
+			</View>
+		);
+	}
+
+	/**
+	 * List of the 'new' items
+	 *
+	 * @return {Node}
+	 */
+	renderNewItems() {
+		const newItems = this.props.newItems.map(
+			(item, index) => this.renderNewItem(item, index === 0)
+		);
 
 		return (
 			<View>
-				{ items }
+				{ newItems }
 				<Message type="info">{ this.t('messages.swipeLeftToDelete') }</Message>
 			</View>
 		);
@@ -345,9 +378,9 @@ class OrderItemsScreen extends Component {
 	 *
 	 * @param {Item} item
 	 * @param {Boolean} isFirst
-	 * @return {Component}
+	 * @return {Node}
 	 */
-	renderItem(item, isFirst) {
+	renderNewItem(item, isFirst) {
 		const uuid = item.uuid;
 		const isCustom = item.product.isCustom;
 		const RowComponent = isCustom ? CustomItemRow : ItemRow;
@@ -390,10 +423,10 @@ class OrderItemsScreen extends Component {
 	/**
 	 * Renders the credits section
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderCredits() {
-		const credits = this.props.order.credits.slice();
+		const credits = this.props.credits;
 
 		return (
 			<View style={layoutStyles.section}>
@@ -406,6 +439,7 @@ class OrderItemsScreen extends Component {
 					onAmountChange={this.props.onCreditAmountChange}
 					onNoteChange={this.props.onCreditNoteChange}
 					credits={credits}
+					editable={this.props.orderIsNew}
 				/>
 			</View>
 		);
@@ -414,13 +448,15 @@ class OrderItemsScreen extends Component {
 	/**
 	 * Renders the top bar of the screen
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderTopBar() {
+		const titlePath = this.props.orderIsNew ? 'order.items.titleNew' : 'order.items.titleEdit';
+
 		if (!this.components.topBar) {
 			this.components.topBar = (
 				<TopBar
-					title={this.t('order.new.title')}
+					title={this.t(titlePath)}
 					onPressHome={() => { this.onLeave(); }}
 				/>
 			);
@@ -432,7 +468,7 @@ class OrderItemsScreen extends Component {
 	/**
 	 * Renders the sidebar with the products and categories
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderCategorySidebar() {
 		if (!this.components.categorySidebar) {
@@ -456,9 +492,11 @@ class OrderItemsScreen extends Component {
 	/**
 	 * Renders the bottom bar of the screen
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderBottomBar() {
+		const nextLabelPath = this.props.orderIsNew ? 'actions.next' : 'actions.done';
+
 		if (!this.components.bottomBar) {
 			this.components.bottomBar = (
 				<BottomBar>
@@ -467,7 +505,7 @@ class OrderItemsScreen extends Component {
 						onPress={() => { this.onLeave(); }}
 					/>
 					<Button
-						title={this.t('actions.next')}
+						title={this.t(nextLabelPath)}
 						layout={buttonLayouts.primary}
 						onPress={() => { this.onNextPress(); }}
 					/>
@@ -481,19 +519,35 @@ class OrderItemsScreen extends Component {
 	/**
 	 * Renders the 'notes' section
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderNotes() {
-		return (
-			<View>
-				<Title style={layoutStyles.title}>{ this.t('order.note.label') }</Title>
+		let notes = null;
+		let instructions = null;
+
+		if (this.props.orderIsNew) {
+			notes = (
 				<TextInput
 					multiline
 					numberOfLines={4}
 					onChangeText={(note) => { this.onNoteChange(note); }}
-					value={this.props.order.note}
+					value={this.props.note}
 				/>
-				<Text style={[typographyStyles.instructions]}>{ this.t('order.note.instructions') }</Text>
+			);
+			instructions = (
+				<Text style={[typographyStyles.instructions]}>
+					{ this.t('order.note.instructions') }
+				</Text>
+			);
+		} else {
+			notes = <Text>{ this.props.note }</Text>;
+		}
+
+		return (
+			<View>
+				<Title style={layoutStyles.title}>{ this.t('order.note.label') }</Title>
+				{ notes }
+				{ instructions }
 			</View>
 		);
 	}
@@ -501,11 +555,11 @@ class OrderItemsScreen extends Component {
 	/**
 	 * Renders the bar with the total
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderTotalBar() {
-		const total = this.props.order.total;
-		const formattedTotal = this.props.localizer.formatCurrency(total.toNumber());
+		const total = this.props.total;
+		const formattedTotal = this.props.localizer.formatCurrency(total);
 
 		return (
 			<View style={styles.totalBar}>
@@ -515,9 +569,10 @@ class OrderItemsScreen extends Component {
 	}
 
 	render() {
-		const hasItems = !!this.items.length;
-		const shouldShowCredits = hasItems || this.props.order.credits.length > 0;
-		const shouldShowNotes = hasItems || this.props.order.note.length > 0;
+		const isNew = this.props.orderIsNew;
+		const hasNewItems = !!this.props.newItems.length;
+		const shouldShowCredits = (isNew && hasNewItems) || this.props.credits.length > 0;
+		const shouldShowNotes = (isNew && hasNewItems) || this.props.note.length > 0;
 
 		return (
 			<Screen>
@@ -529,10 +584,11 @@ class OrderItemsScreen extends Component {
 								<MainContent withSidebar style={styles.mainContent}>
 									<View style={layoutStyles.section}>
 										<Title style={layoutStyles.title}>
-											{ this.t('order.items.label') }
+											{ this.t(`order.items.label${isNew ? '' : 'New'}`) }
 										</Title>
-										{ hasItems ? this.renderItems() : this.renderEmptyItems() }
+										{ hasNewItems ? this.renderNewItems() : this.renderEmptyItems() }
 									</View>
+									{ this.renderFixedItems() }
 									{ shouldShowCredits ? this.renderCredits() : null }
 									{ shouldShowNotes ? this.renderNotes() : null }
 								</MainContent>

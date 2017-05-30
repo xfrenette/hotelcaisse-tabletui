@@ -15,6 +15,7 @@ import CreditRow from './CreditRow';
 const propTypes = {
 	credits: PropTypes.arrayOf(PropTypes.instanceOf(Credit)).isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
+	editable: PropTypes.bool,
 	validate: PropTypes.func,
 	onCreditAdd: PropTypes.func,
 	onNoteChange: PropTypes.func,
@@ -23,6 +24,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+	editable: true,
 	validate: null,
 	onCreditAdd: null,
 	onNoteChange: null,
@@ -117,6 +119,7 @@ class Credits extends Component {
 			<CreditRow
 				key={credit.uuid}
 				autoFocus={!this.blockAutoFocus}
+				editable={this.props.editable}
 				credit={credit}
 				localizer={this.props.localizer}
 				isFirst={isFirst}
@@ -132,15 +135,22 @@ class Credits extends Component {
 		const credits = this.props.credits;
 		const hasCredits = !!credits.length;
 		let creditsLines = null;
+		let actions = null;
 
 		if (hasCredits) {
 			const creditsRows = credits.map(
 				(credit, index) => this.renderCredit(credit, index === 0)
 			);
+			let message = null;
+
+			if (this.props.editable) {
+				message = <Message type="info">{ this.t('messages.swipeLeftToDelete') }</Message>;
+			}
+
 			creditsLines = (
 				<View>
 					{ creditsRows }
-					<Message type="info">{ this.t('messages.swipeLeftToDelete') }</Message>
+					{ message }
 				</View>
 			);
 		} else {
@@ -151,15 +161,21 @@ class Credits extends Component {
 			);
 		}
 
-		return (
-			<View>
-				{ creditsLines }
+		if (this.props.editable) {
+			actions = (
 				<View style={styles.actions}>
 					<Button
 						title={this.t('order.actions.addCredit')}
 						onPress={() => { this.onCreditAdd(); }}
 					/>
 				</View>
+			);
+		}
+
+		return (
+			<View>
+				{ creditsLines }
+				{ actions }
 			</View>
 		);
 	}

@@ -66,9 +66,11 @@ function setProductPrice(product, rawPrice) {
 }
 
 const variantLabels = ['Non-membre', 'Membre'];
+const products = [];
 
-const products = productsData.map((productData) => {
+productsData.forEach((productData) => {
 	const product = new Product();
+	products.push(product);
 	product.uuid = getUUID();
 	product.name = productData.name;
 	product.description = productData.description;
@@ -81,14 +83,13 @@ const products = productsData.map((productData) => {
 			setProductPrice(variantProduct, variant);
 
 			product.addVariant(variantProduct);
+			products.push(variantProduct);
 		});
 	}
 
 	if (productData.price) {
 		setProductPrice(product, productData.price);
 	}
-
-	return product;
 });
 
 export default products;

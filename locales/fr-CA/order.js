@@ -1,8 +1,5 @@
 export default {
 	total: 'Total',
-	new: {
-		title: 'Nouvelle inscription',
-	},
 	balance: {
 		toPay: 'À payer',
 	},
@@ -43,8 +40,12 @@ export default {
 	},
 	customProduct: 'Produit spécial',
 	items: {
+		titleEdit: 'Ajouter des items',
+		titleNew: 'Nouvelle inscription',
 		label: 'Items',
-		empty: 'Pour débuter, ajoutez un item depuis les produits à droite.',
+		labelNew: 'Nouveaux items',
+		labelFixed: 'Items actuels',
+		empty: 'Ajoutez un item depuis les produits à droite.',
 		fields: {
 			customProductName: 'Nom du produit (obligatoire)',
 		},

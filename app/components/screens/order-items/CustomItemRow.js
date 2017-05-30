@@ -180,7 +180,7 @@ class CustomItemRow extends ItemRow {
 	 * Renders the name input field
 	 *
 	 * @see parent
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderNameAndVariant() {
 		return (
@@ -202,7 +202,7 @@ class CustomItemRow extends ItemRow {
 	 * Renders the price input field.
 	 *
 	 * @see parent
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderPrice() {
 		return (

@@ -40,9 +40,12 @@ const appConfig = {
 };
 
 const app = new Application(appConfig);
-const currentPath = {
-	pathname: '/orders/review-payments',
-	state: { order: testOrder },
+const orderPath = {
+	pathname: '/order/items',
+	state: {
+		order: testOrder,
+		new: false,
+	},
 };
 
 // module.exports instead of export because it is an optional require in index.*
@@ -51,7 +54,7 @@ module.exports = {
 	logger,
 	routes: createRoutes(),
 	// initialRoutes: ['/test'],
-	initialRoutes: ['/', '/orders/customer-roomselections', currentPath],
+	initialRoutes: ['/', orderPath],
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',

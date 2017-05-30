@@ -20,6 +20,7 @@ const propTypes = {
 	onRemove: PropTypes.func,
 	onVariantChange: PropTypes.func,
 	isFirst: PropTypes.bool,
+	deletable: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -27,6 +28,7 @@ const defaultProps = {
 	onRemove: null,
 	onVariantChange: null,
 	isFirst: false,
+	deletable: true,
 };
 
 @observer
@@ -96,9 +98,46 @@ class ItemRow extends Component {
 	}
 
 	/**
+	 * If deletable is true, wraps the Node in a SwipeDelete, else returns it
+	 *
+	 * @param {Node} node
+	 * @param {Boolean} deletable
+	 * @return {Node}
+	 */
+	makeDeletable(node, deletable = true) {
+		if (!deletable) {
+			return node;
+		}
+
+		return (
+			<SwipeDelete label={this.t('actions.delete')} onDelete={() => { this.onRemove(); }}>
+				{ node }
+			</SwipeDelete>
+		);
+	}
+
+	/**
+	 * Renders the quality cell
+	 *
+	 * @return {Node}
+	 */
+	renderQuantity() {
+		const item = this.props.item;
+
+		return (
+			<NumberInput
+				value={item.quantity}
+				showIncrementors
+				selectTextOnFocus
+				onChangeValue={(value) => { this.onQuantityChange(value); }}
+			/>
+		);
+	}
+
+	/**
 	 * Renders the cell content containing the name and, if applicable, the variant dropdown.
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderNameAndVariant() {
 		const item = this.props.item;
@@ -145,7 +184,7 @@ class ItemRow extends Component {
 	/**
 	 * Renders the Cell content for the price
 	 *
-	 * @return {Component}
+	 * @return {Node}
 	 */
 	renderPrice() {
 		const item = this.props.item;
@@ -157,28 +196,21 @@ class ItemRow extends Component {
 	}
 
 	render() {
-		const item = this.props.item;
-
-		return (
-			<SwipeDelete label={this.t('actions.delete')} onDelete={() => { this.onRemove(); }}>
-				<Row style={this.rowStyle} first={this.props.isFirst}>
-					<Cell first style={cellStyles.quantity}>
-						<NumberInput
-							value={item.quantity}
-							showIncrementors
-							selectTextOnFocus
-							onChangeValue={(value) => { this.onQuantityChange(value); }}
-						/>
-					</Cell>
-					<Cell style={cellStyles.name}>
-						{ this.renderNameAndVariant() }
-					</Cell>
-					<Cell last style={this.priceCellStyle}>
-						{ this.renderPrice() }
-					</Cell>
-				</Row>
-			</SwipeDelete>
+		const row = (
+			<Row style={this.rowStyle} first={this.props.isFirst}>
+				<Cell first style={cellStyles.quantity}>
+					{ this.renderQuantity() }
+				</Cell>
+				<Cell style={cellStyles.name}>
+					{ this.renderNameAndVariant() }
+				</Cell>
+				<Cell last style={this.priceCellStyle}>
+					{ this.renderPrice() }
+				</Cell>
+			</Row>
 		);
+
+		return this.makeDeletable(row, this.props.deletable);
 	}
 }
 

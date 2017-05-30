@@ -30,17 +30,17 @@ register.addCashMovement(cashMovement2);
 const rootCategory = new ProductCategory();
 rootCategory.uuid = '__root__';
 
-rootCategory.products = [products[0], products[1], products[2]];
+rootCategory.products = [products[0], products[3], products[6]];
 
 const subCategory1 = new ProductCategory();
 subCategory1.uuid = 'sc1';
 subCategory1.name = 'Personne additionnelle';
-subCategory1.products = [products[3], products[4], products[5]];
+subCategory1.products = [products[9], products[12], products[15]];
 
 const subCategory2 = new ProductCategory();
 subCategory2.uuid = 'sc2';
 subCategory2.name = 'Divers';
-subCategory2.products = [products[6], products[7], products[8], products[9]];
+subCategory2.products = [products[16], products[19], products[20], products[21]];
 
 rootCategory.categories.push(subCategory1);
 rootCategory.categories.push(subCategory2);

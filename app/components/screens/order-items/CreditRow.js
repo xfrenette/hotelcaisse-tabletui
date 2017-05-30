@@ -9,6 +9,7 @@ import {
 	TextInput,
 	NumberInput,
 	SwipeDelete,
+	Text,
 } from '../../elements';
 import { Row, Cell } from '../../elements/table';
 
@@ -16,6 +17,7 @@ const propTypes = {
 	credit: PropTypes.instanceOf(Credit).isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	isFirst: PropTypes.bool,
+	editable: PropTypes.bool,
 	autoFocus: PropTypes.bool,
 	onRemove: PropTypes.func,
 	validate: PropTypes.func,
@@ -25,6 +27,7 @@ const propTypes = {
 
 const defaultProps = {
 	isFirst: false,
+	editable: true,
 	autoFocus: false,
 	onRemove: null,
 	validate: null,
@@ -184,7 +187,12 @@ class CreditRow extends Component {
 		amountField.focus();
 	}
 
-	render() {
+	/**
+	 * Renders the Credit row as an editable Credit
+	 *
+	 * @return {Node}
+	 */
+	renderEditable() {
 		const amountError = this.amountError;
 		const noteError = this.noteError;
 
@@ -196,7 +204,7 @@ class CreditRow extends Component {
 				<Row first={this.props.isFirst} style={styles.row}>
 					<Cell first style={cellStyles.note}>
 						<TextInput
-							label={this.t('order.credits.fields.note')}
+							placeholder={this.t('order.credits.fields.note')}
 							onChangeText={(note) => { this.note = note; }}
 							onBlur={() => { this.onNoteBlur(); }}
 							error={noteError}
@@ -210,7 +218,6 @@ class CreditRow extends Component {
 					<Cell last style={cellStyles.amount}>
 						<NumberInput
 							ref={(node) => { this.nodeRefs.amount = node; }}
-							label={this.t('order.credits.fields.amount')}
 							value={this.amount}
 							type="money"
 							localizer={this.props.localizer}
@@ -223,6 +230,32 @@ class CreditRow extends Component {
 				</Row>
 			</SwipeDelete>
 		);
+	}
+
+	/**
+	 * Renders the Credit row as an non-editable Credit
+	 *
+	 * @return {Node}
+	 */
+	renderNotEditable() {
+		return (
+			<Row first={this.props.isFirst} style={styles.row}>
+				<Cell first style={cellStyles.note}>
+					<Text>{ this.note }</Text>
+				</Cell>
+				<Cell last style={cellStyles.amountFixed}>
+					<Text>{ this.props.localizer.formatCurrency(this.amount) }</Text>
+				</Cell>
+			</Row>
+		);
+	}
+
+	render() {
+		if (this.props.editable) {
+			return this.renderEditable();
+		}
+
+		return this.renderNotEditable();
 	}
 }
 
@@ -237,8 +270,12 @@ const cellStyles = {
 		flex: 1,
 	},
 	amount: {
-		width: 200,
+		width: 120,
 	},
+	amountFixed: {
+		width: 120,
+		alignItems: 'flex-end',
+	}
 };
 
 CreditRow.propTypes = propTypes;
