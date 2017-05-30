@@ -1,5 +1,4 @@
 export default {
-	title: 'Ouverture de caisse',
 	fields: {
 		employee: 'Nom de l\'employé(e)',
 		cashAmount: 'Billets et monnaies dans la caisse à l\'ouverture',

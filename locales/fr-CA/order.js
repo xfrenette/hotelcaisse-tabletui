@@ -40,8 +40,6 @@ export default {
 	},
 	customProduct: 'Produit spécial',
 	items: {
-		titleEdit: 'Ajouter des items',
-		titleNew: 'Nouvelle inscription',
 		label: 'Items',
 		labelNew: 'Nouveaux items',
 		labelFixed: 'Items actuels',

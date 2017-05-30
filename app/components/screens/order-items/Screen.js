@@ -451,7 +451,7 @@ class OrderItemsScreen extends Component {
 	 * @return {Node}
 	 */
 	renderTopBar() {
-		const titlePath = this.props.orderIsNew ? 'order.items.titleNew' : 'order.items.titleEdit';
+		const titlePath = `screens.order.items.${this.props.orderIsNew ? 'new' : 'edit'}.title`;
 
 		if (!this.components.topBar) {
 			this.components.topBar = (

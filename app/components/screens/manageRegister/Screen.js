@@ -156,7 +156,7 @@ class ManageRegisterScreen extends Component {
 		return (
 			<Screen>
 				<TopBar
-					title={this.t('manageRegister.title')}
+					title={this.t('screens.register.manage.title')}
 					onPressHome={() => { this.onFinish(); }}
 				/>
 				<ScrollView>

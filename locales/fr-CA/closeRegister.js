@@ -1,5 +1,4 @@
 export default {
-	title: 'Fermeture de caisse',
 	POSTBatch: 'Lot du terminal de point de vente (TPV)',
 	fields: {
 		POSTRef: 'Numéro du lot',

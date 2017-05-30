@@ -257,7 +257,7 @@ class OpenRegister extends Component {
 		return (
 			<Screen>
 				<TopBar
-					title={this.t('openRegister.title')}
+					title={this.t('screens.register.open.title')}
 					onPressHome={() => { this.onCancel(); }}
 				/>
 				<ScrollView>

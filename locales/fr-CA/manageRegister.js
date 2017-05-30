@@ -1,5 +1,4 @@
 export default {
-	title: 'Gestion de caisse',
 	actions: {
 		add: 'Ajouter une opération',
 	},
