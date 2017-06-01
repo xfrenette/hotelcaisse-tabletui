@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react/native';
 import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Room from 'hotelcaisse-app/dist/business/Room';
@@ -38,8 +40,22 @@ const defaultProps = {
 	onDelete: null,
 };
 
+const ONE_DAY = 24 * 60 * 60 * 1000;
+
+@observer
 class RoomSelections extends Component {
-	nodeCache = {};
+	nodeRefs = {};
+	@observable
+	inDate = null;
+	@observable
+	outDate = null;
+
+	componentWillMount() {
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		this.inDate = today;
+		this.outDate = new Date(today.getTime() + ONE_DAY);
+	}
 
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -51,6 +67,12 @@ class RoomSelections extends Component {
 		return this.props.localizer.t(path);
 	}
 
+	restrictOutDatePicker(inDate) {
+		if (this.outDate.getTime() - inDate.getTime() < ONE_DAY) {
+			this.outDate = new Date(inDate.getTime() + ONE_DAY);
+		}
+	}
+
 	onAdd() {
 		if (this.props.onAdd) {
 			this.props.onAdd();
@@ -60,6 +82,15 @@ class RoomSelections extends Component {
 	onDelete(roomSelection) {
 		if (this.props.onDelete) {
 			this.props.onDelete(roomSelection);
+		}
+	}
+
+	onDateSelect(type, date) {
+		if (type === 'in') {
+			this.inDate = date;
+			this.restrictOutDatePicker(date);
+		} else {
+			this.outDate = date;
 		}
 	}
 
@@ -107,32 +138,43 @@ class RoomSelections extends Component {
 		return (
 			<View style={styles.datepickers}>
 				<View style={styles.datepicker}>
-					<Label>{this.t('roomSelections.checkin')}</Label>
-					<DatePicker localizer={this.props.localizer} />
+					<Label>{ this.t('roomSelections.checkin') }</Label>
+					<DatePicker
+						date={this.inDate}
+						minDate={new Date()}
+						localizer={this.props.localizer}
+						onDateSelect={(date) => { this.onDateSelect('in', date); }}
+					/>
 				</View>
 				<View style={styles.datepicker}>
-					<Label>{this.t('roomSelections.checkout')}</Label>
-					<DatePicker localizer={this.props.localizer} />
+					<Label>{ this.t('roomSelections.checkout') }</Label>
+					<DatePicker
+						date={this.outDate}
+						ref={(node) => { this.nodeRefs.datePickerOut = node; }}
+						minDate={new Date(this.inDate.getTime() + ONE_DAY)}
+						localizer={this.props.localizer}
+						onDateSelect={(date) => { this.onDateSelect('out', date); }}
+					/>
 				</View>
 			</View>
 		);
 	}
 
 	renderRoomNamesDropdown() {
-		if (!this.nodeCache.roomNamesDropdown) {
+		if (!this.nodeRefs.roomNamesDropdown) {
 			const Option = Dropdown.Option;
 			const options = this.props.rooms.map(
 				room => <Option key={room.uuid} value={room.uuid} label={room.name} />
 			);
 
-			this.nodeCache.roomNamesDropdown = (
+			this.nodeRefs.roomNamesDropdown = (
 				<Dropdown>
 					{ options }
 				</Dropdown>
 			);
 		}
 
-		return this.nodeCache.roomNamesDropdown;
+		return this.nodeRefs.roomNamesDropdown;
 	}
 
 	renderRoomSelectionFields() {
@@ -148,7 +190,7 @@ class RoomSelections extends Component {
 	}
 
 	renderTableHeaderRow() {
-		if (!this.nodeCache.tableHeaderRow) {
+		if (!this.nodeRefs.tableHeaderRow) {
 			const fields = this.props.fields;
 
 			const cols = fields.map((field, index) => {
@@ -165,7 +207,7 @@ class RoomSelections extends Component {
 				);
 			});
 
-			this.nodeCache.tableHeaderRow = (
+			this.nodeRefs.tableHeaderRow = (
 				<Row first>
 					<Cell style={cellStyles.name} first>
 						<Text style={tableStyles.header}>{ this.t('roomSelections.table.name') }</Text>
@@ -175,7 +217,7 @@ class RoomSelections extends Component {
 			);
 		}
 
-		return this.nodeCache.tableHeaderRow;
+		return this.nodeRefs.tableHeaderRow;
 	}
 
 	render() {
