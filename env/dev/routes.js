@@ -30,7 +30,7 @@ export default () => ([
 							{ component: CloseRegister, path: '/register/close' },
 							{ component: ManageRegister, path: '/register/manage' },
 							{ component: OrderItems, path: '/order/items' },
-							{ component: CustomerRoomSelections, path: '/orders/customer-roomselections' },
+							{ component: CustomerRoomSelections, path: '/order/customer-roomSelections' },
 							{ component: ReviewAndPayments, path: '/orders/review-payments' },
 						],
 					},

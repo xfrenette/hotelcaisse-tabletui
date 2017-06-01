@@ -6,7 +6,7 @@ import Product from 'hotelcaisse-app/dist/business/Product';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import Room from 'hotelcaisse-app/dist/business/Room';
 import TransactionMode from 'hotelcaisse-app/dist/business/TransactionMode';
-import { TextField, EmailField, SelectField, PhoneField, NumberField } from 'hotelcaisse-app/dist/fields';
+import { NameField, TextField, EmailField, SelectField, PhoneField, NumberField } from 'hotelcaisse-app/dist/fields';
 import products from './products';
 
 /**
@@ -51,51 +51,41 @@ business.deviceRegister = register;
 business.rootProductCategory = rootCategory;
 business.products = products;
 
-const nameField = new TextField();
+const nameField = new NameField();
 nameField.uuid = 'name-field';
 nameField.required = true;
+nameField.label = 'Nom complet';
+nameField.role = 'customer.name';
 const emailField = new EmailField();
 emailField.uuid = 'email-field';
+emailField.label = 'Courriel';
+emailField.role = 'customer.email';
 const phoneField = new PhoneField();
+phoneField.label = 'Téléphone';
 phoneField.uuid = 'phone-field';
 const memberIdField = new TextField();
 memberIdField.uuid = 'memberIdField-field';
+memberIdField.label = '# de membre H.I.';
 const countrySelect = new SelectField();
 countrySelect.uuid = 'country-select';
+countrySelect.label = 'Pays';
 countrySelect.values = {
+	france: 'France',
 	canada: 'Canada',
 	usa: 'États-Unis',
-	france: 'France',
 };
 const nbAdultsField = new NumberField();
 nbAdultsField.uuid = 'nb-adults-field';
+nbAdultsField.label = 'Adultes (18+)';
 const nbTeensField = new NumberField();
 nbTeensField.uuid = 'nb-teens-field';
+nbTeensField.label = 'Enfants 7-17';
 const nbChildrenField = new NumberField();
 nbChildrenField.uuid = 'nb-children-field';
+nbChildrenField.label = 'Enfants 0-6';
 
-business.customerFields = {
-	fields: [nameField, emailField, countrySelect, phoneField, memberIdField],
-	labels: {
-		'name-field': 'Nom complet',
-		'email-field': 'Courriel',
-		'phone-field': 'Téléphone',
-		'memberIdField-field': '# membre HI',
-		'country-select': 'Pays',
-	},
-	essentials: {
-		name: 'name-field',
-	},
-};
-
-business.roomSelectionFields = {
-	fields: [nbAdultsField, nbTeensField, nbChildrenField],
-	labels: {
-		'nb-adults-field': 'Adultes (18+)',
-		'nb-teens-field': 'Enfants 7-17',
-		'nb-children-field': 'Enfants 0-6',
-	},
-};
+business.customerFields = [nameField, emailField, countrySelect, phoneField, memberIdField];
+business.roomSelectionFields = [nbAdultsField, nbTeensField, nbChildrenField];
 
 for (let i = 1; i <= 6; i += 1) {
 	const room = new Room();

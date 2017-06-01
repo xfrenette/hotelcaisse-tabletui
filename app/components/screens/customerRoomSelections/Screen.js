@@ -3,6 +3,7 @@ import { observer } from 'mobx-react/native';
 import PropTypes from 'prop-types';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Room from 'hotelcaisse-app/dist/business/Room';
+import Field from 'hotelcaisse-app/dist/fields/Field';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { View, ScrollView } from 'react-native';
 import {
@@ -26,14 +27,8 @@ const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
 	rooms: PropTypes.arrayOf(PropTypes.instanceOf(Room)),
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
-	customerFields: PropTypes.shape({
-		fields: PropTypes.array,
-		labels: PropTypes.object,
-	}),
-	roomSelectionFields: PropTypes.shape({
-		fields: PropTypes.array,
-		labels: PropTypes.object,
-	}),
+	customerFields: PropTypes.arrayOf(PropTypes.instanceOf(Field)),
+	roomSelectionFields: PropTypes.arrayOf(PropTypes.instanceOf(Field)),
 	onAddRoomSelection: PropTypes.func,
 	onDeleteRoomSelection: PropTypes.func,
 	onPressHome: PropTypes.func,
@@ -43,8 +38,8 @@ const propTypes = {
 
 const defaultProps = {
 	rooms: [],
-	customerFields: { fields: [], labels: {} },
-	roomSelectionFields: { fields: [], labels: {} },
+	customerFields: [],
+	roomSelectionFields: [],
 	onAddRoomSelection: null,
 	onDeleteRoomSelection: null,
 	onPressHome: null,
@@ -80,7 +75,7 @@ class CustomerRoomSelectionsScreen extends Component {
 									{ this.t('customer.section.title') }
 								</Title>
 								<CustomerFields
-									customerFields={this.props.customerFields}
+									fields={this.props.customerFields}
 									fieldErrorMessage={this.t('errors.fieldInvalidValue')}
 								/>
 							</View>

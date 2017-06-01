@@ -41,10 +41,10 @@ const appConfig = {
 
 const app = new Application(appConfig);
 const orderPath = {
-	pathname: '/order/items',
+	pathname: '/order/customer-roomSelections',
 	state: {
 		order: testOrder,
-		new: false,
+		new: true,
 	},
 };
 

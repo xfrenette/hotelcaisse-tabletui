@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Room from 'hotelcaisse-app/dist/business/Room';
+import FieldObject from 'hotelcaisse-app/dist/fields/Field';
 import RoomSelection from 'hotelcaisse-app/dist/business/RoomSelection';
 import {
 	Field,
@@ -22,10 +23,7 @@ import styleVars from '../../../styles/variables';
 const propTypes = {
 	rooms: PropTypes.arrayOf(PropTypes.instanceOf(Room)),
 	roomSelections: PropTypes.arrayOf(PropTypes.instanceOf(RoomSelection)),
-	fields: PropTypes.shape({
-		fields: PropTypes.array,
-		labels: PropTypes.object,
-	}).isRequired,
+	fields: PropTypes.arrayOf(PropTypes.instanceOf(FieldObject)).isRequired,
 	fieldErrorMessage: PropTypes.string,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	onAdd: PropTypes.func,
@@ -138,7 +136,7 @@ class RoomSelections extends Component {
 	}
 
 	renderRoomSelectionFields() {
-		const fields = this.props.fields.fields;
+		const fields = this.props.fields;
 		return fields.map((field, index) => {
 			const isLast = index === field.length - 1;
 			return (
@@ -151,12 +149,10 @@ class RoomSelections extends Component {
 
 	renderTableHeaderRow() {
 		if (!this.nodeCache.tableHeaderRow) {
-			const labels = this.props.fields.labels;
-			const fields = this.props.fields.fields;
+			const fields = this.props.fields;
 
 			const cols = fields.map((field, index) => {
 				const isLast = index === fields.length - 1;
-				const label = labels[field.uuid];
 
 				return (
 					<Cell
@@ -164,7 +160,7 @@ class RoomSelections extends Component {
 						style={[cellStyles.fieldHeader, cellStyles.field]}
 						key={field.uuid}
 					>
-						<Text style={tableStyles.header}>{ label }</Text>
+						<Text style={tableStyles.header}>{ field.label }</Text>
 					</Cell>
 				);
 			});

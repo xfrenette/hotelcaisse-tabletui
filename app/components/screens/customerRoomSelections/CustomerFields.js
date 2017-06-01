@@ -3,16 +3,12 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import {
-	Field,
-} from '../../elements';
+import FieldObject from 'hotelcaisse-app/dist/fields/Field';
+import { Field } from '../../elements';
 import { Field as FormField, Label, Group } from '../../elements/form';
 
 const propTypes = {
-	customerFields: PropTypes.shape({
-		fields: PropTypes.array,
-		labels: PropTypes.object,
-	}).isRequired,
+	fields: PropTypes.arrayOf(PropTypes.instanceOf(FieldObject)).isRequired,
 	fieldErrorMessage: PropTypes.string,
 };
 
@@ -30,7 +26,7 @@ class CustomerFields extends Component {
 	fieldErrors = new Map();
 
 	componentWillMount() {
-		this.saveNextFields(this.props.customerFields.fields);
+		this.saveNextFields(this.props.fields);
 	}
 
 	saveNextFields(fields) {
@@ -81,7 +77,7 @@ class CustomerFields extends Component {
 	}
 
 	renderFields() {
-		const fields = this.props.customerFields.fields;
+		const fields = this.props.fields;
 		const nbCols = 2;
 		const fieldRows = [];
 		let lastField = null;
@@ -102,12 +98,11 @@ class CustomerFields extends Component {
 
 		return fieldRows.map((fieldRow) => {
 			const fieldElements = fieldRow.map((field) => {
-				const label = this.props.customerFields.labels[field.uuid];
 				const isLastField = field === lastField;
 
 				return (
 					<View key={field.uuid}>
-						<Label>{ label }</Label>
+						<Label>{ field.label }</Label>
 						<Field
 							ref={(node) => { this.fieldRefs[field.uuid] = node; }}
 							field={field}
