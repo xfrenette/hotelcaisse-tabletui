@@ -12,7 +12,7 @@ import styleVars from '../../styles/variables';
 
 const propTypes = {
 	date: PropTypes.instanceOf(Date),
-	onSelectDate: PropTypes.func,
+	onDateSelect: PropTypes.func,
 	minDate: PropTypes.instanceOf(Date),
 	localizer: PropTypes.instanceOf(Localizer),
 	format: PropTypes.string,
@@ -20,7 +20,7 @@ const propTypes = {
 
 const defaultProps = {
 	date: new Date(),
-	onSelectDate: null,
+	onDateSelect: null,
 	minDate: null,
 	localizer: null,
 	format: 'MMMEd',
@@ -47,7 +47,7 @@ class DatePicker extends Component {
 
 	/**
 	 * Called when we press the "input". Will show the date picker. If a date is selected, will call
-	 * it to onSelectDate with it.
+	 * it to onDateSelect with it.
 	 */
 	async onPress() {
 		try {
@@ -55,7 +55,7 @@ class DatePicker extends Component {
 
 			if (action !== DatePickerAndroid.dismissedAction) {
 				const newDate = DatePicker.buildDate(year, month, day);
-				this.onSelectDate(newDate);
+				this.onDateSelect(newDate);
 			}
 		} catch (e) {
 			// do nothing
@@ -67,9 +67,9 @@ class DatePicker extends Component {
 	 *
 	 * @param {Date} date
 	 */
-	onSelectDate(date) {
-		if (this.props.onSelectDate) {
-			this.props.onSelectDate(date);
+	onDateSelect(date) {
+		if (this.props.onDateSelect) {
+			this.props.onDateSelect(date);
 		}
 	}
 
