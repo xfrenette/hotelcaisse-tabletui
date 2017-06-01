@@ -55,6 +55,14 @@ class Field extends Component {
 		}
 	}
 
+	renderNameField() {
+		const props = {
+			autoCapitalize: 'words',
+		};
+
+		return this.renderTextField(props);
+	}
+
 	renderEmailField() {
 		const props = {
 			keyboardType: 'email-address',
@@ -120,6 +128,8 @@ class Field extends Component {
 		switch (this.field.type) {
 			case 'SelectField':
 				return this.renderSelectField();
+			case 'NameField':
+				return this.renderNameField();
 			case 'EmailField':
 				return this.renderEmailField();
 			case 'PhoneField':
