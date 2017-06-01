@@ -77,6 +77,7 @@ class Field extends Component {
 				ref={(node) => { this.inputNode = node; }}
 				onChangeText={this.props.onChangeValue}
 				error={this.props.error}
+				defaultValue={this.field.defaultValue}
 				{...props}
 				{...this.otherProps}
 			/>
@@ -89,6 +90,7 @@ class Field extends Component {
 				ref={(node) => { this.inputNode = node; }}
 				onChangeValue={this.props.onChangeValue}
 				error={this.props.error}
+				defaultValue={this.field.defaultValue}
 				showIncrementors
 				{...this.otherProps}
 			/>
@@ -101,7 +103,7 @@ class Field extends Component {
 			// eslint-disable-next-line react/no-array-index-key
 			([value, label], index) => <Option key={`${value}_${index}`} value={value} label={label} />
 		);
-		const selectedValue = this.otherProps.value;
+		const selectedValue = this.otherProps.value || this.props.field.defaultValue;
 
 		return (
 			<Dropdown

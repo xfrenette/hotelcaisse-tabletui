@@ -69,6 +69,7 @@ memberIdField.label = '# de membre H.I.';
 const countrySelect = new SelectField();
 countrySelect.uuid = 'country-select';
 countrySelect.label = 'Pays';
+countrySelect.defaultValue = 'canada';
 countrySelect.values = {
 	france: 'France',
 	canada: 'Canada',
@@ -77,12 +78,15 @@ countrySelect.values = {
 const nbAdultsField = new NumberField();
 nbAdultsField.uuid = 'nb-adults-field';
 nbAdultsField.label = 'Adultes (18+)';
+nbAdultsField.defaultValue = 1;
 const nbTeensField = new NumberField();
 nbTeensField.uuid = 'nb-teens-field';
 nbTeensField.label = 'Enfants 7-17';
+nbTeensField.defaultValue = 0;
 const nbChildrenField = new NumberField();
 nbChildrenField.uuid = 'nb-children-field';
 nbChildrenField.label = 'Enfants 0-6';
+nbChildrenField.defaultValue = 0;
 
 business.customerFields = [nameField, emailField, countrySelect, phoneField, memberIdField];
 business.roomSelectionFields = [nbAdultsField, nbTeensField, nbChildrenField];

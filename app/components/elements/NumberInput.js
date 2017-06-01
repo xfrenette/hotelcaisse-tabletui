@@ -418,6 +418,7 @@ class NumberInput extends Component {
 				{ this.incrementors.less }
 				<TextInput
 					{...other}
+					defaultValue={null}
 					ref={(node) => { this.textInputNode = node; }}
 					value={this.inputText}
 					style={style}
