@@ -28,6 +28,23 @@ const defaultProps = {
 
 class DatePicker extends Component {
 	/**
+	 * From a year, a month and a day, builds a Date object. The returned date will have time
+	 * 00:00:00:0000.
+	 *
+	 * @param {Number} year
+	 * @param {Number} month
+	 * @param {Number} day
+	 * @return {Date}
+	 */
+	static buildDate = (year, month, day) => {
+		const date = new Date();
+		date.setFullYear(year, month, day);
+		date.setHours(0, 0, 0, 0);
+
+		return date;
+	};
+
+	/**
 	 * Returns the options for the date picker
 	 *
 	 * @return {Object}
@@ -54,7 +71,7 @@ class DatePicker extends Component {
 			const { action, year, month, day } = await DatePickerAndroid.open(this.pickerOptions);
 
 			if (action !== DatePickerAndroid.dismissedAction) {
-				const newDate = DatePicker.buildDate(year, month, day);
+				const newDate = this.constructor.buildDate(year, month, day);
 				this.onDateSelect(newDate);
 			}
 		} catch (e) {
@@ -101,23 +118,6 @@ class DatePicker extends Component {
 		);
 	}
 }
-
-/**
- * From a year, a month and a day, builds a Date object.
- *
- * @param {Number} year
- * @param {Number} month
- * @param {Number} day
- * @return {Date}
- */
-DatePicker.buildDate = (year, month, day) => {
-	const date = new Date(0);
-	date.setYear(year);
-	date.setMonth(month);
-	date.setDate(day);
-
-	return date;
-};
 
 const styles = {
 	input: {
