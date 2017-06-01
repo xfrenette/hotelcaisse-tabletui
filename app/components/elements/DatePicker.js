@@ -7,18 +7,23 @@ import {
 	TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Localizer from 'hotelcaisse-app/dist/Localizer';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
 	date: PropTypes.instanceOf(Date),
 	onSelectDate: PropTypes.func,
 	minDate: PropTypes.instanceOf(Date),
+	localizer: PropTypes.instanceOf(Localizer),
+	format: PropTypes.string,
 };
 
 const defaultProps = {
 	date: new Date(),
 	onSelectDate: null,
 	minDate: null,
+	localizer: null,
+	format: 'MMMEd',
 };
 
 class DatePicker extends Component {
@@ -75,7 +80,12 @@ class DatePicker extends Component {
 	 */
 	get renderedDate() {
 		const date = this.props.date;
-		return `${date.getDate()}/${date.getMonth()}`;
+
+		if (!this.props.localizer) {
+			return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+		}
+
+		return this.props.localizer.formatDate(date, { skeleton: this.props.format });
 	}
 
 	render() {

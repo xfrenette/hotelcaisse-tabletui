@@ -108,11 +108,11 @@ class RoomSelections extends Component {
 			<View style={styles.datepickers}>
 				<View style={styles.datepicker}>
 					<Label>{this.t('roomSelections.checkin')}</Label>
-					<DatePicker />
+					<DatePicker localizer={this.props.localizer} />
 				</View>
 				<View style={styles.datepicker}>
 					<Label>{this.t('roomSelections.checkout')}</Label>
-					<DatePicker />
+					<DatePicker localizer={this.props.localizer} />
 				</View>
 			</View>
 		);
