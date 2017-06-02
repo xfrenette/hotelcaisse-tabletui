@@ -36,11 +36,11 @@ const transactionMode = new TransactionMode('transaction-mode-1', 'Argent');
 const transaction1 = new Transaction('transaction-1', new Decimal(20), transactionMode);
 
 const customer = new Customer('customer-uuid');
-customer.fieldValues = {
+customer.fieldValues.replace({
 	'name-field': 'Xavier Frenette',
 	'email-field': 'xavier@xavierfrenette.com',
 	'country-select': 'canada',
-};
+});
 
 order.items.push(item1);
 order.items.push(item2);

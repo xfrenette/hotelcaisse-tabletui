@@ -4,11 +4,13 @@ import { observer } from 'mobx-react/native';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import FieldObject from 'hotelcaisse-app/dist/fields/Field';
+import Customer from 'hotelcaisse-app/dist/business/Customer';
 import { Field } from '../../elements';
 import { Field as FormField, Label, Group } from '../../elements/form';
 
 const propTypes = {
 	fields: PropTypes.arrayOf(PropTypes.instanceOf(FieldObject)).isRequired,
+	customer: PropTypes.instanceOf(Customer).isRequired,
 	fieldErrorMessage: PropTypes.string,
 };
 
@@ -26,7 +28,16 @@ class CustomerFields extends Component {
 	fieldErrors = new Map();
 
 	componentWillMount() {
+		this.replaceFieldValues();
 		this.saveNextFields(this.props.fields);
+	}
+
+	replaceFieldValues() {
+		const newValues = new Map();
+		this.props.fields.forEach((field) => {
+			newValues.set(field.uuid, this.props.customer.getFieldValue(field));
+		});
+		this.fieldValues.replace(newValues);
 	}
 
 	saveNextFields(fields) {
@@ -72,6 +83,7 @@ class CustomerFields extends Component {
 		if (res) {
 			this.fieldErrors.set(field.uuid, this.props.fieldErrorMessage);
 		} else {
+			this.props.customer.setFieldValue(field, value);
 			this.fieldErrors.delete(field.uuid);
 		}
 	}

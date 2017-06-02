@@ -76,6 +76,7 @@ class CustomerRoomSelectionsScreen extends Component {
 								</Title>
 								<CustomerFields
 									fields={this.props.customerFields}
+									customer={this.props.order.customer}
 									fieldErrorMessage={this.t('errors.fieldInvalidValue')}
 								/>
 							</View>
