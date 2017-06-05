@@ -84,6 +84,17 @@ class RoomSelectionRow extends Component {
 		}
 	}
 
+	onFieldBlur(field) {
+		const value = this.props.roomSelection.getFieldValue(field);
+		const res = field.validate(value);
+
+		if (res) {
+			this.fieldErrors.set(field.uuid, this.t('errors.fieldInvalidValue'));
+		} else {
+			this.fieldErrors.delete(field.uuid);
+		}
+	}
+
 	renderRoomsDropdown() {
 		const Option = Dropdown.Option;
 		const options = this.props.rooms.map(
@@ -109,7 +120,9 @@ class RoomSelectionRow extends Component {
 					<Field
 						field={field}
 						value={this.props.roomSelection.getFieldValue(field)}
+						error={this.fieldErrors.get(field.uuid)}
 						onChangeValue={(val) => { this.onFieldChange(field, val); }}
+						onBlur={() => { this.onFieldBlur(field); }}
 					/>
 				</Cell>
 			);
