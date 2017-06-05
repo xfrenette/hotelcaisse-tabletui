@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
@@ -8,53 +7,54 @@ import Room from 'hotelcaisse-app/dist/business/Room';
 import FieldObject from 'hotelcaisse-app/dist/fields/Field';
 import RoomSelection from 'hotelcaisse-app/dist/business/RoomSelection';
 import {
-	Field,
 	Button,
 	Message,
 	Text,
-	Dropdown,
 	DatePicker,
-	SwipeDelete,
-} from '../../elements';
-import { Row, Cell } from '../../elements/table';
-import { Label } from '../../elements/form';
-import typographyStyles from '../../../styles/typography';
-import tableStyles from '../../../styles/tables';
-import styleVars from '../../../styles/variables';
+} from '../../../elements';
+import { Row, Cell } from '../../../elements/table';
+import { Label } from '../../../elements/form';
+import RoomSelectionRow from './RoomSelectionRow';
+import typographyStyles from '../../../../styles/typography';
+import tableStyles from '../../../../styles/tables';
+import styleVars from '../../../../styles/variables';
 
 const propTypes = {
-	rooms: PropTypes.arrayOf(PropTypes.instanceOf(Room)),
 	roomSelections: PropTypes.arrayOf(PropTypes.instanceOf(RoomSelection)),
+	rooms: PropTypes.arrayOf(PropTypes.instanceOf(Room)),
 	fields: PropTypes.arrayOf(PropTypes.instanceOf(FieldObject)).isRequired,
-	fieldErrorMessage: PropTypes.string,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
+	inDate: PropTypes.instanceOf(Date),
+	outDate: PropTypes.instanceOf(Date),
+	minInDate: PropTypes.instanceOf(Date),
+	minOutDate: PropTypes.instanceOf(Date),
 	onAdd: PropTypes.func,
 	onDelete: PropTypes.func,
+	onRoomSelect: PropTypes.func,
+	onFieldChange: PropTypes.func,
+	onDateChanged: PropTypes.func,
 };
 
 const defaultProps = {
 	rooms: [],
 	roomSelections: [],
-	fieldErrorMessage: 'error',
+	inDate: null,
+	outDate: null,
+	minInDate: null,
+	minOutDate: null,
 	onAdd: null,
 	onDelete: null,
+	onRoomSelect: null,
+	onFieldChange: null,
+	onDateChanged: null,
 };
-
-const ONE_DAY = 24 * 60 * 60 * 1000;
 
 @observer
 class RoomSelections extends Component {
 	nodeRefs = {};
-	@observable
-	inDate = null;
-	@observable
-	outDate = null;
 
-	componentWillMount() {
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
-		this.inDate = today;
-		this.outDate = new Date(today.getTime() + ONE_DAY);
+	componentWillUnmount() {
+		this.nodeRefs = {};
 	}
 
 	/**
@@ -65,12 +65,6 @@ class RoomSelections extends Component {
 	 */
 	t(path) {
 		return this.props.localizer.t(path);
-	}
-
-	restrictOutDatePicker(inDate) {
-		if (this.outDate.getTime() - inDate.getTime() < ONE_DAY) {
-			this.outDate = new Date(inDate.getTime() + ONE_DAY);
-		}
 	}
 
 	onAdd() {
@@ -85,12 +79,21 @@ class RoomSelections extends Component {
 		}
 	}
 
+	onFieldChange(roomSelection, field, value) {
+		if (this.props.onFieldChange) {
+			this.props.onFieldChange(roomSelection, field, value);
+		}
+	}
+
 	onDateSelect(type, date) {
-		if (type === 'in') {
-			this.inDate = date;
-			this.restrictOutDatePicker(date);
-		} else {
-			this.outDate = date;
+		if (this.props.onDateChanged) {
+			this.props.onDateChanged(type, date);
+		}
+	}
+
+	onRoomSelect(roomSelection, room) {
+		if (this.props.onRoomSelect) {
+			this.props.onRoomSelect(roomSelection, room);
 		}
 	}
 
@@ -103,9 +106,19 @@ class RoomSelections extends Component {
 	}
 
 	renderRoomSelections() {
-		const roomSelections = this.props.roomSelections.map(
-			roomSelection => this.renderRoomSelection(roomSelection)
-		);
+		const roomSelections = this.props.roomSelections.map(roomSelection => (
+			<RoomSelectionRow
+				key={roomSelection.uuid}
+				rooms={this.props.rooms}
+				roomSelection={roomSelection}
+				cellStyles={cellStyles}
+				fields={this.props.fields}
+				localizer={this.props.localizer}
+				onRoomSelect={(room) => { this.onRoomSelect(roomSelection, room); }}
+				onFieldChange={(field, val) => { this.onFieldChange(roomSelection, field, val); }}
+				onDelete={() => { this.onDelete(roomSelection); }}
+			/>
+		));
 
 		return (
 			<View>
@@ -117,31 +130,14 @@ class RoomSelections extends Component {
 		);
 	}
 
-	renderRoomSelection(roomSelection) {
-		return (
-			<SwipeDelete
-				key={roomSelection.uuid}
-				label={this.t('actions.delete')}
-				onDelete={() => { this.onDelete(roomSelection); }}
-			>
-				<Row>
-					<Cell style={cellStyles.name} first>
-						{ this.renderRoomNamesDropdown() }
-					</Cell>
-					{ this.renderRoomSelectionFields() }
-				</Row>
-			</SwipeDelete>
-		);
-	}
-
 	renderDatePickers() {
 		return (
 			<View style={styles.datepickers}>
 				<View style={styles.datepicker}>
 					<Label>{ this.t('roomSelections.checkin') }</Label>
 					<DatePicker
-						date={this.inDate}
-						minDate={new Date()}
+						date={this.props.inDate}
+						minDate={this.props.minInDate}
 						localizer={this.props.localizer}
 						onDateSelect={(date) => { this.onDateSelect('in', date); }}
 					/>
@@ -149,44 +145,15 @@ class RoomSelections extends Component {
 				<View style={styles.datepicker}>
 					<Label>{ this.t('roomSelections.checkout') }</Label>
 					<DatePicker
-						date={this.outDate}
+						date={this.props.outDate}
 						ref={(node) => { this.nodeRefs.datePickerOut = node; }}
-						minDate={new Date(this.inDate.getTime() + ONE_DAY)}
+						minDate={this.props.minOutDate}
 						localizer={this.props.localizer}
 						onDateSelect={(date) => { this.onDateSelect('out', date); }}
 					/>
 				</View>
 			</View>
 		);
-	}
-
-	renderRoomNamesDropdown() {
-		if (!this.nodeRefs.roomNamesDropdown) {
-			const Option = Dropdown.Option;
-			const options = this.props.rooms.map(
-				room => <Option key={room.uuid} value={room.uuid} label={room.name} />
-			);
-
-			this.nodeRefs.roomNamesDropdown = (
-				<Dropdown>
-					{ options }
-				</Dropdown>
-			);
-		}
-
-		return this.nodeRefs.roomNamesDropdown;
-	}
-
-	renderRoomSelectionFields() {
-		const fields = this.props.fields;
-		return fields.map((field, index) => {
-			const isLast = index === field.length - 1;
-			return (
-				<Cell key={field.uuid} last={isLast} style={cellStyles.field}>
-					<Field field={field} />
-				</Cell>
-			);
-		});
 	}
 
 	renderTableHeaderRow() {

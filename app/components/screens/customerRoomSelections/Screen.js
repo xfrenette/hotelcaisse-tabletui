@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react/native';
 import PropTypes from 'prop-types';
-import Order from 'hotelcaisse-app/dist/business/Order';
-import Room from 'hotelcaisse-app/dist/business/Room';
-import Field from 'hotelcaisse-app/dist/fields/Field';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { View, ScrollView } from 'react-native';
 import {
@@ -18,38 +14,25 @@ import {
 	MainContent,
 	Container,
 } from '../../layout';
-import CustomerFields from './CustomerFields';
-import RoomSelections from './RoomSelections';
 import buttonLayouts from '../../../styles/buttons';
 import layoutStyles from '../../../styles/layout';
 
 const propTypes = {
-	order: PropTypes.instanceOf(Order).isRequired,
-	rooms: PropTypes.arrayOf(PropTypes.instanceOf(Room)),
+	customerNode: PropTypes.node.isRequired,
+	roomSelectionsNode: PropTypes.node.isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
-	customerFields: PropTypes.arrayOf(PropTypes.instanceOf(Field)),
-	roomSelectionFields: PropTypes.arrayOf(PropTypes.instanceOf(Field)),
-	onAddRoomSelection: PropTypes.func,
-	onDeleteRoomSelection: PropTypes.func,
 	onPressHome: PropTypes.func,
 	onReturn: PropTypes.func,
 	onNext: PropTypes.func,
 };
 
 const defaultProps = {
-	rooms: [],
-	customerFields: [],
-	roomSelectionFields: [],
-	onAddRoomSelection: null,
-	onDeleteRoomSelection: null,
 	onPressHome: null,
 	onReturn: null,
 	onNext: null,
 };
 
-@observer
 class CustomerRoomSelectionsScreen extends Component {
-
 	/**
 	 * Simple alias to this.props.localizer.t
 	 *
@@ -74,24 +57,13 @@ class CustomerRoomSelectionsScreen extends Component {
 								<Title style={layoutStyles.title}>
 									{ this.t('customer.section.title') }
 								</Title>
-								<CustomerFields
-									fields={this.props.customerFields}
-									customer={this.props.order.customer}
-									fieldErrorMessage={this.t('errors.fieldInvalidValue')}
-								/>
+								{ this.props.customerNode }
 							</View>
 							<View style={layoutStyles.section}>
 								<Title style={layoutStyles.title}>
 									{ this.t('roomSelections.section.title') }
 								</Title>
-								<RoomSelections
-									roomSelections={this.props.order.roomSelections.slice()}
-									rooms={this.props.rooms}
-									fields={this.props.roomSelectionFields}
-									onAdd={this.props.onAddRoomSelection}
-									onDelete={this.props.onDeleteRoomSelection}
-									localizer={this.props.localizer}
-								/>
+								{ this.props.roomSelectionsNode }
 							</View>
 						</Container>
 					</MainContent>

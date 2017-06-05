@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
-import RoomSelection from 'hotelcaisse-app/dist/business/RoomSelection';
+import CustomerContainer from './parts/Customer';
+import RoomSelectionsContainer from './parts/RoomSelections';
 import Screen from '../../components/screens/customerRoomSelections/Screen';
 
+/**
+ * This class will only create the the sub containers (that will manage the Customer and
+ * RoomSelections screen parts) and when we quit the screen.
+ */
 @inject('localizer', 'uuidGenerator', 'business', 'router')
 @observer
 class CustomerRoomSelections extends Component {
@@ -27,29 +32,24 @@ class CustomerRoomSelections extends Component {
 		this.props.router.push('/orders/review-payments', { order: this.order });
 	}
 
-	onAddRoomSelection() {
-		const roomSelection = new RoomSelection();
-		roomSelection.uuid = this.props.uuidGenerator.generate();
-		this.order.roomSelections.push(roomSelection);
+	renderCustomerContainer() {
+		return (
+			<CustomerContainer order={this.order} />
+		);
 	}
 
-	onDeleteRoomSelection(roomSelection) {
-		this.order.removeRoomSelection(roomSelection);
+	renderRoomSelectionsContainer() {
+		return (
+			<RoomSelectionsContainer order={this.order} />
+		);
 	}
 
 	render() {
-		const customerFields = this.props.business.customerFields;
-		const roomSelectionFields = this.props.business.roomSelectionFields;
-
 		return (
 			<Screen
-				order={this.order}
-				rooms={this.props.business.rooms}
+				customerNode={this.renderCustomerContainer()}
+				roomSelectionsNode={this.renderRoomSelectionsContainer()}
 				localizer={this.props.localizer}
-				customerFields={customerFields}
-				roomSelectionFields={roomSelectionFields}
-				onAddRoomSelection={() => { this.onAddRoomSelection(); }}
-				onDeleteRoomSelection={(rs) => { this.onDeleteRoomSelection(rs); }}
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}
 				onNext={() => { this.onNext(); }}
