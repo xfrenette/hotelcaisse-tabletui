@@ -33,16 +33,33 @@ const defaultProps = {
 
 @observer
 class RoomSelectionRow extends Component {
+	/**
+	 * Error messages for the fields
+	 *
+	 * @type {Map}
+	 */
 	@observable
 	fieldErrors = new Map();
 
 	@computed
+	/**
+	 * Returns the uuid of the currently selected room. Returns null if no room selected.
+	 *
+	 * @return {String}
+	 */
 	get roomUUID() {
 		if (!this.props.roomSelection.room) {
 			return null;
 		}
 
 		return this.props.roomSelection.room.uuid;
+	}
+
+	/**
+	 * When unmounting, clear the error messages.
+	 */
+	componentWillUnmount() {
+		this.fieldErrors.clear();
 	}
 
 	/**
@@ -55,12 +72,20 @@ class RoomSelectionRow extends Component {
 		return this.props.localizer.t(path);
 	}
 
-	onDelete(roomSelection) {
+	/**
+	 * When the user wants to delete the room selection
+	 */
+	onDelete() {
 		if (this.props.onDelete) {
-			this.props.onDelete(roomSelection);
+			this.props.onDelete();
 		}
 	}
 
+	/**
+	 * When the user changes the room
+	 *
+	 * @param {String} roomUUID
+	 */
 	onRoomSelect(roomUUID) {
 		const room = this.props.rooms.find(currRoom => currRoom.uuid === roomUUID);
 
@@ -69,12 +94,23 @@ class RoomSelectionRow extends Component {
 		}
 	}
 
+	/**
+	 * When the user changes the value of a field
+	 *
+	 * @param {Field} field
+	 * @param {mixed} value
+	 */
 	onFieldChange(field, value) {
 		if (this.props.onFieldChange) {
 			this.props.onFieldChange(field, value);
 		}
 	}
 
+	/**
+	 * When a field is blurred, we valildate its value and show or hide the error message
+	 *
+	 * @param {Field} field
+	 */
 	onFieldBlur(field) {
 		const value = this.props.roomSelection.getFieldValue(field);
 		const res = field.validate(value);
@@ -86,6 +122,11 @@ class RoomSelectionRow extends Component {
 		}
 	}
 
+	/**
+	 * Returns the DropDown for the rooms
+	 *
+	 * @return {Node}
+	 */
 	renderRoomsDropdown() {
 		const Option = Dropdown.Option;
 		const options = this.props.rooms.map(
@@ -102,6 +143,11 @@ class RoomSelectionRow extends Component {
 		);
 	}
 
+	/**
+	 * Returns the cells for all the fields
+	 *
+	 * @return {Node}
+	 */
 	renderFields() {
 		const fields = this.props.fields;
 		return fields.map((field, index) => {

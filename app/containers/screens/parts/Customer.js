@@ -12,15 +12,25 @@ const defaultProps = {
 };
 
 /**
- * The "Customer" screen part is used in 2 different screens (/order/customer-roomselections and
- * /order/customer).
+ * Container for the Customer form part
  */
 @inject('localizer', 'uuidGenerator', 'business', 'router')
 class Customer extends Component {
+	/**
+	 * Shortcut to return the customer in the props
+	 *
+	 * @return {Customer}
+	 */
 	get customer() {
 		return this.props.order.customer;
 	}
 
+	/**
+	 * When the user changes the value of a field.
+	 *
+	 * @param {Field} field
+	 * @param {mixed} rawValue
+	 */
 	onFieldChange(field, rawValue) {
 		const value = rawValue === '' ? null : rawValue;
 		this.customer.setFieldValue(field, value);

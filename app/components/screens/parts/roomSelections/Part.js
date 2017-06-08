@@ -51,8 +51,16 @@ const defaultProps = {
 
 @observer
 class RoomSelections extends Component {
+	/**
+	 * Internal reference to nodes
+	 *
+	 * @type {Object<Node>}
+	 */
 	nodeRefs = {};
 
+	/**
+	 * When unmounting, clear the nodeRefs
+	 */
 	componentWillUnmount() {
 		this.nodeRefs = {};
 	}
@@ -67,36 +75,68 @@ class RoomSelections extends Component {
 		return this.props.localizer.t(path);
 	}
 
+	/**
+	 * When the user wants to add a new RoomSelection
+	 */
 	onAdd() {
 		if (this.props.onAdd) {
 			this.props.onAdd();
 		}
 	}
 
+	/**
+	 * When the user wants to delete a RoomSelection
+	 *
+	 * @param {RoomSelection} roomSelection
+	 */
 	onDelete(roomSelection) {
 		if (this.props.onDelete) {
 			this.props.onDelete(roomSelection);
 		}
 	}
 
+	/**
+	 * When the user changes the value of a field of a RoomSelection
+	 *
+	 * @param {RoomSelection} roomSelection
+	 * @param {Field} field
+	 * @param {mixed} value
+	 */
 	onFieldChange(roomSelection, field, value) {
 		if (this.props.onFieldChange) {
 			this.props.onFieldChange(roomSelection, field, value);
 		}
 	}
 
+	/**
+	 * When the user changes the checkin (type = 'in') or checkout (type = 'out') date
+	 *
+	 * @param {String} type ('in' or 'out')
+	 * @param {Date} date
+	 */
 	onDateSelect(type, date) {
 		if (this.props.onDateChanged) {
 			this.props.onDateChanged(type, date);
 		}
 	}
 
+	/**
+	 * When the user changes the room for a RoomSelection
+	 *
+	 * @param {RoomSelection} roomSelection
+	 * @param {Room} room
+	 */
 	onRoomSelect(roomSelection, room) {
 		if (this.props.onRoomSelect) {
 			this.props.onRoomSelect(roomSelection, room);
 		}
 	}
 
+	/**
+	 * Returns the Node to display when there is no roomSelection
+	 *
+	 * @return {Node}
+	 */
 	renderEmptyList() {
 		return (
 			<View>
@@ -105,6 +145,11 @@ class RoomSelections extends Component {
 		);
 	}
 
+	/**
+	 * Returns the content when there is at least one roomSelection
+	 *
+	 * @return {Node}
+	 */
 	renderRoomSelections() {
 		const roomSelections = this.props.roomSelections.map(roomSelection => (
 			<RoomSelectionRow
@@ -130,6 +175,11 @@ class RoomSelections extends Component {
 		);
 	}
 
+	/**
+	 * Returns the date pickers for the checkin and checkout dates.
+	 *
+	 * @return {Node}
+	 */
 	renderDatePickers() {
 		return (
 			<View style={styles.datepickers}>
@@ -156,6 +206,11 @@ class RoomSelections extends Component {
 		);
 	}
 
+	/**
+	 * Returns the table head for the list of roomSelections
+	 *
+	 * @return {Node}
+	 */
 	renderTableHeaderRow() {
 		if (!this.nodeRefs.tableHeaderRow) {
 			const fields = this.props.fields;

@@ -13,58 +13,107 @@ const propTypes = {
 const defaultProps = {
 };
 
+/**
+ * Duration, in milliseconds of a single day
+ *
+ * @type {Number}
+ */
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
+/**
+ * Returns a Date for today, with time set to 0:00:00:000
+ *
+ * @return {Date}
+ */
 function getToday() {
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 	return today;
 }
 
+/**
+ * Returns a Date the day after (24 hours) the supplied date
+ *
+ * @return {Date}
+ */
 function getTomorrowOf(date) {
 	return new Date(date.getTime() + ONE_DAY);
 }
 
 /**
- * This class will only create the the sub containers (that will manage the Customer and
- * RoomSelections screen parts) and when we quit the screen.
+ * Container for only the RoomSelections part
  */
 @inject('localizer', 'uuidGenerator', 'business', 'router')
 @observer
 class RoomSelections extends Component {
+	/**
+	 * Disposers for autorun calls
+	 *
+	 * @type {Array<Function>}
+	 */
 	disposers = [];
 
+	/**
+	 * Date to show as the checkin date. Will be the earliest checkin date of all current
+	 * RoomSelections, or today if no earliest date.
+	 *
+	 * @return {Date}
+	 */
 	@computed
 	get inDate() {
 		const earliestDate = this.props.order.earliestCheckInDate;
 		return earliestDate || getToday();
 	}
 
+	/**
+	 * Date to show as the checkout date. Will be the latest checkout date of all current
+	 * RoomSelections, or tomorrow if no latest date.
+	 *
+	 * @return {Date}
+	 */
 	@computed
 	get outDate() {
 		const latestDate = this.props.order.latestCheckOutDate;
 		return latestDate || getTomorrowOf(this.inDate);
 	}
 
+	/**
+	 * Returns the minimum date available in the choeckout calendar: the day after the checkin date.
+	 *
+	 * @return {Date}
+	 */
 	@computed
 	get minOutDate() {
 		return getTomorrowOf(this.inDate);
 	}
 
+	/**
+	 * When mounting, create an autorun for restrictOutDate()
+	 */
 	componentWillMount() {
 		this.disposers.push(autorun(() => { this.restrictOutDate(); }));
 	}
 
+	/**
+	 * When unmounting, clear the autoruns
+	 */
 	componentWillUnmount() {
 		this.disposers.forEach((disposer) => { disposer(); });
 	}
 
+	/**
+	 * Ensure the the checkout date is always at least the day after the checkin date. If not,
+	 * updates the checkout date.
+	 */
 	restrictOutDate() {
 		if (this.outDate.getTime() <= this.inDate.getTime()) {
 			this.onDateChanged('out', getTomorrowOf(this.inDate));
 		}
 	}
 
+	/**
+	 * When the user wants to add a new RoomSelection
+	 */
 	onAdd() {
 		const roomSelection = new RoomSelection();
 		roomSelection.uuid = this.props.uuidGenerator.generate();
@@ -76,19 +125,39 @@ class RoomSelections extends Component {
 		this.props.order.roomSelections.push(roomSelection);
 	}
 
+	/**
+	 * When the user wants to delete a RoomSelection
+	 *
+	 * @param {RoomSelection} roomSelection
+	 */
 	onDelete(roomSelection) {
 		this.props.order.removeRoomSelection(roomSelection);
 	}
 
+	/**
+	 * When the user selects a room for a RoomSelection
+	 *
+	 * @param {RoomSelection} roomSelection
+	 * @param {Room} room
+	 */
 	onRoomSelect(roomSelection, room) {
 		roomSelection.room = room;
 	}
 
+	/**
+	 * When the user changes the value of a field of a RoomSelection
+	 *
+	 * @param {RoomSelection} roomSelection
+	 * @param {Field} field
+	 * @param {mixed} value
+	 */
 	onFieldChange(roomSelection, field, value) {
 		roomSelection.setFieldValue(field, value);
 	}
 
 	/**
+	 * When the user changes the checkin (type = 'in') or checkout (type = 'out') date.
+	 *
 	 * The app supports an Order with RoomSelection having different dates, but, for now, we allow
 	 * only the same date for all the RoomSelection of an Order (for simplicity of the UI). When we
 	 * implement the calendar, it will be easier to make a clean UI where each RoomSelection has a

@@ -13,31 +13,58 @@ import Screen from '../../components/screens/customerRoomSelections/Screen';
 @inject('localizer', 'uuidGenerator', 'business', 'router')
 @observer
 class CustomerRoomSelections extends Component {
+	/**
+	 * Internal reference to the Order we are currently editing.
+	 *
+	 * @type {Order}
+	 */
 	order = null;
 
+	/**
+	 * When mounting, we retrieve the Order from the location, else we create a new one.
+	 */
 	componentWillMount() {
 		const order = get(this.props, 'location.state.order', null);
 		this.order = order || new Order(this.props.uuidGenerator.generate());
 	}
 
+	/**
+	 * When the user presses the home button
+	 */
 	onPressHome() {
 		this.props.router.replace('/');
 	}
 
+	/**
+	 * When the user presses the 'return' button
+	 */
 	onReturn() {
 		this.props.router.goBack();
 	}
 
+	/**
+	 * When the user presses the 'next' button
+	 */
 	onNext() {
 		this.props.router.push('/orders/review-payments', { order: this.order });
 	}
 
+	/**
+	 * Returns the container Component for the customer form
+	 *
+	 * @return {Node}
+	 */
 	renderCustomerContainer() {
 		return (
 			<CustomerContainer order={this.order} />
 		);
 	}
 
+	/**
+	 * Returns the container Component for the room selections
+	 *
+	 * @return {Node}
+	 */
 	renderRoomSelectionsContainer() {
 		return (
 			<RoomSelectionsContainer order={this.order} />
