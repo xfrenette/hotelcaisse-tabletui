@@ -46,10 +46,6 @@ class RoomSelections extends Component {
 		return latestDate || getTomorrowOf(this.inDate);
 	}
 
-	get minInDate() {
-		return getToday();
-	}
-
 	@computed
 	get minOutDate() {
 		return getTomorrowOf(this.inDate);
@@ -122,7 +118,6 @@ class RoomSelections extends Component {
 				localizer={this.props.localizer}
 				inDate={this.inDate}
 				outDate={this.outDate}
-				minInDate={this.minInDate}
 				minOutDate={this.minOutDate}
 				onAdd={() => { this.onAdd(); }}
 				onDelete={(rs) => { this.onDelete(rs); }}

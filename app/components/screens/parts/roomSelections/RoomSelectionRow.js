@@ -2,25 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observable, computed } from 'mobx';
 import { observer } from 'mobx-react/native';
-import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Room from 'hotelcaisse-app/dist/business/Room';
 import FieldObject from 'hotelcaisse-app/dist/fields/Field';
 import RoomSelection from 'hotelcaisse-app/dist/business/RoomSelection';
 import {
 	Field,
-	Button,
-	Message,
-	Text,
 	Dropdown,
-	DatePicker,
 	SwipeDelete,
 } from '../../../elements';
 import { Row, Cell } from '../../../elements/table';
-import { Label } from '../../../elements/form';
-import typographyStyles from '../../../../styles/typography';
-import tableStyles from '../../../../styles/tables';
-import styleVars from '../../../../styles/variables';
 
 const propTypes = {
 	rooms: PropTypes.arrayOf(PropTypes.instanceOf(Room)),
