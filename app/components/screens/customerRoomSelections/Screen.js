@@ -47,7 +47,7 @@ class CustomerRoomSelectionsScreen extends Component {
 		return (
 			<Screen>
 				<TopBar
-					title={this.t('customerRoomSelections.title')}
+					title={this.t('screens.order.customerRoomSelections.title')}
 					onPressHome={this.props.onPressHome}
 				/>
 				<ScrollView>
