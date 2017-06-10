@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { inject } from 'mobx-react/native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { View, ScrollView } from 'react-native';
 import {
@@ -24,14 +25,17 @@ const propTypes = {
 	onPressHome: PropTypes.func,
 	onReturn: PropTypes.func,
 	onNext: PropTypes.func,
+	validate: PropTypes.func,
 };
 
 const defaultProps = {
 	onPressHome: null,
 	onReturn: null,
 	onNext: null,
+	validate: null,
 };
 
+@inject('ui')
 class CustomerRoomSelectionsScreen extends Component {
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -41,6 +45,36 @@ class CustomerRoomSelectionsScreen extends Component {
 	 */
 	t(path) {
 		return this.props.localizer.t(path);
+	}
+
+	/**
+	 * Call the validate prop method and returns its result, or return undefined.
+	 *
+	 * @return {[type]}
+	 */
+	validate() {
+		if (this.props.validate) {
+			return this.props.validate();
+		}
+
+		return undefined;
+	}
+
+	/**
+	 * When the user presses the next button, we validate. If valid, call the onNext prop, else show
+	 * an alert.
+	 */
+	onNext() {
+		const validationRes = this.validate();
+
+		if (validationRes === undefined) {
+			this.props.onNext();
+		} else {
+			this.props.ui.showErrorAlert(
+				this.t('errors.invalidFieldsAlert.title'),
+				this.t('errors.invalidFieldsAlert.message')
+			);
+		}
 	}
 
 	render() {
@@ -76,7 +110,7 @@ class CustomerRoomSelectionsScreen extends Component {
 					<Button
 						title={this.t('actions.next')}
 						layout={buttonLayouts.primary}
-						onPress={this.props.onNext}
+						onPress={() => { this.onNext(); }}
 					/>
 				</BottomBar>
 			</Screen>

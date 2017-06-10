@@ -88,10 +88,12 @@ class RoomSelections extends Component {
 	}
 
 	/**
-	 * When mounting, create an autorun for restrictOutDate()
+	 * When mounting, create an autorun for restrictOutDate(). Also set the fields attribute of each
+	 * roomSelection
 	 */
 	componentWillMount() {
 		this.disposers.push(autorun(() => { this.restrictOutDate(); }));
+		this.setRoomSelectionsFields(this.props.order.roomSelections);
 	}
 
 	/**
@@ -99,6 +101,11 @@ class RoomSelections extends Component {
 	 */
 	componentWillUnmount() {
 		this.disposers.forEach((disposer) => { disposer(); });
+	}
+
+	setRoomSelectionsFields(roomSelections) {
+		const fields = this.props.business.roomSelectionFields;
+		roomSelections.forEach((roomSelection) => { roomSelection.fields = fields; });
 	}
 
 	/**
@@ -121,6 +128,12 @@ class RoomSelections extends Component {
 		// For now, all RoomSelection have the same start and end dates
 		roomSelection.startDate = this.inDate;
 		roomSelection.endDate = this.outDate;
+
+		// Set the fields attribute
+		this.setRoomSelectionsFields([roomSelection]);
+
+		// Pre-select the first room
+		roomSelection.room = this.props.business.rooms[0];
 
 		this.props.order.roomSelections.push(roomSelection);
 	}

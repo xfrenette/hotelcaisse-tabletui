@@ -17,6 +17,15 @@ const defaultProps = {
 @inject('localizer', 'uuidGenerator', 'business', 'router')
 class Customer extends Component {
 	/**
+	 * When mounting, set the fields attribute on the Customer
+	 */
+	componentWillMount() {
+		const customer = this.props.order.customer;
+		const fields = this.props.business.customerFields;
+		customer.fields = fields;
+	}
+
+	/**
 	 * Shortcut to return the customer in the props
 	 *
 	 * @return {Customer}

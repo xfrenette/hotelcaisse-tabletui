@@ -80,6 +80,7 @@ class CustomerRoomSelections extends Component {
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}
 				onNext={() => { this.onNext(); }}
+				validate={() => this.order.validate(['customer', 'roomSelections'])}
 			/>
 		);
 	}

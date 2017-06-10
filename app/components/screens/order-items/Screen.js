@@ -286,8 +286,8 @@ class OrderItemsScreen extends Component {
 			this.onNext();
 		} else {
 			this.props.ui.showErrorAlert(
-				this.t('order.editItems.error.title'),
-				this.t('order.editItems.error.message')
+				this.t('errors.invalidFieldsAlert.title'),
+				this.t('errors.invalidFieldsAlert.message')
 			);
 		}
 	}

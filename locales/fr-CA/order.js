@@ -56,12 +56,6 @@ export default {
 		subtotal: 'Sous-total',
 		total: 'Total',
 	},
-	editItems: {
-		error: {
-			title: 'Erreur',
-			message: 'Certains champs sont en erreur. Veuillez les corriger.',
-		},
-	},
 	continueDraft: {
 		title: 'Inscription en cours',
 		message: 'Une inscription est déjà en cours, souhaitez-vous la continuer ou en créer une nouvelle ?',
