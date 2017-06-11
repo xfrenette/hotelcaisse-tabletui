@@ -39,6 +39,10 @@ const item3 = new Item('test-item3');
 item3.quantity = 1;
 item3.product = customProduct;
 
+const item4 = new Item('test-item4');
+item4.quantity = -1;
+item4.product = products[19];
+
 const credit1 = new Credit('test-credit1', new Decimal(8.35), 'Description du crédit #1');
 
 const transactionMode = new TransactionMode('transaction-mode-1', 'Argent');
@@ -75,6 +79,7 @@ roomSelection2.fieldValues.replace({
 order.items.push(item1);
 order.items.push(item2);
 order.items.push(item3);
+order.items.push(item4);
 order.credits.push(credit1);
 order.transactions.push(transaction1);
 order.customer = customer;

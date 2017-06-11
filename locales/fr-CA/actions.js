@@ -9,4 +9,5 @@ export default {
 	next: 'Suivant',
 	back: 'Retour',
 	leave: 'Quitter',
+	edit: 'Modifier',
 };

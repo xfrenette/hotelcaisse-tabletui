@@ -25,9 +25,11 @@ import { Row, Cell } from '../../elements/table';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
 import tableStyles from '../../../styles/tables';
+import layoutStyles from '../../../styles/layout';
 
 const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
+	isNew: PropTypes.bool,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	transactionModes: PropTypes.arrayOf(PropTypes.instanceOf(TransactionMode)),
 	onPressHome: PropTypes.func,
@@ -36,6 +38,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+	isNew: false,
 	transactionModes: [],
 	onPressHome: null,
 	onReturn: null,
@@ -45,6 +48,14 @@ const defaultProps = {
 @observer
 class ReviewAndPaymentsScreen extends Component {
 	modal = null;
+
+	get items() {
+		return this.props.order.items.filter(item => item.quantity > 0);
+	}
+
+	get reimbursements() {
+		return this.props.order.items.filter(item => item.quantity < 0);
+	}
 
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -70,29 +81,48 @@ class ReviewAndPaymentsScreen extends Component {
 
 	renderCustomerData() {
 		return (
-			<View style={styles.customerData}>
-				<Text style={styles.customerName}>Jean Untel</Text>
-				<Text style={styles.customerMeta}>jean@untel.com</Text>
+			<View style={layoutStyles.block}>
+				<View style={styles.editableBlock}>
+					<View style={styles.editableBlockData}>
+						<Text style={styles.customerName}>{ this.props.order.customer.get('customer.name') }</Text>
+						<Text>{ this.props.order.customer.get('customer.email') }</Text>
+					</View>
+					<Button layout={buttonLayouts.text} title={this.t('actions.edit')} />
+				</View>
 			</View>
 		);
 	}
 
 	renderRoomSelections() {
+		const checkInDate = this.props.order.earliestCheckInDate;
+		const checkOutDate = this.props.order.latestCheckOutDate;
+		const formattedCheckIn = this.props.localizer.formatDate(checkInDate, { skeleton: 'MMMEd' });
+		const formattedCheckOut = this.props.localizer.formatDate(checkOutDate, { skeleton: 'MMMEd' });
+		const rooms = this.props.order.roomSelections.map(rs => rs.room.name);
+
 		return (
-			<View style={styles.roomSelections}>
-				<View style={styles.checkInOuts}>
-					<View style={styles.checkInOut}>
-						<Text style={styles.checkInOutTitle}>
-							{ this.t('roomSelections.checkinShort') }
-						</Text>
-						<Text style={styles.checkInOutDate}>XX/XX</Text>
+			<View style={layoutStyles.section}>
+				<View style={styles.editableBlock}>
+					<View style={styles.editableBlockData}>
+						<View style={styles.checkInOuts}>
+							<View style={styles.checkInOut}>
+								<Text style={styles.checkInOutTitle}>
+									{ this.t('roomSelections.checkinShort') }
+								</Text>
+								<Text>{ formattedCheckIn }</Text>
+							</View>
+							<View style={styles.checkInOut}>
+								<Text style={styles.checkInOutTitle}>
+									{ this.t('roomSelections.checkoutShort') }
+								</Text>
+								<Text>{ formattedCheckOut }</Text>
+							</View>
+							<View style={styles.rooms}>
+								<Text style={styles.room}>{ rooms.join(', ') }</Text>
+							</View>
+						</View>
 					</View>
-					<View style={styles.checkInOut}>
-						<Text style={styles.checkInOutTitle}>
-							{ this.t('roomSelections.checkoutShort') }
-						</Text>
-						<Text style={styles.checkInOutDate}>XX/XX</Text>
-					</View>
+					<Button layout={buttonLayouts.text} title={this.t('actions.edit')} />
 				</View>
 			</View>
 		);
@@ -102,16 +132,32 @@ class ReviewAndPaymentsScreen extends Component {
 		const total = this.props.order.total.toNumber();
 		const formattedTotal = this.props.localizer.formatCurrency(total);
 
-		const items = this.props.order.items.map(item => this.renderItem(item));
+		const items = this.items.map(item => this.renderItem(item));
+		let reimbursements = null;
 		let credits = null;
 		let transactions = null;
 		let balance = null;
+
+		if (this.reimbursements.length) {
+			const reimbursementRows = this.reimbursements.map(item => this.renderItem(item));
+
+			reimbursements = (
+				<View>
+					<Row>
+						<Cell style={[cellStyles.name]} first last>
+							<Text style={styles.sectionCell}>{ this.t('order.reimbursements.label') }</Text>
+						</Cell>
+					</Row>
+					{ reimbursementRows }
+				</View>
+			);
+		}
 
 		if (this.props.order.credits.length) {
 			const creditRows = this.props.order.credits.map(credit => this.renderCredit(credit));
 			credits = (
 				<View>
-					<Row lined={false} style={cellStyles.section}>
+					<Row>
 						<Cell style={[cellStyles.name]} first last>
 							<Text style={styles.sectionCell}>{ this.t('order.credits.label') }</Text>
 						</Cell>
@@ -127,7 +173,7 @@ class ReviewAndPaymentsScreen extends Component {
 			);
 			transactions = (
 				<View>
-					<Row lined={false} style={cellStyles.section}>
+					<Row>
 						<Cell style={[cellStyles.name]} first last>
 							<Text style={styles.sectionCell}>{ this.t('order.payments.label') }</Text>
 						</Cell>
@@ -140,9 +186,8 @@ class ReviewAndPaymentsScreen extends Component {
 			const formattedBalance = this.props.localizer.formatCurrency(balanceAmount);
 
 			balance = (
-				<Row style={cellStyles.section}>
-					<Cell style={cellStyles.name} first />
-					<Cell style={cellStyles.qty}>
+				<Row>
+					<Cell style={cellStyles.name} first>
 						<Text style={styles.totalCell}>{ this.t('order.balance.toPay') }</Text>
 					</Cell>
 					<Cell style={cellStyles.subtotal} last>
@@ -167,10 +212,10 @@ class ReviewAndPaymentsScreen extends Component {
 					</Cell>
 				</Row>
 				{ items }
+				{ reimbursements }
 				{ credits }
-				<Row style={cellStyles.section}>
-					<Cell style={cellStyles.name} first />
-					<Cell style={cellStyles.qty}>
+				<Row>
+					<Cell style={cellStyles.name} first>
 						<Text style={styles.totalCell}>{ this.t('order.items.total') }</Text>
 					</Cell>
 					<Cell style={cellStyles.subtotal} last>
@@ -200,37 +245,32 @@ class ReviewAndPaymentsScreen extends Component {
 	}
 
 	renderCredit(credit) {
-		const amount = credit.amount.toNumber();
+		const amount = credit.amount.toNumber() * -1;
 		const formattedAmount = this.props.localizer.formatCurrency(amount);
 
 		return (
 			<Row key={credit.uuid}>
-				<Cell style={[cellStyles.name, cellStyles.subRow]} first>
-					<Text>{ credit.note }</Text>
+				<Cell style={cellStyles.name} first>
+					<Text>{ credit.note } </Text>
 				</Cell>
 				<Cell style={cellStyles.subtotal} last>
-					<Text>({ formattedAmount })</Text>
+					<Text>{ formattedAmount }</Text>
 				</Cell>
 			</Row>
 		);
 	}
 
 	renderTransaction(transaction) {
-		const amount = transaction.amount.toNumber();
+		const amount = transaction.amount.toNumber() * -1;
 		const formattedAmount = this.props.localizer.formatCurrency(amount);
-		const createdAt = transaction.createdAt;
-		const formattedCreatedAt = `${createdAt.getDate()}/${createdAt.getMonth()}`;
 
 		return (
 			<Row key={transaction.uuid}>
-				<Cell style={[cellStyles.name, cellStyles.subRow]} first>
+				<Cell style={cellStyles.name} first>
 					<Text>{ transaction.transactionMode.name }</Text>
 				</Cell>
-				<Cell style={cellStyles.date} last>
-					<Text>{ formattedCreatedAt }</Text>
-				</Cell>
 				<Cell style={cellStyles.subtotal} last>
-					<Text>({ formattedAmount })</Text>
+					<Text>{ formattedAmount }</Text>
 				</Cell>
 			</Row>
 		);
@@ -295,7 +335,7 @@ class ReviewAndPaymentsScreen extends Component {
 		return (
 			<Screen>
 				<TopBar
-					title={this.t('customerRoomSelections.title')}
+					title={this.t('screens.order.reviewPayments.title')}
 					onPressHome={this.props.onPressHome}
 				/>
 				<View style={styles.screenContent}>
@@ -314,7 +354,7 @@ class ReviewAndPaymentsScreen extends Component {
 						onPress={this.props.onReturn}
 					/>
 					<Button
-						title={this.t('actions.save')}
+						title={this.t('actions.done')}
 						layout={buttonLayouts.default}
 						onPress={this.props.onSave}
 					/>
@@ -353,6 +393,38 @@ const styles = {
 	totalCell: {
 		fontWeight: 'bold',
 		color: styleVars.theme.mainColor,
+	},
+	customerName: {
+		fontWeight: 'bold',
+		color: styleVars.theme.mainColor,
+		fontSize: styleVars.bigFontSize,
+	},
+	checkInOuts: {
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
+		alignItems: 'flex-end',
+	},
+	rooms: {
+		marginRight: styleVars.horizontalRhythm * 2,
+	},
+	checkInOut: {
+		marginRight: styleVars.horizontalRhythm * 2,
+	},
+	checkInOutTitle: {
+		fontWeight: 'bold',
+	},
+	room: {
+		fontWeight: 'bold',
+	},
+	itemType: {
+		fontStyle: 'italic',
+		color: styleVars.colors.grey2,
+	},
+	editableBlock: {
+		flexDirection: 'row',
+	},
+	editableBlockData: {
+		flex: 1,
 	},
 };
 

@@ -14,6 +14,9 @@ export default {
 		customerRoomSelections: {
 			title: 'Informations client et chambres',
 		},
+		reviewPayments: {
+			title: 'Paiement',
+		},
 	},
 	register: {
 		close: {

@@ -31,7 +31,7 @@ export default () => ([
 							{ component: ManageRegister, path: '/register/manage' },
 							{ component: OrderItems, path: '/order/items' },
 							{ component: CustomerRoomSelections, path: '/order/customer-roomSelections' },
-							{ component: ReviewAndPayments, path: '/orders/review-payments' },
+							{ component: ReviewAndPayments, path: '/order/review-payments' },
 						],
 					},
 				],

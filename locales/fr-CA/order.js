@@ -3,6 +3,7 @@ export default {
 	balance: {
 		toPay: 'À payer',
 	},
+	credit: 'Dépôt',
 	credits: {
 		label: 'Dépôts',
 		empty: 'Pour ajouter un dépôt, appuyez le bouton ci-dessous',
@@ -39,6 +40,9 @@ export default {
 		empty: 'Cette catégorie est vide',
 	},
 	customProduct: 'Produit spécial',
+	reimbursements: {
+		label: 'Remboursements',
+	},
 	items: {
 		label: 'Items',
 		labelNew: 'Nouveaux items',
