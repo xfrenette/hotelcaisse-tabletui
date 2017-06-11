@@ -19,12 +19,14 @@ class CustomerRoomSelections extends Component {
 	 * @type {Order}
 	 */
 	order = null;
+	thenReturn = false;
 
 	/**
 	 * When mounting, we retrieve the Order from the location, else we create a new one.
 	 */
 	componentWillMount() {
 		const order = get(this.props, 'location.state.order', null);
+		this.thenReturn = get(this.props, 'location.state.thenReturn', false);
 		this.order = order || new Order(this.props.uuidGenerator.generate());
 	}
 
@@ -46,7 +48,11 @@ class CustomerRoomSelections extends Component {
 	 * When the user presses the 'next' button
 	 */
 	onNext() {
-		this.props.router.push('/orders/review-payments', { order: this.order });
+		if (this.thenReturn) {
+			this.props.router.goBack();
+		} else {
+			this.props.router.push('/order/review-payments', { order: this.order });
+		}
 	}
 
 	/**

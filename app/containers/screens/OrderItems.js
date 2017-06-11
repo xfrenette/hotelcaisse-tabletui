@@ -209,7 +209,7 @@ class OrderItems extends Component {
 	 */
 	onNext() {
 		this.props.router.push(
-			'/orders/customer-roomselections',
+			'/order/customer-roomSelections',
 			{ order: this.order }
 		);
 	}
@@ -223,7 +223,7 @@ class OrderItems extends Component {
 				note={this.order.note}
 				total={this.order.total.toNumber()}
 				orderIsNew={this.orderIsNew}
-				validate={() => this.order.validate()}
+				validate={() => this.order.validate(['items', 'credits'])}
 				allowCustomProduct
 				localizer={this.props.localizer}
 				rootProductCategory={this.props.business.rootProductCategory}

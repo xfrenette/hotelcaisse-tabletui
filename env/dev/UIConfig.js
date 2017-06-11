@@ -41,7 +41,7 @@ const appConfig = {
 
 const app = new Application(appConfig);
 const orderPath = {
-	pathname: '/order/customer-roomSelections',
+	pathname: '/order/review-payments',
 	state: {
 		order: testOrder,
 		new: true,
@@ -54,7 +54,8 @@ module.exports = {
 	logger,
 	routes: createRoutes(),
 	// initialRoutes: ['/test'],
-	initialRoutes: ['/', orderPath],
+	// initialRoutes: ['/', orderPath],
+	initialRoutes: ['/'],
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',

@@ -25,6 +25,21 @@ class ReviewAndPayments extends Component {
 		this.props.router.goBack();
 	}
 
+	onEditCustomer() {
+		this.props.router.push(
+			'/order/customer-roomSelections',
+			{ order: this.order, thenReturn: true },
+		);
+	}
+
+	onEditRoomSelections() {
+		this.props.router.push(
+			'/order/customer-roomSelections',
+			{ order: this.order, thenReturn: true },
+		);
+	}
+
+
 	onSave() {
 	}
 
@@ -38,6 +53,8 @@ class ReviewAndPayments extends Component {
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}
 				onSave={() => { this.onSave(); }}
+				onEditCustomer={() => { this.onEditCustomer(); }}
+				onEditRoomSelections={() => { this.onEditRoomSelections(); }}
 			/>
 		);
 	}

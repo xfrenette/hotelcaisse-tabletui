@@ -35,6 +35,8 @@ const propTypes = {
 	onPressHome: PropTypes.func,
 	onReturn: PropTypes.func,
 	onSave: PropTypes.func,
+	onEditCustomer: PropTypes.func,
+	onEditRoomSelections: PropTypes.func,
 };
 
 const defaultProps = {
@@ -43,6 +45,8 @@ const defaultProps = {
 	onPressHome: null,
 	onReturn: null,
 	onSave: null,
+	onEditCustomer: null,
+	onEditRoomSelections: null,
 };
 
 @observer
@@ -87,7 +91,11 @@ class ReviewAndPaymentsScreen extends Component {
 						<Text style={styles.customerName}>{ this.props.order.customer.get('customer.name') }</Text>
 						<Text>{ this.props.order.customer.get('customer.email') }</Text>
 					</View>
-					<Button layout={buttonLayouts.text} title={this.t('actions.edit')} />
+					<Button
+						layout={buttonLayouts.text}
+						title={this.t('actions.edit')}
+						onPress={this.props.onEditCustomer}
+					/>
 				</View>
 			</View>
 		);
@@ -122,7 +130,11 @@ class ReviewAndPaymentsScreen extends Component {
 							</View>
 						</View>
 					</View>
-					<Button layout={buttonLayouts.text} title={this.t('actions.edit')} />
+					<Button
+						layout={buttonLayouts.text}
+						title={this.t('actions.edit')}
+						onPress={this.props.onEditRoomSelections}
+					/>
 				</View>
 			</View>
 		);
