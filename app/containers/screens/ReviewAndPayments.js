@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
+import Transaction from 'hotelcaisse-app/dist/business/Transaction';
 import Screen from '../../components/screens/reviewAndPayments/Screen';
 
-@inject('localizer', 'uuidGenerator', 'router', 'business')
+@inject('localizer', 'uuidGenerator', 'router', 'business', 'ui')
 @observer
 class ReviewAndPayments extends Component {
 	order = null;
@@ -39,8 +40,15 @@ class ReviewAndPayments extends Component {
 		);
 	}
 
+	onAddTransaction(amount, mode) {
+		const uuid = this.props.uuidGenerator.generate();
+		const transaction = new Transaction(uuid, amount, mode);
+		this.order.transactions.push(transaction);
+	}
 
-	onSave() {
+	onDone() {
+		this.props.ui.orderDraft = null;
+		this.props.router.push('/');
 	}
 
 	render() {
@@ -52,9 +60,10 @@ class ReviewAndPayments extends Component {
 				transactionModes={this.props.business.transactionModes}
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}
-				onSave={() => { this.onSave(); }}
+				onDone={() => { this.onDone(); }}
 				onEditCustomer={() => { this.onEditCustomer(); }}
 				onEditRoomSelections={() => { this.onEditRoomSelections(); }}
+				onAddTransaction={(a, m) => { this.onAddTransaction(a, m); }}
 			/>
 		);
 	}

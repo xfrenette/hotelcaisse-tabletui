@@ -9,9 +9,6 @@ import {
 	Button,
 	BottomBarBackButton,
 	Text,
-	Modal,
-	Dropdown,
-	NumberInput,
 } from '../../elements';
 import {
 	TopBar,
@@ -20,8 +17,8 @@ import {
 	MainContent,
 	Sidebar,
 } from '../../layout';
-import { Group, Label } from '../../elements/form';
 import { Row, Cell } from '../../elements/table';
+import TransactionModal from './TransactionModal';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
 import tableStyles from '../../../styles/tables';
@@ -34,9 +31,10 @@ const propTypes = {
 	transactionModes: PropTypes.arrayOf(PropTypes.instanceOf(TransactionMode)),
 	onPressHome: PropTypes.func,
 	onReturn: PropTypes.func,
-	onSave: PropTypes.func,
+	onDone: PropTypes.func,
 	onEditCustomer: PropTypes.func,
 	onEditRoomSelections: PropTypes.func,
+	onAddTransaction: PropTypes.func,
 };
 
 const defaultProps = {
@@ -44,9 +42,10 @@ const defaultProps = {
 	transactionModes: [],
 	onPressHome: null,
 	onReturn: null,
-	onSave: null,
+	onDone: null,
 	onEditCustomer: null,
 	onEditRoomSelections: null,
+	onAddTransaction: null,
 };
 
 @observer
@@ -73,14 +72,6 @@ class ReviewAndPaymentsScreen extends Component {
 
 	onAddPaymentPress() {
 		this.modal.show();
-	}
-
-	onModalActionPress(key) {
-		if (key === 'save') {
-
-		}
-
-		this.modal.hide();
 	}
 
 	renderCustomerData() {
@@ -306,40 +297,14 @@ class ReviewAndPaymentsScreen extends Component {
 	}
 
 	renderModal() {
-		const actions = {
-			cancel: this.t('actions.cancel'),
-			save: this.t('actions.save'),
-		};
-
-		const Option = Dropdown.Option;
-		const modeOptions = this.props.transactionModes.map(
-			tm => <Option key={tm.uuid} value={tm.uuid} label={tm.name} />
-		);
-
 		return (
-			<Modal
+			<TransactionModal
 				ref={(node) => { this.modal = node; }}
-				title={this.t('order.payments.modal.title')}
-				actions={actions}
-				onActionPress={(key) => { this.onModalActionPress(key); }}
-			>
-				<Group>
-					<View>
-						<Label>{ this.t('order.payments.fields.mode') }</Label>
-						<Dropdown>
-							{ modeOptions }
-						</Dropdown>
-					</View>
-					<View>
-						<Label>{ this.t('order.payments.fields.amount') }</Label>
-						<NumberInput
-							type="money"
-							localizer={this.props.localizer}
-							value={this.props.order.balance.toNumber()}
-						/>
-					</View>
-				</Group>
-			</Modal>
+				localizer={this.props.localizer}
+				balance={this.props.order.balance.toNumber()}
+				transactionModes={this.props.transactionModes}
+				onAddTransaction={this.props.onAddTransaction}
+			/>
 		);
 	}
 
@@ -368,7 +333,7 @@ class ReviewAndPaymentsScreen extends Component {
 					<Button
 						title={this.t('actions.done')}
 						layout={buttonLayouts.default}
-						onPress={this.props.onSave}
+						onPress={this.props.onDone}
 					/>
 				</BottomBar>
 				{ this.renderModal() }
