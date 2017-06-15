@@ -171,10 +171,10 @@ class Home extends Component {
 
 		buttons.push(
 			renderMainButton({
-				key: 'find-order',
+				key: 'orders',
 				title: this.t('home.actions.findOrder'),
 				icon: 'search',
-				onPress: () => { this.onButtonPress('find-order'); },
+				onPress: () => { this.onButtonPress('orders'); },
 			})
 		);
 

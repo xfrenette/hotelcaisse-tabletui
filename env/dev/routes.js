@@ -10,6 +10,7 @@ import ManageRegister from '../../app/containers/screens/ManageRegister';
 import OrderItems from '../../app/containers/screens/OrderItems';
 import CustomerRoomSelections from '../../app/containers/screens/CustomerRoomSelections';
 import ReviewAndPayments from '../../app/containers/screens/ReviewAndPayments';
+import Orders from '../../app/containers/screens/Orders';
 import TestScreen from './TestScreen';
 
 export default () => ([
@@ -32,6 +33,7 @@ export default () => ([
 							{ component: OrderItems, path: '/order/items' },
 							{ component: CustomerRoomSelections, path: '/order/customer-roomSelections' },
 							{ component: ReviewAndPayments, path: '/order/review-payments' },
+							{ component: Orders, path: '/orders' },
 						],
 					},
 				],

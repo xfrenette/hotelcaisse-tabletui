@@ -18,6 +18,9 @@ export default {
 			title: 'Paiement',
 		},
 	},
+	orders: {
+		title: 'Fiches',
+	},
 	register: {
 		close: {
 			title: 'Fermeture de caisse',

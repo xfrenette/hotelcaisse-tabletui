@@ -43,11 +43,8 @@ class Home extends Component {
 			case 'new-order':
 				this.onNewOrderPress();
 				break;
-			case 'find-order':
-				path = '/orders/find';
-				break;
-			case 'test':
-				path = '/test';
+			case 'orders':
+				path = '/orders';
 				break;
 			default:
 				path = null;
