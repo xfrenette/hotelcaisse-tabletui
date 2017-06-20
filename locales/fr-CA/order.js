@@ -68,4 +68,10 @@ export default {
 			new: 'Nouvelle',
 		},
 	},
+	list: {
+		empty: 'Aucune fiche n\'a encore été créée.',
+		current: 'Clients actuels',
+		yesterday: 'Partis hier',
+		older: 'Fiches antérieures',
+	},
 };
