@@ -48,6 +48,12 @@ describe('constructor()', () => {
 		expect(ui.localizer.locale).toBe(locale);
 		expect(ui.localizer.t('a')).toBe('b');
 	});
+
+	test('sets ordersServer if present', () => {
+		const ordersServer = {};
+		ui = new UI({ ordersServer });
+		expect(ui.ordersServer).toBe(ordersServer);
+	});
 });
 
 describe('state', () => {
@@ -112,5 +118,10 @@ describe('getStores()', () => {
 	test('contains logger', () => {
 		ui.logger = { log: () => {} };
 		expect(ui.getStores().logger).toBe(ui.logger);
+	});
+
+	test('contains ordersServer', () => {
+		ui.ordersServer = {};
+		expect(ui.getStores().ordersServer).toBe(ui.ordersServer);
 	});
 });

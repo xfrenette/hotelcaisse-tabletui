@@ -98,6 +98,12 @@ class UI {
 	 * @type {Order}
 	 */
 	orderDraft = null;
+	/**
+	 * Server instance which we can query to search non-loaded Orders or load non-loaded Orders.
+	 *
+	 * @type {Server}
+	 */
+	ordersServer = null;
 
 	/**
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI
@@ -112,11 +118,12 @@ class UI {
 	 * - showConsole (boolean) to show the floating console
 	 * - moneyDenominations : array of number of the different money denominations
 	 * 	(ex: [0.05, 0.1, 5, 10])
+	 * - ordersServer: Server instance which we can query to search and load additional Orders
 	 *
 	 * @param {Object} settings
 	 */
 	constructor(settings = {}) {
-		['routes', 'auth', 'app', 'uuidGenerator', 'logger'].forEach((setting) => {
+		['routes', 'auth', 'app', 'uuidGenerator', 'logger', 'ordersServer'].forEach((setting) => {
 			if (settings[setting]) {
 				this[setting] = settings[setting];
 			}
@@ -194,6 +201,7 @@ class UI {
 			uuidGenerator: this.uuidGenerator,
 			logger: this.logger,
 			business: this.app ? this.app.business : null,
+			ordersServer: this.ordersServer,
 		};
 	}
 
