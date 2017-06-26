@@ -1,11 +1,11 @@
 import Application from 'hotelcaisse-app';
 import BusinessAutoload from 'hotelcaisse-app/dist/plugins/autoload/Business';
 import { serialize } from 'serializr';
-import createRoutes from './routes';
 import storedBusiness from './storedBusiness';
 import UILogger from '../../app/lib/UILogger';
 import TestAuth from '../../tests/mock/TestAuth';
 import TestReader from '../../tests/mock/TestReader';
+import TestServer from '../../tests/mock/TestServer';
 import dummyOrder from '../../tests/mock/dummyOrder';
 import TestUUIDGenerator from '../../tests/mock/TestUUIDGenerator';
 import strings from '../../locales/fr-CA';
@@ -25,7 +25,7 @@ testAuth.delay = 2000;
 */
 const serializedData = serialize(storedBusiness);
 const businessStorage = new TestReader(serializedData);
-// businessStorage.delay = 1000;
+businessStorage.delay = 2000;
 
 const testAuth = new TestAuth();
 testAuth.authenticated = true;
@@ -48,14 +48,19 @@ const orderPath = {
 	},
 };
 
-// module.exports instead of export because it is an optional require in index.*
+const server = new TestServer();
+server.delay = 2000;
+server.business = storedBusiness;
+server.maxOrderLoads = 2;
+
+// module.exports instead of export because it is an optional require in index.
 module.exports = {
 	app,
 	logger,
-	routes: createRoutes(),
+	ordersServer: server,
 	// initialRoutes: ['/', '/orders'],
-	initialRoutes: ['/', orderPath],
-	// initialRoutes: ['/'],
+	// initialRoutes: ['/', orderPath],
+	initialRoutes: ['/'],
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',

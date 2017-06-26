@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { View, TouchableNativeFeedback } from 'react-native';
 import PropTypes from 'prop-types';
-import Decimal from 'decimal.js';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
+import Field from 'hotelcaisse-app/dist/fields/Field';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {	Text } from '../../elements';
 import styleVars from '../../../styles/variables';
 
 const propTypes = {
-	order: PropTypes.number.isRequired,
+	order: PropTypes.instanceOf(Order).isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
+	customerFields: PropTypes.arrayOf(PropTypes.instanceOf(Field)).isRequired,
 	onPress: PropTypes.func,
 };
 
@@ -18,45 +19,56 @@ const defaultProps = {
 	onPress: null,
 };
 
-const OrderItem = (props) => {
-	const customerName = 'Vincent-Olivier Arsenault-Chapdelaine';
-	const checkInDate = 'lun. 5 mai';
-	const checkOutDate = 'mar. 6 mai';
-
-	const rand = Math.random();
-	const balanceAmount = rand < 0.1
-		? new Decimal(-12.34)
-		: (rand > 0.9 ? new Decimal(8.34) : new Decimal(0));
-
-	let balance = <View style={styles.balance} />;
-
-	if (!balanceAmount.eq(0)) {
-		balance = (
-			<Text style={[styles.balance, textStyles.balance]}>
-				{ props.localizer.formatCurrency(balanceAmount.toNumber())}
-			</Text>
-		);
+class OrderItem extends Component {
+	shouldComponentUpdate(nextProps) {
+		return nextProps.order.uuid !== this.props.order.uuid;
 	}
 
-	return (
-		<TouchableNativeFeedback onPress={props.onPress}>
-			<View style={styles.item}>
-				<Text style={[styles.customerName, textStyles.customerName]}>{ customerName }</Text>
-				<View style={styles.roomSelections}>
-					<Text style={textStyles.room}>Chambre 1, chambre 5</Text>
-					<View style={styles.checkInOut}>
-						<Text>{ checkInDate }</Text>
-						<View style={styles.checkInOutArrow}>
-							<Icon name="long-arrow-right" />
+	render() {
+		const order = this.props.order;
+		order.customer.fields = this.props.customerFields;
+		const customerName = order.customer.get('customer.name');
+		const checkInDate = this.props.localizer.formatDate(
+			order.earliestCheckInDate,
+			{ skeleton: 'MMMEd' }
+		);
+		const checkOutDate = this.props.localizer.formatDate(
+			order.latestCheckOutDate,
+			{ skeleton: 'MMMEd' }
+		);
+		const balanceAmount = order.balance;
+		const rooms = order.roomSelections.map(rs => rs.room.name).join(', ');
+
+		let balanceNode = <View style={styles.balance} />;
+
+		if (!balanceAmount.eq(0)) {
+			balanceNode = (
+				<Text style={[styles.balance, textStyles.balance]}>
+					{ this.props.localizer.formatCurrency(balanceAmount.toNumber())}
+				</Text>
+			);
+		}
+
+		return (
+			<TouchableNativeFeedback onPress={this.props.onPress}>
+				<View style={styles.item}>
+					<Text style={[styles.customerName, textStyles.customerName]}>{ customerName }</Text>
+					<View style={styles.roomSelections}>
+						<Text style={textStyles.room}>{ rooms }</Text>
+						<View style={styles.checkInOut}>
+							<Text>{ checkInDate }</Text>
+							<View style={styles.checkInOutArrow}>
+								<Icon name="long-arrow-right" />
+							</View>
+							<Text>{ checkOutDate }</Text>
 						</View>
-						<Text>{ checkOutDate }</Text>
 					</View>
+					{ balanceNode }
 				</View>
-				{ balance }
-			</View>
-		</TouchableNativeFeedback>
-	);
-};
+			</TouchableNativeFeedback>
+		);
+	}
+}
 
 const styles = {
 	item: {

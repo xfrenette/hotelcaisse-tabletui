@@ -23,8 +23,8 @@ function dummyDate() {
 	return date;
 }
 
-function dateAfter(date, nbDays) {
-	const newDate = new Date(date.getTime() + (nbDays * ONE_DAY));
+function dateBefore(date, nbDays) {
+	const newDate = new Date(date.getTime() - (nbDays * ONE_DAY));
 	return newDate;
 }
 
@@ -86,9 +86,10 @@ function addTransactions(order, modes) {
 	}
 }
 
-function dummyRoomSelection(rooms, fields) {
-	const startDate = dummyDate();
-	const endDate = dateAfter(startDate, Math.ceil(Math.random() * 4));
+function dummyRoomSelection(rooms, fields, latestCheckOutDate = new Date()) {
+	latestCheckOutDate.setHours(0, 0, 0, 0);
+	const endDate = dateBefore(latestCheckOutDate, Math.floor(Math.random() * 2));
+	const startDate = dateBefore(endDate, Math.ceil(Math.random() * 3));
 
 	const roomSelection = new RoomSelection(generateUUID());
 	roomSelection.room = rooms[Math.floor(Math.random() * rooms.length)];
@@ -105,7 +106,7 @@ function dummyRoomSelection(rooms, fields) {
 	return roomSelection;
 }
 
-function dummyOrder(business) {
+function dummyOrder(business, latestCheckOutDate) {
 	const order = new Order(generateUUID());
 	order.customer = dummyCustomer(business.customerFields);
 	order.note = Math.random() > 0.5 ? faker.lorem.sentence() : null;
@@ -125,7 +126,11 @@ function dummyOrder(business) {
 	const nbRoomSelections = Math.ceil(Math.random() * 2);
 
 	for (let i = nbRoomSelections - 1; i >= 0; i -= 1) {
-		order.roomSelections.push(dummyRoomSelection(business.rooms, business.roomSelectionFields));
+		order.roomSelections.push(dummyRoomSelection(
+			business.rooms,
+			business.roomSelectionFields,
+			latestCheckOutDate
+		));
 	}
 
 	return order;
