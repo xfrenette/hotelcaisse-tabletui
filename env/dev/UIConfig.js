@@ -28,10 +28,10 @@ const businessStorage = new TestReader(serializedData);
 // businessStorage.delay = 1000;
 
 const testAuth = new TestAuth();
-// testAuth.authenticated = true;
-testAuth.authenticated = false;
-testAuth.validCode = '1234';
-testAuth.delay = 500;
+testAuth.authenticated = true;
+// testAuth.authenticated = false;
+// testAuth.validCode = '1234';
+// testAuth.delay = 500;
 
 const logger = new UILogger();
 
@@ -63,8 +63,8 @@ module.exports = {
 	ordersServer: server,
 	// initialRoutes: ['/', '/orders'],
 	// initialRoutes: ['/', orderPath],
-	initialRoutes: ['/', '/register/manage'],
-	// initialRoutes: ['/', '/register/open'],
+	// initialRoutes: ['/', '/register/manage'],
+	initialRoutes: ['/', '/register/close'],
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',
