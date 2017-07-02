@@ -75,10 +75,9 @@ function flattenRoutes(routes, accumulatedGuards = []) {
 /**
  * Returns a unique key (string) for the passed route object.
  *
- * @param {Object} route
  * @return {String}
  */
-function generateRouteKey(route) {
+function generateRouteKey() {
 	keyIncrementor += 1;
 	return `route_${keyIncrementor}`;
 }
@@ -117,8 +116,8 @@ function routesBuilder(routesDef) {
 		if (guards && guards.length) {
 			const component = props.component;
 			const render = props.render;
-			delete(props.component);
-			props.render=(routeProps) => (
+			delete props.component;
+			props.render = routeProps => (
 				<GuardedScreen
 					guards={guards}
 					component={component}

@@ -12,9 +12,6 @@ import Orders from './containers/screens/Orders';
 import LoadedGuard from './lib/routeGuards/LoadedGuard';
 import AuthenticatedGuard from './lib/routeGuards/AuthenticatedGuard';
 
-import React from 'react';
-import { View, Text } from 'react-native';
-
 /**
  * Returns the main route object. See app/lib/routesBuilder for the signature of a route object.
  */
@@ -25,7 +22,6 @@ export default ui => ({
 			guards: [new LoadedGuard(ui, '/loading')],
 			routes: [
 				{ path: '/authenticate', component: Authentication },
-				{ path: '/test', render: () => <View><Text>Test</Text></View> },
 				{
 					guards: [new AuthenticatedGuard(ui.auth, '/authenticate')],
 					routes: [
