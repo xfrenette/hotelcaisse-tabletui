@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text } from 'react-native';
-import { inject } from 'mobx-react/native';
-import { Button } from '../elements';
+import { View } from 'react-native';
+import { observable } from 'mobx';
+import { inject, observer } from 'mobx-react/native';
+import { Keypad, Text, Button } from '../elements';
+import { Container } from '../layout';
 
 const propTypes = {
 	status: PropTypes.string,
@@ -19,27 +21,36 @@ const defaultProps = {
 };
 
 @inject('localizer')
+@observer
 class Authentication extends Component {
-	doFail() {
-		this.authenticate('4567');
+	/**
+	 * Code currently entered on the keypad
+	 *
+	 * @type {String}
+	 */
+	@observable
+	code = '';
+
+	/**
+	 * When mounting, reset the screen
+	 */
+	componentWillMount() {
+		this.reset();
 	}
 
-	doSucceed() {
-		this.authenticate('1234');
+	/**
+	 * When unmounting, reset the screen
+	 */
+	componentWillUnmount() {
+		this.reset();
 	}
 
-	authenticate(code) {
-		if (this.props.onAuthenticate) {
-			this.props.onAuthenticate(code);
-		}
-	}
-
-	finish() {
-		if (this.props.onFinish) {
-			this.props.onFinish();
-		}
-	}
-
+	/**
+	 * Simple alias to this.props.localizer.t
+	 *
+	 * @param {String} path
+	 * @return {String}
+	 */
 	t(path) {
 		if (this.props.localizer) {
 			return this.props.localizer.t(path);
@@ -48,36 +59,99 @@ class Authentication extends Component {
 		return path;
 	}
 
-	render() {
-		const buttons = [];
-		let message = this.t('auth.please');
+	/**
+	 * Reset the screen: resets the code.
+	 */
+	reset() {
+		this.code = '';
+	}
 
-		if (this.props.status !== 'success' && this.props.status !== 'authenticating') {
-			buttons.push(<Button key="inv" onPress={() => { this.doFail(); }} title="Connexion (échec)" />);
-			buttons.push(<Button key="val" onPress={() => { this.doSucceed(); }} title="Connexion (réussie)" />);
-		} else if (this.props.status === 'success') {
-			buttons.push(<Button key="fin" onPress={() => { this.finish(); }} title="Entrer" />);
+	/**
+	 * Tries to authenticate with the code in the [code] property
+	 */
+	tryAuthenticate() {
+		if (this.code && this.props.onAuthenticate) {
+			this.props.onAuthenticate(this.code);
 		}
+	}
+
+	/**
+	 * When authentication is successful and we are finished with the login screen.
+	 */
+	onFinish() {
+		if (this.props.onFinish) {
+			this.props.onFinish();
+		}
+	}
+
+	/**
+	 * Renders the keypad to enter the code and its messages.
+	 *
+	 * @return {Node}
+	 */
+	renderKeypad() {
+		let message;
 
 		switch (this.props.status) {
 			case 'fail':
-				message = 'Mauvais code';
+				message = this.t('auth.messages.fail');
 				break;
 			case 'error':
-				message = 'Erreur de vérification';
-				break;
-			case 'success':
-				message = 'Authentification avec succès';
+				message = this.t('auth.messages.error');
 				break;
 			case 'authenticating':
+				message = this.t('auth.messages.authenticating');
+				break;
 			default:
-				message = 'Authentification en cours...';
+				message = this.t('auth.messages.waiting');
 				break;
 		}
+
+		return (
+			<View>
+				<Text>{ message }</Text>
+				<Keypad
+					placeholder={this.t('auth.placeholder')}
+					submitLabel={this.t('actions.ok')}
+					value={this.code}
+					onChange={(val) => { this.code = val; }}
+					onSubmit={() => { this.tryAuthenticate(); }}
+				/>
+			</View>
+		);
+	}
+
+	/**
+	 * Renders the content when authentication was successful
+	 *
+	 * @return {Node}
+	 */
+	renderSuccess() {
+		return (
+			<View>
+				<Text>{ this.t('auth.messages.success') }</Text>
+				<Button
+					title={ this.t('auth.actions.finish') }
+					onPress={() => { this.onFinish(); }}
+				/>
+			</View>
+		);
+	}
+
+	render() {
+		let content;
+
+		if (this.props.status === 'success') {
+			content = this.renderSuccess();
+		} else {
+			content = this.renderKeypad();
+		}
+
 		return (
 			<View style={styles.authentication}>
-				<Text>{ message }</Text>
-				{ buttons }
+				<Container layout="oneColCentered">
+					{ content }
+				</Container>
 			</View>
 		);
 	}
@@ -88,10 +162,8 @@ Authentication.defaultProps = defaultProps;
 
 const styles = {
 	authentication: {
-		backgroundColor: '#ddeeaa',
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center',
 	},
 };
 

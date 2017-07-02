@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react/native';
 import { ERRORS as AUTH_ERRORS } from 'hotelcaisse-app/dist/auth/Auth';
 import AuthenticationScreen from '../../components/screens/Authentication';
 
-@inject('ui', 'auth')
+@inject('ui', 'auth', 'localizer')
 @observer
 class Authentication extends Component {
 	@observable
@@ -55,6 +55,7 @@ class Authentication extends Component {
 		return (
 			<AuthenticationScreen
 				status={this.status}
+				localizer={this.props.localizer}
 				onAuthenticate={(code) => { this.onAuthenticate(code); }}
 				onFinish={() => { this.onFinish(); }}
 			/>

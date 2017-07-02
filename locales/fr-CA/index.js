@@ -9,6 +9,7 @@ import order from './order';
 import customer from './customer';
 import roomSelections from './roomSelections';
 import screens from './screens';
+import auth from './auth';
 
 export default {
 	actions,
@@ -22,4 +23,5 @@ export default {
 	customer,
 	roomSelections,
 	screens,
+	auth,
 };
