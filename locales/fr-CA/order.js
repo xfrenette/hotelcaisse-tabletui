@@ -71,7 +71,12 @@ export default {
 	list: {
 		empty: 'Aucune fiche n\'a encore été créée.',
 		current: 'Clients actuels',
+		today: 'Départs aujourd\'hui',
 		yesterday: 'Partis hier',
-		older: 'Fiches antérieures',
+		leftOn: 'Partis le %{date}',
+		actions: {
+			loadNext: 'Charger plus de fiches',
+		},
+		noMore: 'Fin des fiches',
 	},
 };
