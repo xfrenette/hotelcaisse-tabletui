@@ -12,6 +12,7 @@ import Orders from './containers/screens/Orders';
 import LoadedGuard from './lib/routeGuards/LoadedGuard';
 import AuthenticatedGuard from './lib/routeGuards/AuthenticatedGuard';
 import RegisterOpenedGuard from './lib/routeGuards/RegisterOpenedGuard';
+import RegisterNotOpenedGuard from './lib/routeGuards/RegisterNotOpenedGuard';
 
 /**
  * Returns the main route object. See app/lib/routesBuilder for the signature of a route object.
@@ -38,7 +39,12 @@ export default ui => ({
 								{ path: '/order/customer-roomSelections', component: CustomerRoomSelections },
 							],
 						},
-						{ path: '/register/open', component: OpenRegister },
+						{
+							guards: [new RegisterNotOpenedGuard(ui.app.business)],
+							routes: [
+								{ path: '/register/open', component: OpenRegister },
+							],
+						},
 					],
 				},
 			],
