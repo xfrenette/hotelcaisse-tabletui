@@ -1,9 +1,11 @@
-import { observable } from 'mobx';
 import { Platform, ToastAndroid, Alert, BackHandler } from 'react-native';
+import { observable } from 'mobx';
 import { createMemoryHistory } from 'history';
 import DefaultAuth from 'hotelcaisse-app/dist/auth/Auth';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { RouterStore, syncHistoryWithStore } from './mobx-react-router';
+import routesDef from '../routes';
+import routesBuilder from './routesBuilder';
 
 /**
  * Different states the UI can be.
@@ -46,12 +48,6 @@ class UI {
 	 */
 	@observable
 	state = STATES.BOOTSTRAPPING;
-	/**
-	 * Array of route objects describing all the routes used in conjunction with the router.
-	 *
-	 * @type {Array}
-	 */
-	routes = [];
 	/**
 	 * History object used in conjunction with the router
 	 *
@@ -108,7 +104,6 @@ class UI {
 	/**
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI
 	 * params (all optional, but might not work if not present):
-	 * - routes
 	 * - initialRoutes (array<String>, optional) Mainly used when developping
 	 * - auth
 	 * - locale (string)
@@ -123,7 +118,7 @@ class UI {
 	 * @param {Object} settings
 	 */
 	constructor(settings = {}) {
-		['routes', 'auth', 'app', 'uuidGenerator', 'logger', 'ordersServer'].forEach((setting) => {
+		['auth', 'app', 'uuidGenerator', 'logger', 'ordersServer'].forEach((setting) => {
 			if (settings[setting]) {
 				this[setting] = settings[setting];
 			}
@@ -206,6 +201,16 @@ class UI {
 	}
 
 	/**
+	 * From the routesDef, returns an array of Route nodes
+	 *
+	 * @return {Array<Node>}
+	 */
+	buildRouteComponents() {
+		const def = routesDef(this);
+		return routesBuilder(def);
+	}
+
+	/**
 	 * Returns the device's UUID
 	 *
 	 * @todo
@@ -278,6 +283,31 @@ class UI {
 		const currentPath = this.history.location.pathname;
 		const baseScreenPaths = ['/'];
 		return baseScreenPaths.indexOf(currentPath) !== -1;
+	}
+
+	/**
+	 * Simple utility function that goes back 1 step in the history if there is a previous location,
+	 * else goes to home.
+	 */
+	goBackOrGoHome() {
+		if (this.history.length > 1) {
+			this.router.goBack();
+		} else {
+			this.router.replace('/');
+		}
+	}
+
+	/**
+	 * Goes to the home and resets the history to only one entry: the home.
+	 */
+	resetToHome() {
+		const historyLength = this.history.length;
+
+		if (historyLength > 1) {
+			this.history.go(-historyLength + 1);
+		}
+
+		this.router.replace('/');
 	}
 }
 

@@ -1,4 +1,4 @@
-import Auth from 'hotelcaisse-app/dist/auth/Auth';
+import Auth, { ERRORS } from 'hotelcaisse-app/dist/auth/Auth';
 
 class TestAuth extends Auth {
 	constructor(doSucceed = true) {
@@ -13,8 +13,11 @@ class TestAuth extends Auth {
 	authenticate(code, deviceUUID) {
 		const codeIsValid = this.validCode === null || code === this.validCode;
 		let success = false;
+		let error = ERRORS.AUTHENTICATION_FAILED;
 
-		if (this.doSucceed && codeIsValid) {
+		if (!this.doSucceed) {
+			error = 'other-error';
+		} else if (codeIsValid) {
 			success = true;
 		}
 
@@ -22,13 +25,13 @@ class TestAuth extends Auth {
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
 					this.authenticated = success;
-					success ? resolve() : reject();
+					success ? resolve() : reject(error);
 				}, this.delay);
 			});
 		}
 
 		this.authenticated = success;
-		return success ? Promise.resolve() : Promise.reject();
+		return success ? Promise.resolve() : Promise.reject(error);
 	}
 }
 

@@ -15,14 +15,6 @@ beforeEach(() => {
 });
 
 describe('constructor()', () => {
-	test('sets routes only if present', () => {
-		ui = new UI();
-		expect(ui.routes).toEqual([]);
-		const routes = [{ test: true }];
-		ui = new UI({ routes });
-		expect(ui.routes).toEqual(routes);
-	});
-
 	test('sets auth if present', () => {
 		const auth = new TestAuth();
 		ui = new UI({ auth });

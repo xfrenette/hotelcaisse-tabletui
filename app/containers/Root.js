@@ -1,13 +1,15 @@
-/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { inject } from 'mobx-react/native';
 import Console from './layout/Console';
-import RouteWithSubRoutes from './RouteWithSubRoutes';
 
 const propTypes = {
-	routes: PropTypes.array.isRequired,
+	children: PropTypes.node,
+};
+
+const defaultProps = {
+	children: null,
 };
 
 @inject('ui')
@@ -23,9 +25,7 @@ class Root extends Component {
 		return (
 			<View style={{ flex: 1 }}>
 				<View style={{ flex: 1 }}>
-					{this.props.routes.map(
-						(route, i) => <RouteWithSubRoutes key={i} route={route} />
-					)}
+					{this.props.children}
 				</View>
 				{ consoleComponent }
 			</View>
@@ -34,5 +34,6 @@ class Root extends Component {
 }
 
 Root.propTypes = propTypes;
+Root.defaultProps = defaultProps;
 
 export default Root;

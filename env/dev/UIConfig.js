@@ -13,7 +13,7 @@ import strings from '../../locales/fr-CA';
 /*
 Examples :
 
-// Authentication that always fail
+// Authentication that fails because of an error
 const testAuth = new TestAuth(false);
 
 // Authentication with a specific valid code waiting 2 secs before validating
@@ -25,10 +25,13 @@ testAuth.delay = 2000;
 */
 const serializedData = serialize(storedBusiness);
 const businessStorage = new TestReader(serializedData);
-businessStorage.delay = 2000;
+// businessStorage.delay = 1000;
 
 const testAuth = new TestAuth();
-testAuth.authenticated = true;
+// testAuth.authenticated = true;
+testAuth.authenticated = false;
+testAuth.validCode = '1234';
+testAuth.delay = 500;
 
 const logger = new UILogger();
 
@@ -60,7 +63,8 @@ module.exports = {
 	ordersServer: server,
 	// initialRoutes: ['/', '/orders'],
 	// initialRoutes: ['/', orderPath],
-	initialRoutes: ['/'],
+	initialRoutes: ['/', '/register/manage'],
+	// initialRoutes: ['/', '/register/open'],
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',

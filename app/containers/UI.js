@@ -1,10 +1,8 @@
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
 import { Router } from 'react-router-native';
 import { Provider } from 'mobx-react/native';
-import RouteWithSubRoutes from './RouteWithSubRoutes';
+import Root from './Root';
 import UIApp from '../lib/UI';
 
 const propTypes = {
@@ -13,17 +11,15 @@ const propTypes = {
 
 const UI = (props) => {
 	const stores = props.ui.getStores();
-	const routes = props.ui.routes;
+	const routes = props.ui.buildRouteComponents();
 	const history = props.ui.history;
 
 	return (
 		<Provider {...stores}>
 			<Router history={history}>
-				<View style={{ flex: 1 }}>
-					{routes.map(
-						(route, i) => <RouteWithSubRoutes key={i} route={route} />
-					)}
-				</View>
+				<Root>
+					{ routes }
+				</Root>
 			</Router>
 		</Provider>
 	);
