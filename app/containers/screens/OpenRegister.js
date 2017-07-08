@@ -30,8 +30,10 @@ class OpenRegister extends Component {
 	 * @param {Decimal} amount
 	 */
 	onOpen(employee, amount) {
+		// Order is important: first set the deviceRegister on business, then open it so the
+		// 'registerOpen' event may trigger.
+		this.props.business.setDeviceRegister(this.newRegister);
 		this.newRegister.open(employee, amount);
-		this.props.business.deviceRegister = this.newRegister;
 
 		this.props.ui.showToast(this.t('openRegister.messages.opened'));
 		this.props.router.replace('/');
