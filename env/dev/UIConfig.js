@@ -1,6 +1,5 @@
 import Application from 'hotelcaisse-app';
-import BusinessAutoload from 'hotelcaisse-app/dist/plugins/autoload/Business';
-import { serialize } from 'serializr';
+import BusinessAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Business';
 import storedBusiness from './storedBusiness';
 import UILogger from '../../app/lib/UILogger';
 import TestAuth from '../../tests/mock/TestAuth';
@@ -23,9 +22,8 @@ testAuth.validCode = '1234';
 testAuth.delay = 2000;
 
 */
-const serializedData = serialize(storedBusiness);
-const businessStorage = new TestReader(serializedData);
-// businessStorage.delay = 1000;
+const businessStorage = new TestReader(storedBusiness);
+// businessStorage.delay = 3000;
 
 const testAuth = new TestAuth();
 testAuth.authenticated = true;
@@ -38,7 +36,7 @@ const logger = new UILogger();
 const appConfig = {
 	logger,
 	plugins: [
-		new BusinessAutoload([businessStorage]),
+		new BusinessAutoload(businessStorage),
 	],
 };
 
@@ -64,7 +62,7 @@ module.exports = {
 	// initialRoutes: ['/', '/orders'],
 	// initialRoutes: ['/', orderPath],
 	// initialRoutes: ['/', '/register/manage'],
-	initialRoutes: ['/', '/register/close'],
+	initialRoutes: ['/', '/register/open'],
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',
