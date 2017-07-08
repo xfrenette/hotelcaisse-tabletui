@@ -10,6 +10,7 @@ import customer from './customer';
 import roomSelections from './roomSelections';
 import screens from './screens';
 import auth from './auth';
+import appMenu from './appMenu';
 
 export default {
 	actions,
@@ -24,4 +25,5 @@ export default {
 	roomSelections,
 	screens,
 	auth,
+	appMenu,
 };

@@ -11,7 +11,7 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { STATES } from 'hotelcaisse-app/dist/business/Register';
 import { Text } from '../../elements';
 import styleVars from '../../../styles/variables';
-import AppMenu from './AppMenu';
+import AppMenu from '../../../containers/layout/AppMenu';
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer),
@@ -242,7 +242,7 @@ class Home extends Component {
 
 	render() {
 		return (
-			<AppMenu ref={(node) => { this.appMenu = node; }}>
+			<AppMenu ref={(node) => { this.appMenu = node ? node.wrappedInstance : node }}>
 				{ this.renderAppMenuTrigger() }
 				<View style={styles.screenMain}>
 					{ this.renderLogo() }
