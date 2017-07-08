@@ -43,6 +43,10 @@ class TestServer extends Server {
 		return this.resolveInDelay(orders);
 	}
 
+	getBusiness() {
+		return this.resolveInDelay(this.business);
+	}
+
 	resolveInDelay(data) {
 		return new Promise((resolve) => {
 			if (this.delay === 0) {
