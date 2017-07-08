@@ -4,12 +4,14 @@ import {
 	View,
 	Image,
 	TouchableNativeFeedback,
+	TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { STATES } from 'hotelcaisse-app/dist/business/Register';
 import { Text } from '../../elements';
 import styleVars from '../../../styles/variables';
+import AppMenu from './AppMenu';
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer),
@@ -85,6 +87,13 @@ function renderSubButton(opts) {
 
 class Home extends Component {
 	/**
+	 * Internal reference to the AppMenu
+	 *
+	 * @type {AppMenu}
+	 */
+	appMenu = null;
+
+	/**
 	 * Simple alias to this.props.localizer.t
 	 *
 	 * @param {String} path
@@ -116,6 +125,13 @@ class Home extends Component {
 		if (this.props.onButtonPress) {
 			this.props.onButtonPress(key);
 		}
+	}
+
+	/**
+	 * When the user presses the app menu trigger button; opens the menu.
+	 */
+	onAppMenuPress() {
+		this.appMenu.open();
 	}
 
 	/**
@@ -211,19 +227,35 @@ class Home extends Component {
 		return buttons;
 	}
 
+	/**
+	 * Renders the AppMenu trigger button.
+	 *
+	 * @return {Node}
+	 */
+	renderAppMenuTrigger() {
+		return (
+			<TouchableOpacity style={styles.menuTrigger} onPress={() => { this.onAppMenuPress() }}>
+				<Icon name="bars" style={styles.menuTriggerButton} />
+			</TouchableOpacity>
+		);
+	}
+
 	render() {
 		return (
-			<View style={styles.screenMain}>
-				{ this.renderLogo() }
-				<View style={styles.buttons}>
-					<View style={styles.buttonsRow}>
-						{ this.renderMainButtons() }
-					</View>
-					<View style={styles.buttonsRow}>
-						{ this.renderSubButtons() }
+			<AppMenu ref={(node) => { this.appMenu = node; }}>
+				{ this.renderAppMenuTrigger() }
+				<View style={styles.screenMain}>
+					{ this.renderLogo() }
+					<View style={styles.buttons}>
+						<View style={styles.buttonsRow}>
+							{ this.renderMainButtons() }
+						</View>
+						<View style={styles.buttonsRow}>
+							{ this.renderSubButtons() }
+						</View>
 					</View>
 				</View>
-			</View>
+			</AppMenu>
 		);
 	}
 }
@@ -262,6 +294,15 @@ const styles = {
 		marginTop: styleVars.verticalRhythm,
 		flexDirection: 'row',
 		justifyContent: 'center',
+	},
+	menuTrigger: {
+		alignItems: 'flex-end',
+		paddingHorizontal: styleVars.verticalRhythm,
+		paddingVertical: styleVars.horizontalRhythm,
+	},
+	menuTriggerButton: {
+		fontSize: styleVars.verticalRhythm,
+		lineHeight: styleVars.verticalRhythm,
 	},
 };
 
