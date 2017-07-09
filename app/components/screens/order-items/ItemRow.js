@@ -68,7 +68,7 @@ class ItemRow extends Component {
 	 */
 	onQuantityChange(quantity) {
 		if (this.props.onQuantityChange) {
-			this.props.onQuantityChange(quantity);
+			this.props.onQuantityChange(quantity || 0);
 		}
 	}
 
@@ -126,7 +126,7 @@ class ItemRow extends Component {
 
 		return (
 			<NumberInput
-				value={item.quantity}
+				value={item.quantity || null}
 				showIncrementors
 				selectTextOnFocus
 				onChangeValue={(value) => { this.onQuantityChange(value); }}
