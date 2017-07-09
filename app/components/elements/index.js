@@ -3,7 +3,7 @@ import Dropdown from './Dropdown';
 import Keypad from './Keypad';
 import Message from './Message';
 import DenominationsInput from './DenominationsInput';
-import NumberInput from './NumberInput';
+import NumberInput from './numberInput/NumberInput';
 import Text from './Text';
 import TextInput from './TextInput';
 import Title from './Title';

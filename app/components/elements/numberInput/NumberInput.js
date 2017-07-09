@@ -6,8 +6,8 @@ import { observer } from 'mobx-react/native';
 import escapeStringRegexp from 'escape-string-regexp';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
-import TextInput from './TextInput';
-import styleVars from '../../styles/variables';
+import TextInput from '../TextInput';
+import styleVars from '../../../styles/variables';
 
 const propTypes = {
 	value: PropTypes.number,
