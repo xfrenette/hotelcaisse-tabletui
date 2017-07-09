@@ -210,3 +210,26 @@ describe('getTextInputPostText()', () => {
 		expect(numberInput.getTextInputPostText()).toBe('$');
 	});
 });
+
+describe('valueIsValid()', () => {
+	test('validates if no constraints', () => {
+		numberInput.props.constraints = null;
+		expect(numberInput.valueIsValid(-2)).toBe(true);
+	});
+
+	test('uses constraints', () => {
+		numberInput.props.constraints = {
+			numericality: {
+				greaterThan: 2,
+			},
+		};
+		expect(numberInput.valueIsValid(2)).toBe(false);
+	});
+
+	test('sets a numericality automatically if not present', () => {
+		numberInput.props.constraints = {
+			presence: true,
+		};
+		expect(numberInput.valueIsValid('2')).toBe(false);
+	});
+});

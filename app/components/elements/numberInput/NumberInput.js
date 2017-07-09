@@ -5,6 +5,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import escapeStringRegexp from 'escape-string-regexp';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
+import validate from 'hotelcaisse-app/dist/Validator';
 import TextInput from '../TextInput';
 import Incrementor from './Incrementor';
 import styleVars from '../../../styles/variables';
@@ -17,6 +18,7 @@ const propTypes = {
 	showIncrementors: PropTypes.bool,
 	onChangeValue: PropTypes.func,
 	localizer: PropTypes.instanceOf(Localizer),
+	constraints: PropTypes.object,
 };
 
 const defaultProps = {
@@ -27,6 +29,7 @@ const defaultProps = {
 	onChangeValue: null,
 	localizer: null,
 	showIncrementors: false,
+	constraints: null,
 };
 
 @observer
@@ -179,8 +182,15 @@ class NumberInput extends Component {
 	 * @return {Boolean}
 	 */
 	valueIsValid(value) {
-		// TODO
-		return true;
+		const constraints = this.props.constraints || {};
+
+		if (typeof constraints.numericality !== 'object') {
+			constraints.numericality = {};
+		}
+
+		constraints.numericality.noStrings = true;
+
+		return validate({ value }, { value: constraints }) === undefined;
 	}
 
 	/**
