@@ -414,8 +414,6 @@ class NumberInput extends Component {
 
 		return (
 			<View>
-				{ this.incrementors.more }
-				{ this.incrementors.less }
 				<TextInput
 					{...other}
 					defaultValue={null}
@@ -428,6 +426,8 @@ class NumberInput extends Component {
 					preText={preText}
 					postText={postText}
 				/>
+				{ this.incrementors.more }
+				{ this.incrementors.less }
 			</View>
 		);
 	}
@@ -441,12 +441,10 @@ const incrementorButtonWidth = 30;
 const styles = {
 	textInput: {
 		textAlign: 'center',
-		zIndex: 1,
 	},
 	incrementButton: {
 		position: 'absolute',
 		top: 1,
-		zIndex: 2,
 		height: styleVars.input.height - 2,
 		justifyContent: 'center',
 	},
