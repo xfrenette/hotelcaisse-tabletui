@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableHighlight } from 'react-native';
+import { View } from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import escapeStringRegexp from 'escape-string-regexp';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import TextInput from '../TextInput';
+import Incrementor from './Incrementor';
 import styleVars from '../../../styles/variables';
 
 const propTypes = {
@@ -45,16 +45,6 @@ class NumberInput extends Component {
 	 */
 	inputValue = null;
 	/**
-	 * Holds the incrementors element. This object exists to have a cache and not have to re-render
-	 * them at each render()
-	 *
-	 * @type {Object}
-	 */
-	incrementors = {
-		less: null,
-		more: null,
-	};
-	/**
 	 * Reference to the TextInput node
 	 *
 	 * @type {TextInput}
@@ -66,10 +56,6 @@ class NumberInput extends Component {
 
 		this.inputValue = this.props.value;
 		this.updateInputText();
-
-		if (this.props.showIncrementors) {
-			this.createIncrementors();
-		}
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -316,17 +302,6 @@ class NumberInput extends Component {
 	}
 
 	/**
-	 * Creates the "plus" and "minus" incrementors React elements. They will be cached in the
-	 * incrementors internal object.
-	 */
-	createIncrementors() {
-		this.incrementors = {
-			less: this.renderIncrementor(-1),
-			more: this.renderIncrementor(1),
-		};
-	}
-
-	/**
 	 * Returns the text to use a preText in the TextInput. It will be the currency sign, if
 	 * applicable with the localizer. Else returns an empty string.
 	 *
@@ -373,32 +348,17 @@ class NumberInput extends Component {
 
 	/**
 	 * Rendering function to render the "more" and "less" button. For a "more", pass 1, for a less,
-	 * pass -1.
+	 * pass -1. Does nothing if the showIncrementors is not true.
 	 *
 	 * @param {Number} type
 	 * @return {Component}
 	 */
 	renderIncrementor(type) {
-		const iconName = type === 1 ? 'plus' : 'minus';
-		const buttonStyle = [styles.incrementButton];
-
-		if (type === 1) {
-			buttonStyle.push(styles.incrementButtonMore);
-		} else {
-			buttonStyle.push(styles.incrementButtonLess);
+		if (!this.props.showIncrementors) {
+			return null;
 		}
 
-		const icon = <Icon name={iconName} style={styles.incrementButtonIcon} />;
-
-		return (
-			<TouchableHighlight
-				style={buttonStyle}
-				underlayColor={styleVars.colors.grey1}
-				onPress={() => { this.incrementValue(type); }}
-			>
-				{ icon }
-			</TouchableHighlight>
-		);
+		return <Incrementor type={type} onPress={() => { this.incrementValue(type); }} />;
 	}
 
 	/**
@@ -426,8 +386,8 @@ class NumberInput extends Component {
 					preText={preText}
 					postText={postText}
 				/>
-				{ this.incrementors.more }
-				{ this.incrementors.less }
+				{ this.renderIncrementor(-1) }
+				{ this.renderIncrementor(+1) }
 			</View>
 		);
 	}
@@ -441,30 +401,6 @@ const incrementorButtonWidth = 30;
 const styles = {
 	textInput: {
 		textAlign: 'center',
-	},
-	incrementButton: {
-		position: 'absolute',
-		top: 1,
-		height: styleVars.input.height - 2,
-		justifyContent: 'center',
-	},
-	incrementButtonIcon: {
-		lineHeight: 10,
-		fontSize: 12,
-		width: incrementorButtonWidth,
-		textAlign: 'center',
-		alignSelf: 'center',
-		color: styleVars.theme.mainColor,
-	},
-	incrementButtonMore: {
-		right: 1,
-		borderLeftWidth: 1,
-		borderLeftColor: styleVars.theme.lineColor,
-	},
-	incrementButtonLess: {
-		left: 1,
-		borderRightWidth: 1,
-		borderRightColor: styleVars.theme.lineColor,
 	},
 };
 
