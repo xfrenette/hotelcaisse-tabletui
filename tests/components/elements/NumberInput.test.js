@@ -1,6 +1,6 @@
 import 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
-import NumberInput from 'components/elements/NumberInput';
+import NumberInput from 'components/elements/numberInput/NumberInput';
 
 jest.mock('mobx-react/native', () => require('mobx-react/custom'));
 
@@ -11,16 +11,18 @@ const baseValue = 5;
 beforeEach(() => {
 	localizer = new Localizer('fr-CA', 'CAD');
 	numberInput = new NumberInput({ value: baseValue, localizer });
+	numberInput.componentWillMount();
 });
 
-describe('getDecimalSeparator()', () => {
+describe('saveDecimalSeparator()', () => {
 	test('returns localized separator', () => {
-		expect(numberInput.getDecimalSeparator()).toBe(localizer.getDecimalSeparator());
+		numberInput.saveDecimalSeparator(localizer);
+		expect(numberInput.decimalSeparator).toBe(localizer.getDecimalSeparator());
 	});
 
 	test('returns dot if no localizer', () => {
-		numberInput.props.localizer = null;
-		expect(numberInput.getDecimalSeparator()).toBe('.');
+		numberInput.saveDecimalSeparator(null);
+		expect(numberInput.decimalSeparator).toBe('.');
 	});
 });
 
@@ -34,7 +36,7 @@ describe('parseValue()', () => {
 
 	test('ignores non-number', () => {
 		const value = ' 1x234 é';
-		const expected = 1234;
+		const expected = 1;
 
 		expect(numberInput.parseValue(value)).toBe(expected);
 	});
@@ -46,8 +48,8 @@ describe('parseValue()', () => {
 		expect(numberInput.parseValue(value)).toBe(expected);
 	});
 
-	test('ignores following "-" if starts with "-"', () => {
-		const values = ['--1234', '-1 2-34'];
+	test('only keeps the valid number at beginning', () => {
+		const values = ['-1234.x', '-1234 5', '-1234,0.4'];
 		const expected = -1234;
 
 		values.forEach((value) => {
@@ -56,7 +58,7 @@ describe('parseValue()', () => {
 	});
 
 	test('returns null if no number', () => {
-		const values = [' ', '', 'hello', '-', ',', null];
+		const values = [' ', '', 'hello', '-', ',', '--', null];
 
 		values.forEach((value) => {
 			expect(numberInput.parseValue(value)).toBeNull();
@@ -70,36 +72,67 @@ describe('parseValue()', () => {
 		expect(numberInput.parseValue(value)).toBe(expected);
 	});
 
-	test('only keeps last decimal separator', () => {
-		const value = '1012,34,56';
-		const expected = 101234.56;
-
-		expect(numberInput.parseValue(value)).toBe(expected);
-	});
-
 	test('ignores last decimal if last character', () => {
 		const value = '12,34,';
-		const expected = 1234;
-
-		expect(numberInput.parseValue(value)).toBe(expected);
-	});
-
-	test('uses dot as decimal separator if no localizer', () => {
-		numberInput.props.localizer = null;
-		const value = '12.34';
 		const expected = 12.34;
 
 		expect(numberInput.parseValue(value)).toBe(expected);
 	});
 
-	// The default decimal separator is '.' and it is used in different regular expression. This test
-	// ensures it works as expected.
-	test('If no localizer, escapes the "."', () => {
-		numberInput.props.localizer = null;
-		const value = '66';
-		const expected = 66;
+	test('uses dot as decimal separator if no localizer', () => {
+		numberInput.saveDecimalSeparator(null);
+		const value = '12.34';
+		const expected = 12.34;
 
 		expect(numberInput.parseValue(value)).toBe(expected);
+	});
+});
+
+describe('textIsValid()', () => {
+	test('returns true for null', () => {
+		expect(numberInput.textIsValid(null)).toBe(true);
+	});
+
+	test('returns true if only a minus', () => {
+		expect(numberInput.textIsValid('-')).toBe(true);
+	});
+
+	test('returns true if single leading 0', () => {
+		const values = ['0', '-0', '0,', '-0,'];
+		values.forEach((value) => {
+			expect(numberInput.textIsValid(value)).toBe(true);
+		});
+	});
+
+	test('returns false if more than one leading 0', () => {
+		const values = ['00', '-00', '00,', '-00,'];
+		values.forEach((value) => {
+			expect(numberInput.textIsValid(value)).toBe(false);
+		});
+	});
+
+	test('returns true if trailing 0 after separator', () => {
+		const values = ['0,0', '-0,00', '0,00', '-0,000'];
+		values.forEach((value) => {
+			expect(numberInput.textIsValid(value)).toBe(true);
+		});
+	});
+
+	test('returns false for other invalid strings', () => {
+		const values = ['--', ' 1', '1.2.3', '1x', 'x2'];
+		values.forEach((value) => {
+			expect(numberInput.textIsValid(value)).toBe(false);
+		});
+	});
+
+	// Since the method uses a regular expression and in some languages the decimal separator is the
+	// dot, which has a specific meaning in regular expression, this tests ensures the dot is
+	// considered a real dot, not 'any character'. Ex : if the decimal separator is '.', the
+	// following could be considered valid "12,23" if the regular expression is:
+	//  /[0-9]+${ds}[0-9]+/ where ${ds} would be replaced by '.'
+	test('escapes the dot', () => {
+		numberInput.saveDecimalSeparator(null);
+		expect(numberInput.textIsValid('12,34')).toBe(false);
 	});
 });
 
@@ -129,59 +162,10 @@ describe('formatValue()', () => {
 	});
 
 	test('works without a localizer', () => {
-		numberInput.props.localizer = null;
+		numberInput.saveDecimalSeparator(null);
 		const value = -5567.23;
 		const expected = '-5567.23';
 		expect(numberInput.formatValue(value)).toBe(expected);
-	});
-});
-
-describe('formatValueUsingModel()', () => {
-	test('works with simple numbers', () => {
-		const model = '5034';
-		const value = 123;
-		const expected = '123';
-		expect(numberInput.formatValueUsingModel(value, model)).toBe(expected);
-	});
-
-	test('adds trailing zeros', () => {
-		let model = '1,30200';
-		let value = 21.302;
-		let expected = '21,30200';
-		expect(numberInput.formatValueUsingModel(value, model)).toBe(expected);
-
-		model = '1,00';
-		value = 12;
-		expected = '12,00';
-		expect(numberInput.formatValueUsingModel(value, model)).toBe(expected);
-	});
-
-	test('returns minus if only char', () => {
-		const model = '-';
-		const value = null;
-		const expected = '-';
-		expect(numberInput.formatValueUsingModel(value, model)).toBe(expected);
-	});
-
-	test('keeps trailing decimal separator', () => {
-		const model = '1 234,';
-		const value = 23;
-		const expected = '23,';
-		expect(numberInput.formatValueUsingModel(value, model)).toBe(expected);
-	});
-
-	test('prepends with 0 if only a decimal separator', () => {
-		const model = ',';
-		const value = null;
-		const expected = '0,';
-		expect(numberInput.formatValueUsingModel(value, model)).toBe(expected);
-	});
-
-	test('keeps negative zero', () => {
-		const model = '-0,0';
-		const value = 0;
-		const expected = '-0,0';
-		expect(numberInput.formatValueUsingModel(value, model)).toBe(expected);
 	});
 });
 

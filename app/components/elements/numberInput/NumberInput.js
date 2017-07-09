@@ -13,7 +13,6 @@ const propTypes = {
 	value: PropTypes.number,
 	style: TextInput.propTypes.style,
 	type: PropTypes.string,
-	maxDecimals: PropTypes.number,
 	showIncrementors: PropTypes.bool,
 	onChangeValue: PropTypes.func,
 	localizer: PropTypes.instanceOf(Localizer),
@@ -23,7 +22,6 @@ const defaultProps = {
 	value: null,
 	style: null,
 	type: null,
-	maxDecimals: Infinity,
 	onChangeValue: null,
 	localizer: null,
 	showIncrementors: false,
@@ -39,32 +37,32 @@ class NumberInput extends Component {
 	@observable
 	inputText = '';
 	/**
-	 * Value (number) currently in the text field.
-	 *
-	 * @type {Number}
-	 */
-	inputValue = null;
-	/**
 	 * Reference to the TextInput node
 	 *
 	 * @type {TextInput}
 	 */
 	textInputNode = null;
+	/**
+	 * Decimal separator to use
+	 *
+	 * @type {String}
+	 */
+	decimalSeparator = '.';
 
-	constructor(props) {
-		super(props);
-
-		this.inputValue = this.props.value;
-		this.updateInputText();
+	componentWillMount() {
+		this.saveDecimalSeparator(this.props.localizer);
+		this.updateInputText(this.props.value);
 	}
 
 	componentWillReceiveProps(newProps) {
-		if (newProps.value !== this.inputValue) {
-			const newValue = this.applyValueFilters(newProps.value);
+		// If the value changed, update the text input
+		if (newProps.value !== this.props.value) {
+			this.updateInputText(newProps.value);
+		}
 
-			if (newValue !== this.inputValue) {
-				this.updateInputText();
-			}
+		// If the localizer changed, update the decimal separator
+		if (newProps.localizer !== this.props.localizer) {
+			this.saveDecimalSeparator(newProps.localizer);
 		}
 	}
 
@@ -75,7 +73,33 @@ class NumberInput extends Component {
 	 */
 	onChangeText(text) {
 		const newValue = this.parseValue(text);
-		this.tryChangeValue(newValue, text);
+
+		if (newValue !== this.props.value) {
+			// If the value changed
+			this.tryChangeValue(newValue);
+		} else if (this.textIsValid(text)) {
+			// If the value didn't change but it is a valid displayable text, we update the input text
+			this.inputText = text;
+		}
+	}
+
+	/**
+	 * Saves in decimalSeparator the one used by the localizer. If no localizer, defaults to dot '.'.
+	 *
+	 * @param {[type]} localizer
+	 * @return {[type]}
+	 */
+	saveDecimalSeparator(localizer) {
+		this.decimalSeparator = localizer ? localizer.getDecimalSeparator() : '.';
+	}
+
+	/**
+	 * Updates the text of the text input with the value
+	 *
+	 * @param {Number} value
+	 */
+	updateInputText(value) {
+		this.inputText = this.formatValue(value);
 	}
 
 	/**
@@ -105,25 +129,14 @@ class NumberInput extends Component {
 	}
 
 	/**
-	 * Receives a number, applies the filters to it and updates the value if applicable. If a
-	 * textModel is passed, it will be used when updating the text input's value
+	 * When the value changed (value is valid)
 	 *
 	 * @param {Number} value
-	 * @param {String} textModel
 	 */
-	tryChangeValue(value, textModel) {
-		const newValue = this.applyValueFilters(value);
-
-		// If the newValue is different from previous, we trigger a onChangeValue
-		if (newValue !== this.inputValue) {
-			this.inputValue = newValue;
-
-			if (this.props.onChangeValue) {
-				this.props.onChangeValue(newValue);
-			}
+	onChangeValue(value) {
+		if (this.props.onChangeValue) {
+			this.props.onChangeValue(value);
 		}
-
-		this.updateInputText(textModel);
 	}
 
 	/**
@@ -138,28 +151,9 @@ class NumberInput extends Component {
 		}
 
 		let cleanedText = text;
-		const decimalSeparator = this.getDecimalSeparator();
-		const escapedDecimalSeparator = escapeStringRegexp(decimalSeparator);
-		const decimalSeparatorPlaceholder = decimalSeparator === '@' ? '!' : '@';
 
-		// First pass : remove any characters not a number, - or the decimal separator
-		const firstPassRegExp = new RegExp(`[^0-9-${escapedDecimalSeparator}]`, 'g');
-		cleanedText = cleanedText.replace(firstPassRegExp, '');
-
-		// Takes note if number is negative (starts with a '-')
-		const negativity = cleanedText[0] === '-' ? -1 : 1;
-
-		// Replace the last decimal separator by a placeholder
-		// Ex if decimal separator is ',', replaces '12,23,5' by '12,23@5'
-		const replaceLastDecimalRegExp = new RegExp(`${escapedDecimalSeparator}([^${escapedDecimalSeparator}]*)$`);
-		cleanedText = cleanedText.replace(replaceLastDecimalRegExp, `${decimalSeparatorPlaceholder}$1`);
-
-		// Second pass, keep only numbers and the decimal separator placeholder
-		const secondPassRegExp = new RegExp(`[^0-9${decimalSeparatorPlaceholder}]`, 'g');
-		cleanedText = cleanedText.replace(secondPassRegExp, '');
-
-		// Replace the decimal separator by a '.' (there should be just one decimal separator)
-		cleanedText = cleanedText.replace(decimalSeparatorPlaceholder, '.');
+		// Replace the decimalSeparator with a dot to parse
+		cleanedText = text.replace(this.decimalSeparator, '.');
 
 		const number = Number.parseFloat(cleanedText);
 
@@ -167,46 +161,62 @@ class NumberInput extends Component {
 			return null;
 		}
 
-		return number * negativity;
+		return number;
 	}
 
 	/**
-	 * Applies all filters (ex: min and max, number of decimals, ...) to the value and returns the
-	 * filtered value.
+	 * Returns true if the value respects the restrictions received
 	 *
 	 * @param {Number} value
-	 * @return {Number}
+	 * @return {Boolean}
 	 */
-	applyValueFilters(value) {
+	valueIsValid(value) {
 		// TODO
-		// Based on this.props, limit the value and returns it
-		// - If integer only
-		// - If has to be greater than
-		// - If has to be less than
-		// - If number of decimal is limited
-		return value;
+		return true;
 	}
 
 	/**
-	 * Updates the input text value by displaying the value prop. If a textModel is supplied, it will
-	 * be updated with the value (ex: if it ends with a decimal separator, it will be kept)
+	 * Validate that the text is valid text to show. A valid text is a regular number (ex: "2.23") or
+	 * a valid number being constructed :
+	 * - A single minus ("-")
+	 * - A single 0 ("0", "-0")
+	 * - A number followed by a decimal separator ("-2.", "0.")
+	 * - A number with trailing zeros as decimal ("-2.98000", "0.000")
 	 *
-	 * @param {String} textModel
+	 * Uses the decimal separator defined by the localizer.
+	 *
+	 * @param {String} text
+	 * @return {Boolean}
 	 */
-	updateInputText(textModel = null) {
-		let text = '';
+	textIsValid(text) {
+		const ds = escapeStringRegexp(this.decimalSeparator);
 
-		if (textModel) {
-			text = this.formatValueUsingModel(this.inputValue, textModel);
-		} else {
-			text = this.formatValue(this.inputValue);
+		if (text === null) {
+			return true;
 		}
 
-		this.inputText = text;
+		if (text === '-') {
+			return true;
+		}
+
+		/**
+		 * Regular expression that tests the following
+		 * - Optional single negative (-)
+		 * - Followed by either a single 0 or a number not starting by 0
+		 * - Optionnaly followed by
+		 * 	- decimal separator
+		 * 	- followed by optional number (can be just zeros)
+		 *
+		 * @type {RegExp}
+		 */
+		const validRX = new RegExp(`^-?(0|([1-9][0-9]*))(${ds}[0-9]*)?$`);
+
+		return validRX.test(text);
 	}
 
 	/**
-	 * Formats a number using the localizer.
+	 * Takes a number and returns the formatted string. If the number is null, returns empty string.
+	 * Uses the localizer decimal separator.
 	 *
 	 * @param {Number} value
 	 * @return {String}
@@ -216,79 +226,8 @@ class NumberInput extends Component {
 			return '';
 		}
 
-		if (this.props.localizer) {
-			const formatterOptions = {
-				useGrouping: false,
-				maximumFractionDigits: 20,
-			};
-			return this.props.localizer.formatNumber(value, formatterOptions);
-		}
-
-		return `${value}`;
-	}
-
-	/**
-	 * Formats a number using the localizer and an existing "model". Ex : if the model ends with a
-	 * decimal separator, or with trailing decimal zeros, they will be kept.
-	 *
-	 * @param {Number} value
-	 * @param {String} model
-	 * @return {String}
-	 */
-	formatValueUsingModel(value, model) {
-		const decimalSeparator = this.getDecimalSeparator();
-		const escapedDecimalSeparator = escapeStringRegexp(decimalSeparator);
-
-		if (value === null) {
-			if (model === '-') {
-				return '-';
-			}
-
-			// If the model is only the decimal separator, we prepend it with 0
-			if (model === decimalSeparator) {
-				return `0${decimalSeparator}`;
-			}
-		}
-
-		const formatted = this.formatValue(value);
-
-		// If model ends with trailing decimal separator or with a decimal followed by only zeros, we
-		// keep the zeros
-		let trailingDecimalSeparator = '';
-		const trailingDecimalRegExp = new RegExp(`${escapedDecimalSeparator}0*$`);
-		if (trailingDecimalRegExp.test(model)) {
-			trailingDecimalSeparator = decimalSeparator;
-		}
-
-		// If model ends with trailing zeros, we add them
-		let trailingZeros = '';
-		const trailingZerosRegExp = new RegExp(`${escapedDecimalSeparator}([0-9]*[1-9])?(0+)$`);
-		const trailingZerosRes = trailingZerosRegExp.exec(model);
-		if (trailingZerosRes) {
-			trailingZeros = trailingZerosRes[2];
-		}
-
-		// If value is 0 and model starts with a 0, we prepend a minus before
-		let negativity = '';
-		if (value === 0 && model[0] === '-') {
-			negativity = '-';
-		}
-
-		return `${negativity}${formatted}${trailingDecimalSeparator}${trailingZeros}`;
-	}
-
-	/**
-	 * Returns the decimal separator character used and to use in the text input. Used the localizer.
-	 * If no localizer is set, returns '.'.
-	 *
-	 * @return {String}
-	 */
-	getDecimalSeparator() {
-		if (this.props.localizer) {
-			return this.props.localizer.getDecimalSeparator();
-		}
-
-		return '.';
+		const text = String(value);
+		return text.replace('.', this.decimalSeparator);
 	}
 
 	/**
@@ -297,8 +236,19 @@ class NumberInput extends Component {
 	 * @param {Number} type  1 or -1
 	 */
 	incrementValue(type) {
-		const currentValue = typeof this.inputValue === 'number' ? this.inputValue : 0;
-		this.tryChangeValue(currentValue + type, this.inputText);
+		const currentValue = typeof this.props.value === 'number' ? this.props.value : 0;
+		this.tryChangeValue(currentValue + type);
+	}
+
+	/**
+	 * If the received value is valid, trigger the onChangeValue, else does nothing.
+	 *
+	 * @param {Number} value
+	 */
+	tryChangeValue(value) {
+		if (this.valueIsValid(value)) {
+			this.onChangeValue(value);
+		}
 	}
 
 	/**
@@ -344,7 +294,6 @@ class NumberInput extends Component {
 
 		return '';
 	}
-
 
 	/**
 	 * Rendering function to render the "more" and "less" button. For a "more", pass 1, for a less,
