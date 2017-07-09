@@ -11,6 +11,7 @@ import styleVars from '../../../styles/variables';
 
 const propTypes = {
 	value: PropTypes.number,
+	acceptDotAsDecimal: PropTypes.bool,
 	style: TextInput.propTypes.style,
 	type: PropTypes.string,
 	showIncrementors: PropTypes.bool,
@@ -20,6 +21,7 @@ const propTypes = {
 
 const defaultProps = {
 	value: null,
+	acceptDotAsDecimal: false,
 	style: null,
 	type: null,
 	onChangeValue: null,
@@ -79,7 +81,13 @@ class NumberInput extends Component {
 			this.tryChangeValue(newValue);
 		} else if (this.textIsValid(text)) {
 			// If the value didn't change but it is a valid displayable text, we update the input text
-			this.inputText = text;
+			let inputText = text;
+
+			if (this.props.acceptDotAsDecimal && this.decimalSeparator !== '.') {
+				inputText = inputText.replace('.', this.decimalSeparator);
+			}
+
+			this.inputText = inputText;
 		}
 	}
 
@@ -183,20 +191,27 @@ class NumberInput extends Component {
 	 * - A number followed by a decimal separator ("-2.", "0.")
 	 * - A number with trailing zeros as decimal ("-2.98000", "0.000")
 	 *
-	 * Uses the decimal separator defined by the localizer.
+	 * Uses the decimal separator defined by the localizer. Accepts the dot if acceptDotAsDecimal is
+	 * true.
 	 *
 	 * @param {String} text
 	 * @return {Boolean}
 	 */
 	textIsValid(text) {
-		const ds = escapeStringRegexp(this.decimalSeparator);
-
 		if (text === null) {
 			return true;
 		}
 
 		if (text === '-') {
 			return true;
+		}
+
+		// Decimal separator character
+		let ds = escapeStringRegexp(this.decimalSeparator);
+
+		// If we allow the dot (props.acceptDotAsDecimal), modify the ds
+		if (this.decimalSeparator !== '.' && this.props.acceptDotAsDecimal) {
+			ds = `[${ds}\.]`;
 		}
 
 		/**

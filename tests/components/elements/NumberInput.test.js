@@ -119,10 +119,18 @@ describe('textIsValid()', () => {
 	});
 
 	test('returns false for other invalid strings', () => {
-		const values = ['--', ' 1', '1.2.3', '1x', 'x2'];
+		const values = ['--', ' 1', '1,2,3', '1x', 'x2'];
 		values.forEach((value) => {
 			expect(numberInput.textIsValid(value)).toBe(false);
 		});
+	});
+
+	test('uses acceptDotAsDecimal', () => {
+		numberInput.props.acceptDotAsDecimal = false;
+		expect(numberInput.textIsValid('12.34')).toBe(false);
+
+		numberInput.props.acceptDotAsDecimal = true;
+		expect(numberInput.textIsValid('12.34')).toBe(true);
 	});
 
 	// Since the method uses a regular expression and in some languages the decimal separator is the
