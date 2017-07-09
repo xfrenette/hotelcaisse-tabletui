@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { TouchableHighlight, InteractionManager } from 'react-native';
 import PropTypes from 'prop-types';
-import { TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styleVars from '../../../styles/variables';
 
@@ -13,28 +13,40 @@ const defaultProps = {
 	onPress: () => {},
 };
 
-function Incrementor(props) {
-	const type = props.type;
-	const iconName = type === 1 ? 'plus' : 'minus';
-	const buttonStyle = [styles.button];
+class Incrementor extends Component {
+	onPress() {
+		if (!this.props.onPress) {
+			return;
+		}
 
-	if (type === 1) {
-		buttonStyle.push(styles.more);
-	} else {
-		buttonStyle.push(styles.less);
+		requestAnimationFrame(() => {
+			this.props.onPress();
+		});
 	}
 
-	const icon = <Icon name={iconName} style={styles.icon} />;
+	render() {
+		const type = this.props.type;
+		const iconName = type === 1 ? 'plus' : 'minus';
+		const buttonStyle = [styles.button];
 
-	return (
-		<TouchableHighlight
-			style={buttonStyle}
-			underlayColor={styleVars.colors.grey1}
-			onPress={props.onPress}
-		>
-			{ icon }
-		</TouchableHighlight>
-	);
+		if (type === 1) {
+			buttonStyle.push(styles.more);
+		} else {
+			buttonStyle.push(styles.less);
+		}
+
+		const icon = <Icon name={iconName} style={styles.icon} />;
+
+		return (
+			<TouchableHighlight
+				style={buttonStyle}
+				underlayColor={styleVars.colors.grey1}
+				onPress={() => { this.onPress(); }}
+			>
+				{ icon }
+			</TouchableHighlight>
+		);
+	}
 }
 
 Incrementor.propTypes = propTypes;
