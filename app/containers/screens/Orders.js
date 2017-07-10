@@ -113,6 +113,14 @@ class Orders extends Component {
 		this.props.router.replace('/');
 	}
 
+	/**
+	 * When the user pulls down to refresh. We clear the list of orders and restart a loading.
+	 */
+	onRefresh() {
+		this.orders.clear();
+		this.loadNextOrders();
+	}
+
 	render() {
 		return (
 			<OrdersScreen
@@ -122,6 +130,7 @@ class Orders extends Component {
 				hasMoreOrders={this.hasMoreOrders}
 				localizer={this.props.localizer}
 				onOrderPress={(order) => { this.onOrderPress(order); }}
+				onRefresh={() => { this.onRefresh(); }}
 				onDone={() => { this.onDone(); }}
 				onLoadNextOrders={() => this.onLoadNextOrders()}
 			/>

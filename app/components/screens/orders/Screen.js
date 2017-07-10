@@ -30,6 +30,7 @@ const propTypes = {
 	hasMoreOrders: PropTypes.bool,
 	customerFields: PropTypes.arrayOf(PropTypes.instanceOf(Field)).isRequired,
 	onPressHome: PropTypes.func,
+	onRefresh: PropTypes.func,
 	onDone: PropTypes.func,
 	onOrderPress: PropTypes.func,
 	onLoadNextOrders: PropTypes.func,
@@ -39,6 +40,7 @@ const defaultProps = {
 	loading: false,
 	hasMoreOrders: false,
 	onPressHome: null,
+	onRefresh: null,
 	onDone: null,
 	onOrderPress: null,
 	onLoadNextOrders: null,
@@ -318,6 +320,8 @@ class OrdersScreen extends Component {
 	renderOrders(sections) {
 		return (
 			<SectionList
+				onRefresh={this.props.onRefresh}
+				refreshing={false}
 				renderItem={({ item }) => this.renderOrder(item)}
 				renderSectionHeader={({ section }) => this.renderSectionHeader(section)}
 				sections={sections}
