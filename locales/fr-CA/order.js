@@ -42,7 +42,7 @@ export default {
 		empty: 'Cette catégorie est vide',
 	},
 	customProduct: 'Produit spécial',
-	reimbursements: {
+	refunds: {
 		label: 'Remboursements',
 	},
 	items: {

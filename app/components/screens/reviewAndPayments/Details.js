@@ -23,20 +23,38 @@ const defaultProps = {
 @observer
 class Details extends Component {
 	/**
-	 * Items with positive quantity
+	 * Bought Items (with positive quantity)
 	 *
 	 * @return {Array<Item>}
 	 */
-	get items() {
+	get boughtItems() {
 		return this.props.order.items.filter(item => item.quantity > 0);
 	}
 	/**
-	 * Items with negative quantity
+	 * Refunded Items (with negative quantity)
 	 *
 	 * @return {Array<Item>}
 	 */
-	get reimbursements() {
+	get refundedItems() {
 		return this.props.order.items.filter(item => item.quantity < 0);
+	}
+
+	/**
+	 * All payments (Transaction with positive amount)
+	 *
+	 * @return {Array<Transaction>}
+	 */
+	get payments() {
+		return this.props.order.transactions.filter(transaction => transaction.amount.gt(0));
+	}
+
+	/**
+	 * All refunds (Transaction with negative amount)
+	 *
+	 * @return {Array<Transaction>}
+	 */
+	get refunds() {
+		return this.props.order.transactions.filter(transaction => transaction.amount.lt(0));
 	}
 
 	/**
@@ -100,74 +118,143 @@ class Details extends Component {
 		);
 	}
 
+	/**
+	 * Renders the list of bought Items
+	 *
+	 * @return {Node}
+	 */
+	renderBoughtItems() {
+		return this.boughtItems.map(item => this.renderItem(item));
+	}
+
+	/**
+	 * Renders the list of refunded Items
+	 *
+	 * @return {Node}
+	 */
+	renderRefundedItems() {
+		if (!this.refundedItems.length) {
+			return null;
+		}
+
+		const refundedItemRows = this.refundedItems.map(item => this.renderItem(item));
+
+		return (
+			<View>
+				<Row>
+					<Cell style={[cellStyles.name]} first last>
+						<Text style={styles.sectionCell}>{ this.t('order.refundedItems.label') }</Text>
+					</Cell>
+				</Row>
+				{ refundedItemRows }
+			</View>
+		);
+	}
+
+	/**
+	 * Renders the list of Credits
+	 *
+	 * @return {Node}
+	 */
+	renderCredits() {
+		if (!this.props.order.credits.length) {
+			return null;
+		}
+
+		const creditRows = this.props.order.credits.map(credit => this.renderCredit(credit));
+
+		return (
+			<View>
+				<Row>
+					<Cell style={[cellStyles.name]} first last>
+						<Text style={styles.sectionCell}>{ this.t('order.credits.label') }</Text>
+					</Cell>
+				</Row>
+				{ creditRows }
+			</View>
+		);
+	}
+
+	/**
+	 * Renders the list of payments
+	 *
+	 * @return {Node}
+	 */
+	renderPayments() {
+		if (!this.payments.length) {
+			return null;
+		}
+
+		const transactionRows = this.payments.map(
+			transaction => this.renderTransaction(transaction)
+		);
+
+		return (
+			<View>
+				<Row>
+					<Cell style={[cellStyles.name]} first last>
+						<Text style={styles.sectionCell}>{ this.t('order.payments.label') }</Text>
+					</Cell>
+				</Row>
+				{ transactionRows }
+			</View>
+		);
+	}
+
+	/**
+	 * Renders the list of refunds
+	 *
+	 * @return {Node}
+	 */
+	renderRefunds() {
+		if (!this.refunds.length) {
+			return null;
+		}
+
+		const transactionRows = this.refunds.map(
+			transaction => this.renderTransaction(transaction)
+		);
+
+		return (
+			<View>
+				<Row>
+					<Cell style={[cellStyles.name]} first last>
+						<Text style={styles.sectionCell}>{ this.t('order.refunds.label') }</Text>
+					</Cell>
+				</Row>
+				{ transactionRows }
+			</View>
+		);
+	}
+
+	/**
+	 * Renders the balance row
+	 *
+	 * @return {Node}
+	 */
+	renderBalance() {
+		if (!this.props.order.transactions.length) {
+			return null;
+		}
+
+		const balanceAmount = this.props.order.balance.toNumber();
+		const formattedBalance = this.props.localizer.formatCurrency(balanceAmount);
+
+		return (
+			<Row>
+				<Cell style={cellStyles.name} first>
+					<Text style={styles.totalCell}>{ this.t('order.balance.toPay') }</Text>
+				</Cell>
+				<Cell style={cellStyles.subtotal} last>
+					<Text style={styles.totalCell}>{ formattedBalance }</Text>
+				</Cell>
+			</Row>
+		);
+	}
+
 	render() {
 		const total = this.props.order.total.toNumber();
 		const formattedTotal = this.props.localizer.formatCurrency(total);
-
-		const items = this.items.map(item => this.renderItem(item));
-		let reimbursements = null;
-		let credits = null;
-		let transactions = null;
-		let balance = null;
-
-		if (this.reimbursements.length) {
-			const reimbursementRows = this.reimbursements.map(item => this.renderItem(item));
-
-			reimbursements = (
-				<View>
-					<Row>
-						<Cell style={[cellStyles.name]} first last>
-							<Text style={styles.sectionCell}>{ this.t('order.reimbursements.label') }</Text>
-						</Cell>
-					</Row>
-					{ reimbursementRows }
-				</View>
-			);
-		}
-
-		if (this.props.order.credits.length) {
-			const creditRows = this.props.order.credits.map(credit => this.renderCredit(credit));
-			credits = (
-				<View>
-					<Row>
-						<Cell style={[cellStyles.name]} first last>
-							<Text style={styles.sectionCell}>{ this.t('order.credits.label') }</Text>
-						</Cell>
-					</Row>
-					{ creditRows }
-				</View>
-			);
-		}
-
-		if (this.props.order.transactions.length) {
-			const transactionRows = this.props.order.transactions.map(
-				transaction => this.renderTransaction(transaction)
-			);
-			transactions = (
-				<View>
-					<Row>
-						<Cell style={[cellStyles.name]} first last>
-							<Text style={styles.sectionCell}>{ this.t('order.payments.label') }</Text>
-						</Cell>
-					</Row>
-					{ transactionRows }
-				</View>
-			);
-
-			const balanceAmount = this.props.order.balance.toNumber();
-			const formattedBalance = this.props.localizer.formatCurrency(balanceAmount);
-
-			balance = (
-				<Row>
-					<Cell style={cellStyles.name} first>
-						<Text style={styles.totalCell}>{ this.t('order.balance.toPay') }</Text>
-					</Cell>
-					<Cell style={cellStyles.subtotal} last>
-						<Text style={styles.totalCell}>{ formattedBalance }</Text>
-					</Cell>
-				</Row>
-			);
-		}
 
 		return (
 			<View style={styles.items}>
@@ -183,9 +270,9 @@ class Details extends Component {
 						<Text style={tableStyles.header} last>{ this.t('order.items.subtotal') }</Text>
 					</Cell>
 				</Row>
-				{ items }
-				{ reimbursements }
-				{ credits }
+				{ this.renderBoughtItems() }
+				{ this.renderRefundedItems() }
+				{ this.renderCredits() }
 				<Row>
 					<Cell style={cellStyles.name} first>
 						<Text style={styles.totalCell}>{ this.t('order.items.total') }</Text>
@@ -194,8 +281,9 @@ class Details extends Component {
 						<Text style={styles.totalCell}>{ formattedTotal }</Text>
 					</Cell>
 				</Row>
-				{ transactions }
-				{ balance }
+				{ this.renderPayments() }
+				{ this.renderRefunds() }
+				{ this.renderBalance() }
 			</View>
 		);
 	}
