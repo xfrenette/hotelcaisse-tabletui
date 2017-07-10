@@ -23,7 +23,7 @@ const propTypes = {
 
 const defaultProps = {
 	value: null,
-	acceptDotAsDecimal: false,
+	acceptDotAsDecimal: true,
 	style: null,
 	type: null,
 	onChangeValue: null,
