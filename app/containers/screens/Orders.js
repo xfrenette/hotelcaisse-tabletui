@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { observable } from 'mobx';
+import { observable, computed } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import OrdersScreen from '../../components/screens/orders/Screen';
 
 const NB_ORDERS_TO_LOAD = 10;
 
-@inject('business', 'router', 'localizer', 'ordersServer')
+@inject('ui', 'business', 'router', 'localizer', 'ordersServer')
 @observer
 class Orders extends Component {
-	lastLoadedOrder = null;
 	/**
 	 * Indicates if we think we may have more Orders to load or if we reached the end of the list.
 	 *
@@ -23,13 +22,6 @@ class Orders extends Component {
 	 */
 	@observable
 	loading = false;
-	/**
-	 * Orders to show. Updated when new Orders are loaded.
-	 *
-	 * @type {Array}
-	 */
-	@observable
-	orders = [];
 
 	/**
 	 * On mount, reinit properties and load the first Orders
@@ -37,8 +29,28 @@ class Orders extends Component {
 	componentWillMount() {
 		this.hasMoreOrders = true;
 		this.loading = false;
-		this.orders = [];
-		this.loadNextOrders();
+		if (!this.orders.length) {
+			this.loadNextOrders();
+		}
+	}
+
+	/**
+	 * Simple alias to UI.loadedOrders (which is observable)
+	 *
+	 * @return {Array<Order>}
+	 */
+	@computed
+	get orders() {
+		return this.props.ui.loadedOrders;
+	}
+
+	/**
+	 * Utility function to add orders to UI.loadedOrders
+	 *
+	 * @param {Array<Order>} orders
+	 */
+	addOrders(orders) {
+		this.props.ui.loadedOrders.push(...orders);
 	}
 
 	/**
@@ -59,11 +71,9 @@ class Orders extends Component {
 					this.loading = false;
 
 					if (orders.length) {
-						this.orders.push(...orders);
-						this.lastLoadedOrder = orders[orders.length - 1];
+						this.addOrders(orders);
 					} else {
 						this.hasMoreOrders = false;
-						this.lastLoadedOrder = null;
 					}
 				});
 		});
@@ -92,7 +102,8 @@ class Orders extends Component {
 			return;
 		}
 
-		this.loadNextOrders(this.lastLoadedOrder);
+		const lastOrder = this.orders.length ? this.orders[this.orders.length - 1] : null;
+		this.loadNextOrders(lastOrder);
 	}
 
 	/**

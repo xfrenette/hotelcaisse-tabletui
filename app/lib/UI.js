@@ -100,6 +100,15 @@ class UI {
 	 * @type {Server}
 	 */
 	ordersServer = null;
+	/**
+	 * List of orders that were loaded in the /orders screen. Used to reshow the same list when we
+	 * go back from an Order screen we reached from /orders. It can be cleared anytime though; it is
+	 * just a convenient cache.
+	 *
+	 * @type {Array<Order>}
+	 */
+	@observable
+	loadedOrders = [];
 
 	/**
 	 * Constructor. Can receive an object with the following param overwritting the defaults UI

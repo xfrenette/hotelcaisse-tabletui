@@ -112,6 +112,15 @@ class OrdersScreen extends Component {
 	}
 
 	/**
+	 * When mounting, do the sections if we have orders
+	 */
+	componentWillMount() {
+		if (this.props.orders.length) {
+			this.updateOrderSections(this.props.orders);
+		}
+	}
+
+	/**
 	 * When receiving new orders, redo the sections
 	 *
 	 * @param {Object} newProps
