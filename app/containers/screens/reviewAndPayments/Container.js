@@ -2,15 +2,31 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
-import Transaction from 'hotelcaisse-app/dist/business/Transaction';
+import Customer from './Customer';
+import RoomSelections from './RoomSelections';
+import Sidebar from './Sidebar';
+import Details from './Details';
 import Screen from '../../../components/screens/reviewAndPayments/Screen';
 
 @inject('localizer', 'uuidGenerator', 'router', 'business', 'ui')
 @observer
-class ReviewAndPayments extends Component {
+class Container extends Component {
+	/**
+	 * The Order currently being edited
+	 *
+	 * @type {Order}
+	 */
 	order = null;
+	/**
+	 * If the Order is a new one or an already existing one (already saved)
+	 *
+	 * @type {Boolean}
+	 */
 	isNew = false;
 
+	/**
+	 * When mounting, get the Order and 'isNew' from the location
+	 */
 	componentWillMount() {
 		const order = get(this.props, 'location.state.order', null);
 		this.order = order || new Order(this.props.uuidGenerator.generate());
@@ -18,34 +34,23 @@ class ReviewAndPayments extends Component {
 		this.isNew = get(this.props, 'location.state.new', false);
 	}
 
+	/**
+	 * When the user presses the 'Home' button
+	 */
 	onPressHome() {
 		this.props.router.replace('/');
 	}
 
+	/**
+	 * When the user presses the 'Return' button
+	 */
 	onReturn() {
 		this.props.router.goBack();
 	}
 
-	onEditCustomer() {
-		this.props.router.push(
-			'/order/customer-roomSelections',
-			{ order: this.order, thenReturn: true },
-		);
-	}
-
-	onEditRoomSelections() {
-		this.props.router.push(
-			'/order/customer-roomSelections',
-			{ order: this.order, thenReturn: true },
-		);
-	}
-
-	onAddTransaction(amount, mode) {
-		const uuid = this.props.uuidGenerator.generate();
-		const transaction = new Transaction(uuid, amount, mode);
-		this.order.transactions.push(transaction);
-	}
-
+	/**
+	 * When the user presses the 'Done' button
+	 */
 	onDone() {
 		this.props.ui.orderDraft = null;
 		this.props.router.push('/');
@@ -54,19 +59,19 @@ class ReviewAndPayments extends Component {
 	render() {
 		return (
 			<Screen
+				sidebarNode={<Sidebar order={this.order} />}
+				customerNode={<Customer order={this.order} />}
+				roomSelectionsNode={<RoomSelections order={this.order} />}
+				detailsNode={<Details order={this.order} />}
 				order={this.order}
 				isNew={this.isNew}
 				localizer={this.props.localizer}
-				transactionModes={this.props.business.transactionModes}
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}
 				onDone={() => { this.onDone(); }}
-				onEditCustomer={() => { this.onEditCustomer(); }}
-				onEditRoomSelections={() => { this.onEditRoomSelections(); }}
-				onAddTransaction={(a, m) => { this.onAddTransaction(a, m); }}
 			/>
 		);
 	}
 }
 
-export default ReviewAndPayments;
+export default Container;
