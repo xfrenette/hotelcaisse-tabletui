@@ -215,6 +215,7 @@ class CustomItemRow extends ItemRow {
 				onBlur={() => { this.onPriceBlur(); }}
 				value={this.price}
 				selectTextOnFocus
+				constraints={{ numericality: { greaterThanOrEqualTo: 0 } }}
 			/>
 		);
 	}

@@ -225,6 +225,7 @@ class CreditRow extends Component {
 							onChangeValue={(amount) => { this.amount = amount; }}
 							onBlur={() => { this.onAmountBlur(); }}
 							error={amountError}
+							constraints={{ numericality: { greaterThanOrEqualTo: 0 } }}
 						/>
 					</Cell>
 				</Row>

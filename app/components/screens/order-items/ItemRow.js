@@ -130,6 +130,7 @@ class ItemRow extends Component {
 				showIncrementors
 				selectTextOnFocus
 				onChangeValue={(value) => { this.onQuantityChange(value); }}
+				constraints={{ numericality: { onlyInteger: true, greaterThanOrEqualTo: 1 } }}
 			/>
 		);
 	}
