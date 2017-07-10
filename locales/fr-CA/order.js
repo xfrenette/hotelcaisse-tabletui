@@ -2,6 +2,8 @@ export default {
 	total: 'Total',
 	balance: {
 		toPay: 'À payer',
+		toCollect: 'À percevoir',
+		toRefund: 'À rembourser',
 	},
 	credit: 'Dépôt',
 	credits: {

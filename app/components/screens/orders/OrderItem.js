@@ -24,6 +24,17 @@ class OrderItem extends Component {
 		return nextProps.order.uuid !== this.props.order.uuid;
 	}
 
+	/**
+	 * Simple alias to this.props.localizer.t
+	 *
+	 * @param {String} path
+	 * @param {Object} variables
+	 * @return {String}
+	 */
+	t(path, variables) {
+		return this.props.localizer.t(path, variables);
+	}
+
 	render() {
 		const order = this.props.order;
 		order.customer.fields = this.props.customerFields;
@@ -42,10 +53,16 @@ class OrderItem extends Component {
 		let balanceNode = <View style={styles.balance} />;
 
 		if (!balanceAmount.eq(0)) {
+			const typeStyle = balanceAmount.gt(0) ? textStyles.toCollect : textStyles.toRefund
 			balanceNode = (
-				<Text style={[styles.balance, textStyles.balance]}>
-					{ this.props.localizer.formatCurrency(balanceAmount.toNumber())}
-				</Text>
+				<View style={styles.balance}>
+					<Text style={[textStyles.balanceLabel, typeStyle]}>
+						{ this.t(`order.balance.${balanceAmount.gt(0) ? 'toCollect' : 'toRefund'}`) }
+					</Text>
+					<Text style={[textStyles.balance, typeStyle]}>
+						{ this.props.localizer.formatCurrency(balanceAmount.toNumber())}
+					</Text>
+				</View>
 			);
 		}
 
@@ -102,8 +119,18 @@ const textStyles = {
 	room: {
 		fontWeight: 'bold',
 	},
+	balanceLabel: {
+		textAlign: 'right',
+	},
 	balance: {
 		textAlign: 'right',
+		fontWeight: 'bold',
+	},
+	toCollect: {
+		color: styleVars.colors.red1,
+	},
+	toRefund: {
+		color: styleVars.colors.orange1,
 	},
 };
 
