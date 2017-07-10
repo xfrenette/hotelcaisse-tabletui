@@ -44,7 +44,7 @@ class Home extends Component {
 				this.onNewOrderPress();
 				break;
 			case 'orders':
-				path = '/orders';
+				this.onOrdersPress();
 				break;
 			default:
 				path = null;
@@ -81,6 +81,15 @@ class Home extends Component {
 		} else {
 			this.createOrder();
 		}
+	}
+
+	/**
+	 * When the user presses the "See Orders" button, we first clear the cache before going to the
+	 * screen
+	 */
+	onOrdersPress() {
+		this.props.ui.loadedOrders.clear();
+		this.goToPath('/orders');
 	}
 
 	/**
