@@ -6,7 +6,7 @@ import CloseRegister from './containers/screens/CloseRegister';
 import ManageRegister from './containers/screens/ManageRegister';
 import OrderItems from './containers/screens/OrderItems';
 import CustomerRoomSelections from './containers/screens/CustomerRoomSelections';
-import ReviewAndPayments from './containers/screens/ReviewAndPayments';
+import ReviewAndPayments from './containers/screens/reviewAndPayments/Container';
 import Orders from './containers/screens/Orders';
 
 import LoadedGuard from './lib/routeGuards/LoadedGuard';

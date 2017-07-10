@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Transaction from 'hotelcaisse-app/dist/business/Transaction';
-import Screen from '../../components/screens/reviewAndPayments/Screen';
+import Screen from '../../../components/screens/reviewAndPayments/Screen';
 
 @inject('localizer', 'uuidGenerator', 'router', 'business', 'ui')
 @observer
