@@ -10,4 +10,5 @@ export default {
 	back: 'Retour',
 	leave: 'Quitter',
 	edit: 'Modifier',
+	confirm: 'Confirmer',
 };

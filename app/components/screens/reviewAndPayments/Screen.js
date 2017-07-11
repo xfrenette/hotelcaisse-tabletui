@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
+import { View, ScrollView, Alert } from 'react-native';
 import { observer } from 'mobx-react/native';
 import PropTypes from 'prop-types';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
-import { View, ScrollView } from 'react-native';
 import {
 	Button,
 	BottomBarBackButton,
-	Text,
 } from '../../elements';
 import {
 	TopBar,
@@ -15,10 +14,7 @@ import {
 	Screen,
 	MainContent,
 } from '../../layout';
-import { Row, Cell } from '../../elements/table';
-import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
-import tableStyles from '../../../styles/tables';
 import layoutStyles from '../../../styles/layout';
 
 const propTypes = {
@@ -57,6 +53,35 @@ class ReviewAndPaymentsScreen extends Component {
 	 */
 	t(path) {
 		return this.props.localizer.t(path);
+	}
+
+	/**
+	 * When pressing 'Done', confirm if the balance is not 0, then call this.confirmDone()
+	 */
+	onDone() {
+		if (!this.props.order.balance.eq(0)) {
+			const key = this.props.order.balance.gt(0) ? 'payment' : 'refund';
+
+			Alert.alert(
+				this.t(`order.doneNonZeroBalance.${key}.title`),
+				this.t(`order.doneNonZeroBalance.${key}.message`),
+				[
+					{ text: this.t('actions.cancel') },
+					{ text: this.t('actions.confirm'), onPress: () => { this.onDoneConfirm(); } },
+				]
+			);
+		} else {
+			this.onDoneConfirm();
+		}
+	}
+
+	/**
+	 * When the 'done' is confirmed
+	 */
+	onDoneConfirm() {
+		if (this.props.onDone) {
+			this.props.onDone();
+		}
 	}
 
 	/**
@@ -117,7 +142,7 @@ class ReviewAndPaymentsScreen extends Component {
 					<Button
 						title={this.t('actions.done')}
 						layout={doneButtonLayout}
-						onPress={this.props.onDone}
+						onPress={() => { this.onDone(); }}
 					/>
 				</BottomBar>
 			</Screen>

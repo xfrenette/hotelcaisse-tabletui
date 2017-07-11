@@ -80,6 +80,16 @@ export default {
 			new: 'Nouvelle',
 		},
 	},
+	doneNonZeroBalance: {
+		payment: {
+			title: 'Montant à percevoir',
+			message: 'Il reste un montant à percevoir. Confirmez-vous que vous souhaitez continuer sans enregistrer un paiement ?',
+		},
+		refund: {
+			title: 'Montant à rembourser',
+			message: 'Il reste un montant à rembourser. Confirmez-vous que vous souhaitez continuer sans enregistrer un remboursement ?',
+		},
+	},
 	list: {
 		empty: 'Aucune fiche n\'a encore été créée.',
 		current: 'Clients actuels',
