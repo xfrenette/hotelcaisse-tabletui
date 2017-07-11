@@ -32,6 +32,7 @@ const propTypes = {
 	onPressHome: PropTypes.func,
 	onReturn: PropTypes.func,
 	onDone: PropTypes.func,
+	onCancel: PropTypes.func,
 };
 
 const defaultProps = {
@@ -43,6 +44,7 @@ const defaultProps = {
 	onPressHome: null,
 	onReturn: null,
 	onDone: null,
+	onCancel: null,
 };
 
 @observer
@@ -88,6 +90,9 @@ class ReviewAndPaymentsScreen extends Component {
 			? buttonLayouts.primary
 			: buttonLayouts.default;
 
+		const backButtonLabel = this.t(`actions.${this.props.isNew ? 'back' : 'cancel'}`);
+		const backButtonCallback = this.props.isNew ? this.props.onReturn : this.props.onCancel;
+
 		return (
 			<Screen>
 				<TopBar
@@ -106,8 +111,8 @@ class ReviewAndPaymentsScreen extends Component {
 				</View>
 				<BottomBar>
 					<BottomBarBackButton
-						title={this.t('actions.back')}
-						onPress={this.props.onReturn}
+						title={backButtonLabel}
+						onPress={backButtonCallback}
 					/>
 					<Button
 						title={this.t('actions.done')}

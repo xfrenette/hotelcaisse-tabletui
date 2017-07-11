@@ -25,13 +25,18 @@ class Container extends Component {
 	isNew = false;
 
 	/**
-	 * When mounting, get the Order and 'isNew' from the location
+	 * When mounting, get the Order and 'isNew' from the location. If it is not new, we start
+	 * recording changes.
 	 */
 	componentWillMount() {
 		const order = get(this.props, 'location.state.order', null);
 		this.order = order || new Order(this.props.uuidGenerator.generate());
 		this.order.customer.fields = this.props.business.customerFields;
 		this.isNew = get(this.props, 'location.state.new', false);
+
+		if (!this.isNew) {
+			this.order.recordChanges();
+		}
 	}
 
 	/**
@@ -42,18 +47,36 @@ class Container extends Component {
 	}
 
 	/**
-	 * When the user presses the 'Return' button
+	 * When the user presses the 'Return' button (only shown if a new Order, else we show the cancel,
+	 * see below)
 	 */
 	onReturn() {
 		this.props.router.goBack();
 	}
 
 	/**
-	 * When the user presses the 'Done' button
+	 * When the user presses the 'Cancel' button (only shown when editing an existing Order, else
+	 * show 'Return', see above). We revert the changes on the Order and go back.
+	 */
+	onCancel() {
+		this.order.revertChanges();
+		this.props.router.goBack();
+	}
+
+	/**
+	 * When the user presses the 'Done' button. We clear the draft. If new order, we add it to the
+	 * business and we go home, else we commit the changes and go back.
 	 */
 	onDone() {
 		this.props.ui.orderDraft = null;
-		this.props.router.push('/');
+
+		if (this.isNew) {
+			this.props.business.addOrder(this.order);
+			this.props.router.push('/');
+		} else {
+			this.order.commitChanges();
+			this.props.router.goBack();
+		}
 	}
 
 	render() {
@@ -69,6 +92,7 @@ class Container extends Component {
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}
 				onDone={() => { this.onDone(); }}
+				onCancel={() => { this.onCancel(); }}
 			/>
 		);
 	}
