@@ -68,6 +68,9 @@ export default {
 			name: 'Ne peut être vide',
 			price: 'Doit être positif',
 		},
+		actions: {
+			edit: 'Modifier les items',
+		},
 		qty: 'Qté',
 		unitPrice: 'Prix',
 		subtotal: 'Sous-total',

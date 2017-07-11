@@ -6,18 +6,32 @@ import DetailsComponent from '../../../components/screens/reviewAndPayments/Deta
 
 const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
+	isNew: PropTypes.bool,
 };
 
 const defaultProps = {
+	isNew: false,
 };
 
-@inject('localizer')
+@inject('localizer', 'router')
 class Details extends Component {
+	/**
+	 * When the user presses the 'edit items' button, we redirect to the items screen.
+	 */
+	onItemsEdit() {
+		this.props.router.push(
+			'/order/items',
+			{ order: this.props.order, new: this.isNew },
+		);
+	}
+
 	render() {
 		return (
 			<DetailsComponent
 				order={this.props.order}
 				localizer={this.props.localizer}
+				isNew={this.props.isNew}
+				onItemsEdit={() => { this.onItemsEdit(); }}
 			/>
 		);
 	}

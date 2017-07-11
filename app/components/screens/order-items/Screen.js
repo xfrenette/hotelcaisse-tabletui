@@ -572,7 +572,8 @@ class OrderItemsScreen extends Component {
 		const isNew = this.props.orderIsNew;
 		const hasNewItems = !!this.props.newItems.length;
 		const shouldShowCredits = (isNew && hasNewItems) || this.props.credits.length > 0;
-		const shouldShowNotes = (isNew && hasNewItems) || this.props.note.length > 0;
+		const note = this.props.note || '';
+		const shouldShowNotes = (isNew && hasNewItems) || note.length > 0;
 
 		return (
 			<Screen>

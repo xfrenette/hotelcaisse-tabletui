@@ -96,7 +96,7 @@ class Container extends Component {
 				sidebarNode={<Sidebar order={this.order} canAddTransaction={this.canAddTransaction} />}
 				customerNode={<Customer order={this.order} />}
 				roomSelectionsNode={<RoomSelections order={this.order} />}
-				detailsNode={<Details order={this.order} />}
+				detailsNode={<Details order={this.order} isNew={this.isNew} />}
 				order={this.order}
 				isNew={this.isNew}
 				canAddTransaction={this.canAddTransaction}

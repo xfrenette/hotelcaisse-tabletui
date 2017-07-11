@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import { View } from 'react-native';
-import { Text } from '../../elements';
+import { Text, Button } from '../../elements';
 import { Row, Cell } from '../../elements/table';
 import Item from './Item';
 import Credit from './Credit';
@@ -15,9 +15,13 @@ import tableStyles from '../../../styles/tables';
 const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
+	isNew: PropTypes.bool,
+	onItemsEdit: PropTypes.func,
 };
 
 const defaultProps = {
+	isNew: false,
+	onItemsEdit: null,
 };
 
 @observer
@@ -252,12 +256,30 @@ class Details extends Component {
 		);
 	}
 
+	/**
+	 * Renders the 'edit items' button only if we are editing an existing order.
+	 *
+	 * @return {Node}
+	 */
+	renderEditItemsButton() {
+		if (this.props.isNew) {
+			return null;
+		}
+
+		return (
+			<View style={styles.editItems}>
+				<Button title={this.t('order.items.actions.edit')} onPress={this.props.onItemsEdit} />
+			</View>
+		);
+	}
+
 	render() {
 		const total = this.props.order.total.toNumber();
 		const formattedTotal = this.props.localizer.formatCurrency(total);
 
 		return (
-			<View style={styles.items}>
+			<View>
+				{ this.renderEditItemsButton() }
 				<Row first>
 					<Cell style={cellStyles.name} first />
 					<Cell style={cellStyles.unitPrice}>
@@ -296,6 +318,9 @@ const styles = {
 	totalCell: {
 		fontWeight: 'bold',
 		color: styleVars.theme.mainColor,
+	},
+	editItems: {
+		alignItems: 'flex-start',
 	},
 };
 
