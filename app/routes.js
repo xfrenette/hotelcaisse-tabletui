@@ -30,13 +30,13 @@ export default ui => ({
 						{ path: '/', exact: true, component: Home },
 						{ path: '/orders', component: Orders },
 						{ path: '/order/review-payments', component: ReviewAndPayments },
+						{ path: '/order/items', component: OrderItems },
+						{ path: '/order/customer-roomSelections', component: CustomerRoomSelections },
 						{
 							guards: [new RegisterOpenedGuard(ui.app.business)],
 							routes: [
 								{ path: '/register/close', component: CloseRegister },
 								{ path: '/register/manage', component: ManageRegister },
-								{ path: '/order/items', component: OrderItems },
-								{ path: '/order/customer-roomSelections', component: CustomerRoomSelections },
 							],
 						},
 						{

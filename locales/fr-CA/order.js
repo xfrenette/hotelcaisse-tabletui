@@ -6,6 +6,7 @@ export default {
 		toCollect: 'À percevoir',
 		toRefund: 'À rembourser',
 		paid: 'Payé',
+		cannotSaveRegisterClosed: 'La caisse doit être ouverte pour pouvoir enregistrer les paiements et les remboursements.',
 	},
 	credit: 'Dépôt',
 	credits: {

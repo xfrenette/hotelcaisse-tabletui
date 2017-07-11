@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
+import { STATES } from 'hotelcaisse-app/dist/business/Register';
 import Customer from './Customer';
 import RoomSelections from './RoomSelections';
 import Sidebar from './Sidebar';
@@ -23,6 +25,15 @@ class Container extends Component {
 	 * @type {Boolean}
 	 */
 	isNew = false;
+	/**
+	 * We can add transaction only if the register is opened
+	 *
+	 * @return {Boolean}
+	 */
+	@computed
+	get canAddTransaction() {
+		return this.props.business.deviceRegister.state === STATES.OPENED;
+	}
 
 	/**
 	 * When mounting, get the Order and 'isNew' from the location. If it is not new, we start
@@ -82,12 +93,13 @@ class Container extends Component {
 	render() {
 		return (
 			<Screen
-				sidebarNode={<Sidebar order={this.order} />}
+				sidebarNode={<Sidebar order={this.order} canAddTransaction={this.canAddTransaction} />}
 				customerNode={<Customer order={this.order} />}
 				roomSelectionsNode={<RoomSelections order={this.order} />}
 				detailsNode={<Details order={this.order} />}
 				order={this.order}
 				isNew={this.isNew}
+				canAddTransaction={this.canAddTransaction}
 				localizer={this.props.localizer}
 				onPressHome={() => { this.onPressHome(); }}
 				onReturn={() => { this.onReturn(); }}

@@ -18,6 +18,7 @@ import buttonLayouts from '../../../styles/buttons';
 
 const propTypes = {
 	balance: PropTypes.number,
+	canAddTransaction: PropTypes.bool,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	transactionModes: PropTypes.arrayOf(PropTypes.instanceOf(TransactionMode)),
 	onAddTransaction: PropTypes.func,
@@ -25,6 +26,7 @@ const propTypes = {
 
 const defaultProps = {
 	balance: 0,
+	canAddTransaction: false,
 	transactionModes: [],
 	onAddTransaction: null,
 };
@@ -75,6 +77,36 @@ class Sidebar extends Component {
 	}
 
 	/**
+	 * Renders the 'add transaction' button. If we cannot save the transactions (ex: the register is
+	 * closed), we instead show a message.
+	 *
+	 * @return {Node}
+	 */
+	renderAddTransactionButton() {
+		if (!this.props.canAddTransaction) {
+			return (
+				<View style={styles.registerClosed}>
+					<Icon name="lock" style={styles.registerClosedIcon} />
+					<Text style={styles.registerClosedLabel}>
+						{ this.t('order.balance.cannotSaveRegisterClosed') }
+					</Text>
+				</View>
+			);
+		}
+
+		const balance = this.props.balance;
+		const buttonLabel = this.t(`order.actions.${balance > 0 ? 'savePayment' : 'saveRefund'}`);
+
+		return (
+			<Button
+				title={buttonLabel}
+				layout={buttonLayouts.primary}
+				onPress={() => { this.onAddTransactionPress(); }}
+			/>
+		);
+	}
+
+	/**
 	 * Renders the content if we have a non-zero balance
 	 *
 	 * @return {Node}
@@ -84,7 +116,6 @@ class Sidebar extends Component {
 		const formattedBalance = this.props.localizer.formatCurrency(Math.abs(balance));
 		const label = this.t(`order.balance.${balance > 0 ? 'toCollect' : 'toRefund'}`);
 		const style = balance > 0 ? styles.toCollect : styles.toRefund;
-		const buttonLabel = this.t(`order.actions.${balance > 0 ? 'savePayment' : 'saveRefund'}`);
 
 		return (
 			<View>
@@ -92,11 +123,7 @@ class Sidebar extends Component {
 					{ label }
 				</Text>
 				<Text style={[styles.balanceAmount, style]}>{ formattedBalance }</Text>
-				<Button
-					title={buttonLabel}
-					layout={buttonLayouts.primary}
-					onPress={() => { this.onAddTransactionPress(); }}
-				/>
+				{ this.renderAddTransactionButton() }
 			</View>
 		);
 	}
@@ -164,6 +191,19 @@ const styles = {
 		fontWeight: 'bold',
 		fontSize: styleVars.verticalRhythm * 2,
 		lineHeight: styleVars.verticalRhythm * 3,
+	},
+	registerClosed: {
+		flexDirection: 'row',
+		alignItems: 'flex-start',
+	},
+	registerClosedLabel: {
+		fontStyle: 'italic',
+		flex: 1,
+	},
+	registerClosedIcon: {
+		marginRight: 10,
+		fontSize: 18,
+		lineHeight: 22,
 	},
 };
 

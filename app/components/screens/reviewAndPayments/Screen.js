@@ -20,6 +20,7 @@ import layoutStyles from '../../../styles/layout';
 const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
 	isNew: PropTypes.bool,
+	canAddTransaction: PropTypes.bool,
 	sidebarNode: PropTypes.node,
 	customerNode: PropTypes.node,
 	roomSelectionsNode: PropTypes.node,
@@ -32,11 +33,12 @@ const propTypes = {
 };
 
 const defaultProps = {
+	isNew: false,
+	canAddTransaction: false,
 	sidebarNode: null,
 	customerNode: null,
 	roomSelectionsNode: null,
 	detailsNode: null,
-	isNew: false,
 	onPressHome: null,
 	onReturn: null,
 	onDone: null,
@@ -56,10 +58,11 @@ class ReviewAndPaymentsScreen extends Component {
 	}
 
 	/**
-	 * When pressing 'Done', confirm if the balance is not 0, then call this.confirmDone()
+	 * When pressing 'Done', confirm if the balance is not 0 (and can add transactions), then call
+	 * this.confirmDone(); else calls directly this.confirmDone().
 	 */
 	onDone() {
-		if (!this.props.order.balance.eq(0)) {
+		if (this.props.canAddTransaction && !this.props.order.balance.eq(0)) {
 			const key = this.props.order.balance.gt(0) ? 'payment' : 'refund';
 
 			Alert.alert(
