@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import PropTypes from 'prop-types';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import TransactionMode from 'hotelcaisse-app/dist/business/TransactionMode';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
 	Button,
 	Text,
@@ -72,21 +74,55 @@ class Sidebar extends Component {
 		);
 	}
 
-	render() {
+	/**
+	 * Renders the content if we have a non-zero balance
+	 *
+	 * @return {Node}
+	 */
+	renderNonZeroBalance() {
 		const balance = this.props.balance;
-		const formattedBalance = this.props.localizer.formatCurrency(balance);
+		const formattedBalance = this.props.localizer.formatCurrency(Math.abs(balance));
+		const label = this.t(`order.balance.${balance > 0 ? 'toCollect' : 'toRefund'}`);
+		const style = balance > 0 ? styles.toCollect : styles.toRefund;
+		const buttonLabel = this.t(`order.actions.${balance > 0 ? 'savePayment' : 'saveRefund'}`);
 
 		return (
-			<SidebarElement style={styles.screenSidebar}>
-				<Text style={[styles.balanceLabel, styles.toPayLabel]}>
-					{ this.t('order.balance.toPay') }
+			<View>
+				<Text style={[styles.balanceLabel, style]}>
+					{ label }
 				</Text>
-				<Text style={[styles.balanceAmount, styles.toPayAmount]}>{ formattedBalance }</Text>
+				<Text style={[styles.balanceAmount, style]}>{ formattedBalance }</Text>
 				<Button
-					title={this.t('order.actions.addPayment')}
+					title={buttonLabel}
 					layout={buttonLayouts.primary}
 					onPress={() => { this.onAddTransactionPress(); }}
 				/>
+			</View>
+		);
+	}
+
+	/**
+	 * Renders the content if we have a zero balance
+	 *
+	 * @return {Node}
+	 */
+	renderZeroBalance() {
+		return (
+			<View style={styles.paidBlock}>
+				<Icon name="check-circle" style={styles.paidIcon} />
+				<Text style={styles.paidLabel}>{ this.t('order.balance.paid') }</Text>
+			</View>
+		);
+	}
+
+	render() {
+		const content = this.props.balance === 0
+			? this.renderZeroBalance()
+			: this.renderNonZeroBalance();
+
+		return (
+			<SidebarElement style={styles.screenSidebar}>
+				{ content }
 				{ this.renderModal() }
 			</SidebarElement>
 		);
@@ -98,18 +134,36 @@ const styles = {
 		width: 300,
 	},
 	balanceLabel: {
-		marginBottom: styleVars.verticalRhythm,
+		textAlign: 'right',
 	},
 	balanceAmount: {
 		fontSize: styleVars.verticalRhythm * 2,
 		lineHeight: styleVars.verticalRhythm * 2,
 		fontWeight: 'bold',
-		marginBottom: styleVars.verticalRhythm * 2,
+		marginBottom: styleVars.verticalRhythm,
+		textAlign: 'right',
 	},
-	toPayAmount: {
+	toCollect: {
 		color: styleVars.colors.green1,
 	},
-	toPayLabel: {
+	toRefund: {
+		color: styleVars.colors.orange1,
+	},
+	paidBlock: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	paidIcon: {
+		color: styleVars.colors.green1,
+		fontSize: styleVars.verticalRhythm * 2,
+		marginRight: 12,
+	},
+	paidLabel: {
+		color: styleVars.colors.green1,
+		fontWeight: 'bold',
+		fontSize: styleVars.verticalRhythm * 2,
+		lineHeight: styleVars.verticalRhythm * 3,
 	},
 };
 

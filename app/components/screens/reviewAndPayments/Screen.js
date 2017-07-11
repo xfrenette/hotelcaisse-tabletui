@@ -84,6 +84,10 @@ class ReviewAndPaymentsScreen extends Component {
 	}
 
 	render() {
+		const doneButtonLayout = this.props.order.balance.eq(0)
+			? buttonLayouts.primary
+			: buttonLayouts.default;
+
 		return (
 			<Screen>
 				<TopBar
@@ -107,7 +111,7 @@ class ReviewAndPaymentsScreen extends Component {
 					/>
 					<Button
 						title={this.t('actions.done')}
-						layout={buttonLayouts.default}
+						layout={doneButtonLayout}
 						onPress={this.props.onDone}
 					/>
 				</BottomBar>

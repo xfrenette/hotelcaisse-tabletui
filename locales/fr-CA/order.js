@@ -1,9 +1,11 @@
 export default {
 	total: 'Total',
 	balance: {
+		label: 'Solde',
 		toPay: 'À payer',
 		toCollect: 'À percevoir',
 		toRefund: 'À rembourser',
+		paid: 'Payé',
 	},
 	credit: 'Dépôt',
 	credits: {
@@ -28,13 +30,24 @@ export default {
 			amount: 'Montant',
 		},
 	},
+	refunds: {
+		label: 'Remboursements',
+		modal: {
+			title: 'Enregistrer le remboursement',
+		},
+		fields: {
+			mode: 'Mode de remboursement',
+			amount: 'Montant',
+		},
+	},
 	note: {
 		label: 'Notes',
 		instructions: 'Les notes sont utilisées uniquement à l\'interne et n\'apparaitront pas sur la facture.',
 	},
 	actions: {
 		addCredit: 'Ajouter un dépôt',
-		addPayment: 'Enregistrer le paiement',
+		savePayment: 'Enregistrer le paiement',
+		saveRefund: 'Enregistrer le remboursement',
 		startNew: 'Nouvelle',
 		continue: 'Continuer',
 	},
@@ -42,9 +55,6 @@ export default {
 		empty: 'Cette catégorie est vide',
 	},
 	customProduct: 'Produit spécial',
-	refunds: {
-		label: 'Remboursements',
-	},
 	items: {
 		label: 'Items',
 		labelNew: 'Nouveaux items',

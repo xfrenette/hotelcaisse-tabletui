@@ -28,6 +28,12 @@ const defaultProps = {
 @observer
 class TransactionModal extends Component {
 	/**
+	 * When the modal is shown, we save here if it is for a refund or a payment
+	 *
+	 * @type {Boolean}
+	 */
+	isRefund = false;
+	/**
 	 * Internal reference to the modal component
 	 *
 	 * @type {Node}
@@ -64,7 +70,8 @@ class TransactionModal extends Component {
 	 * Show the modal, after setting the default value for the amount and the TransactionMode.
 	 */
 	show() {
-		this.amount = this.props.balance;
+		this.isRefund = this.props.balance < 0;
+		this.amount = Math.abs(this.props.balance);
 		this.mode = this.props.transactionModes[0];
 		this.modal.show();
 	}
@@ -78,7 +85,12 @@ class TransactionModal extends Component {
 	onActionPress(key) {
 		if (key === 'save') {
 			if (this.amount) {
-				const amount = new Decimal(this.amount);
+				let amount = new Decimal(this.amount);
+
+				if (this.isRefund) {
+					amount = amount.mul(-1);
+				}
+
 				this.onAddTransaction(amount, this.mode);
 			}
 		}
@@ -108,17 +120,20 @@ class TransactionModal extends Component {
 		const modeOptions = this.props.transactionModes.map(
 			tm => <Option key={tm.uuid} value={tm} label={tm.name} />
 		);
+		const title = this.t(`order.${this.isRefund ? 'refunds' : 'payments'}.modal.title`);
+		const modeLabel = this.t(`order.${this.isRefund ? 'refunds' : 'payments'}.fields.mode`);
+		const amountLabel = this.t(`order.${this.isRefund ? 'refunds' : 'payments'}.fields.amount`);
 
 		return (
 			<Modal
 				ref={(node) => { this.modal = node; }}
-				title={this.t('order.payments.modal.title')}
+				title={title}
 				actions={actions}
 				onActionPress={(key) => { this.onActionPress(key); }}
 			>
 				<Group>
 					<View>
-						<Label>{ this.t('order.payments.fields.mode') }</Label>
+						<Label>{ modeLabel }</Label>
 						<Dropdown
 							selectedValue={this.mode}
 							onValueChange={(val) => { this.mode = val; }}
@@ -127,7 +142,7 @@ class TransactionModal extends Component {
 						</Dropdown>
 					</View>
 					<View>
-						<Label>{ this.t('order.payments.fields.amount') }</Label>
+						<Label>{ amountLabel }</Label>
 						<NumberInput
 							type="money"
 							localizer={this.props.localizer}

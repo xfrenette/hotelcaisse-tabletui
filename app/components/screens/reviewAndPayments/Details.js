@@ -243,7 +243,7 @@ class Details extends Component {
 		return (
 			<Row>
 				<Cell style={cellStyles.name} first>
-					<Text style={styles.totalCell}>{ this.t('order.balance.toPay') }</Text>
+					<Text style={styles.totalCell}>{ this.t('order.balance.label') }</Text>
 				</Cell>
 				<Cell style={cellStyles.subtotal} last>
 					<Text style={styles.totalCell}>{ formattedBalance }</Text>
