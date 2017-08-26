@@ -1,4 +1,4 @@
-import { Platform, ToastAndroid, Alert, BackHandler } from 'react-native';
+import { Alert, BackHandler, Platform, ToastAndroid } from 'react-native';
 import { observable } from 'mobx';
 import { createMemoryHistory } from 'history';
 import DefaultAuth from 'hotelcaisse-app/dist/auth/Auth';
@@ -205,6 +205,7 @@ class UI {
 			uuidGenerator: this.uuidGenerator,
 			logger: this.logger,
 			business: this.app ? this.app.business : null,
+			register: this.app ? this.app.register : null,
 			ordersServer: this.ordersServer,
 		};
 	}

@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react/native';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import Screen from '../../components/screens/manageRegister/Screen';
 
-@inject('router', 'business', 'localizer', 'uuidGenerator')
+@inject('router', 'register', 'localizer', 'uuidGenerator')
 @observer
 class ManageRegister extends Component {
 
@@ -56,7 +56,7 @@ class ManageRegister extends Component {
 		}
 
 		const cashMovement = this.createCashMovement(note, amount);
-		this.props.business.deviceRegister.addCashMovement(cashMovement);
+		this.props.register.addCashMovement(cashMovement);
 	}
 
 	/**
@@ -65,11 +65,11 @@ class ManageRegister extends Component {
 	 * @param {CashMovement} cashMovement
 	 */
 	onDelete(cashMovement) {
-		this.props.business.deviceRegister.removeCashMovement(cashMovement);
+		this.props.register.removeCashMovement(cashMovement);
 	}
 
 	render() {
-		const cashMovements = this.props.business.deviceRegister.cashMovements.slice();
+		const cashMovements = this.props.register.cashMovements.slice();
 
 		return (
 			<Screen

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Text from './Text';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
-	style: View.propTypes.style,
+	style: ViewPropTypes.style,
 	type: PropTypes.oneOf(['info', 'warning', 'error']),
 	children: PropTypes.node.isRequired,
 };

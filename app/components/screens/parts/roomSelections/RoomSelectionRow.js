@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { observable, computed } from 'mobx';
+import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Room from 'hotelcaisse-app/dist/business/Room';
 import FieldObject from 'hotelcaisse-app/dist/fields/Field';
 import RoomSelection from 'hotelcaisse-app/dist/business/RoomSelection';
-import {
-	Field,
-	Dropdown,
-	SwipeDelete,
-} from '../../../elements';
-import { Row, Cell } from '../../../elements/table';
+import { Dropdown, Field, SwipeDelete, } from '../../../elements';
+import { Cell, Row } from '../../../elements/table';
 
 const propTypes = {
 	rooms: PropTypes.arrayOf(PropTypes.instanceOf(Room)),
@@ -43,16 +39,16 @@ class RoomSelectionRow extends Component {
 
 	@computed
 	/**
-	 * Returns the uuid of the currently selected room. Returns null if no room selected.
+	 * Returns the id of the currently selected room. Returns null if no room selected.
 	 *
 	 * @return {String}
 	 */
-	get roomUUID() {
+	get roomID() {
 		if (!this.props.roomSelection.room) {
 			return null;
 		}
 
-		return this.props.roomSelection.room.uuid;
+		return this.props.roomSelection.room.id;
 	}
 
 	/**
@@ -84,10 +80,10 @@ class RoomSelectionRow extends Component {
 	/**
 	 * When the user changes the room
 	 *
-	 * @param {String} roomUUID
+	 * @param {String} roomID
 	 */
-	onRoomSelect(roomUUID) {
-		const room = this.props.rooms.find(currRoom => currRoom.uuid === roomUUID);
+	onRoomSelect(roomID) {
+		const room = this.props.rooms.find(currRoom => currRoom.id === roomID);
 
 		if (room && this.props.onRoomSelect) {
 			this.props.onRoomSelect(room);
@@ -116,9 +112,9 @@ class RoomSelectionRow extends Component {
 		const res = field.validate(value);
 
 		if (res) {
-			this.fieldErrors.set(field.uuid, this.t('errors.fieldInvalidValue'));
+			this.fieldErrors.set(field.id, this.t('errors.fieldInvalidValue'));
 		} else {
-			this.fieldErrors.delete(field.uuid);
+			this.fieldErrors.delete(field.id);
 		}
 	}
 
@@ -130,13 +126,13 @@ class RoomSelectionRow extends Component {
 	renderRoomsDropdown() {
 		const Option = Dropdown.Option;
 		const options = this.props.rooms.map(
-			room => <Option key={room.uuid} value={room.uuid} label={room.name} />
+			room => <Option key={room.id} value={room.id} label={room.name} />
 		);
 
 		return (
 			<Dropdown
-				selectedValue={this.roomUUID}
-				onValueChange={(uuid) => { this.onRoomSelect(uuid); }}
+				selectedValue={this.roomID}
+				onValueChange={(id) => { this.onRoomSelect(id); }}
 			>
 				{ options }
 			</Dropdown>
@@ -153,11 +149,11 @@ class RoomSelectionRow extends Component {
 		return fields.map((field, index) => {
 			const isLast = index === field.length - 1;
 			return (
-				<Cell key={field.uuid} last={isLast} style={this.props.cellStyles.field}>
+				<Cell key={field.id} last={isLast} style={this.props.cellStyles.field}>
 					<Field
 						field={field}
 						value={this.props.roomSelection.getFieldValue(field)}
-						error={this.fieldErrors.get(field.uuid)}
+						error={this.fieldErrors.get(field.id)}
 						onChangeValue={(val) => { this.onFieldChange(field, val); }}
 						onBlur={() => { this.onFieldBlur(field); }}
 					/>

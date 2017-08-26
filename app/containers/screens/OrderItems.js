@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { computed } from 'mobx';
-import { observer, inject } from 'mobx-react/native';
+import { inject, observer } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Product from 'hotelcaisse-app/dist/business/Product';
@@ -93,8 +93,6 @@ class OrderItems extends Component {
 	 */
 	onCustomProductAdd() {
 		const customProduct = new Product();
-		customProduct.uuid = this.props.uuidGenerator.generate();
-		customProduct.isCustom = true;
 		this.onProductAdd(customProduct);
 	}
 

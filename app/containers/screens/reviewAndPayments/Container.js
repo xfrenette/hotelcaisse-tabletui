@@ -10,7 +10,7 @@ import Sidebar from './Sidebar';
 import Details from './Details';
 import Screen from '../../../components/screens/reviewAndPayments/Screen';
 
-@inject('localizer', 'uuidGenerator', 'router', 'business', 'ui')
+@inject('localizer', 'uuidGenerator', 'router', 'business', 'register', 'ui')
 @observer
 class Container extends Component {
 	/**
@@ -32,7 +32,7 @@ class Container extends Component {
 	 */
 	@computed
 	get canAddTransaction() {
-		return this.props.business.deviceRegister.state === STATES.OPENED;
+		return this.props.register.state === STATES.OPENED;
 	}
 
 	/**

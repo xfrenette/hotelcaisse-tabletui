@@ -1,7 +1,8 @@
 import Decimal from 'decimal.js';
 import Product from 'hotelcaisse-app/dist/business/Product';
+import AppliedTax from 'hotelcaisse-app/dist/business/AppliedTax';
 
-let uuid = 0;
+let id = 0;
 
 const productsData = [
 	{
@@ -48,21 +49,20 @@ const productsData = [
 	},
 ];
 
-function getUUID() {
-	const res = uuid;
-	uuid += 1;
-	return `prod_${res}`;
+function getID() {
+	id += 1;
+	return 6980 + id;
 }
 
 function setProductPrice(product, rawPrice) {
 	const price = new Decimal(rawPrice);
 	const netPrice = price.div(1.14975);
-	const tps = netPrice.mul(0.05).toDecimalPlaces(2);
-	const tvq = netPrice.mul(0.09975).toDecimalPlaces(2);
+	const tps = netPrice.mul(0.05).toDecimalPlaces(5);
+	const tvq = netPrice.mul(0.09975).toDecimalPlaces(5);
 
 	product.price = price.sub(tps).sub(tvq);
-	product.addTax('TPS', tps);
-	product.addTax('TVQ', tvq);
+	product.taxes.push(new AppliedTax(123, 'TPS', tps));
+	product.taxes.push(new AppliedTax(123, 'TVQ', tvq));
 }
 
 const variantLabels = ['Non-membre', 'Membre'];
@@ -71,14 +71,14 @@ const products = [];
 productsData.forEach((productData) => {
 	const product = new Product();
 	products.push(product);
-	product.uuid = getUUID();
+	product.id = getID();
 	product.name = productData.name;
 	product.description = productData.description;
 
 	if (productData.variants) {
 		productData.variants.forEach((variant, index) => {
 			const variantProduct = new Product();
-			variantProduct.uuid = getUUID();
+			variantProduct.uuid = getID();
 			variantProduct.name = variantLabels[index];
 			setProductPrice(variantProduct, variant);
 

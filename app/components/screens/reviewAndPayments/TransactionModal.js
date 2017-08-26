@@ -6,11 +6,7 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Decimal from 'decimal.js';
 import TransactionMode from 'hotelcaisse-app/dist/business/TransactionMode';
 import { View } from 'react-native';
-import {
-	Modal,
-	Dropdown,
-	NumberInput,
-} from '../../elements';
+import { Dropdown, Modal, NumberInput, } from '../../elements';
 import { Group, Label } from '../../elements/form';
 
 const propTypes = {
@@ -118,7 +114,7 @@ class TransactionModal extends Component {
 
 		const Option = Dropdown.Option;
 		const modeOptions = this.props.transactionModes.map(
-			tm => <Option key={tm.uuid} value={tm} label={tm.name} />
+			tm => <Option key={tm.id} value={tm} label={tm.name} />
 		);
 		const title = this.t(`order.${this.isRefund ? 'refunds' : 'payments'}.modal.title`);
 		const modeLabel = this.t(`order.${this.isRefund ? 'refunds' : 'payments'}.fields.mode`);

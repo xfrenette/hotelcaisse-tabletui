@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
+import { ScrollView, View, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
-	style: ScrollView.propTypes.style,
+	style: ViewPropTypes.style,
 	dark: PropTypes.bool,
 	children: PropTypes.node,
 };

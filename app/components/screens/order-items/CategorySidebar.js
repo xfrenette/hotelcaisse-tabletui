@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableNativeFeedback } from 'react-native';
-import { observable, computed, autorun } from 'mobx';
+import { TouchableNativeFeedback, View } from 'react-native';
+import { autorun, computed, observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
-import {	Sidebar } from '../../layout';
-import {	Text, Button } from '../../elements';
+import { Sidebar } from '../../layout';
+import { Button, Text } from '../../elements';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
 import typographyStyles from '../../../styles/typography';
@@ -107,13 +107,13 @@ class CategorySidebar extends Component {
 
 	/**
 	 * To prevent problems where the same Product could be in 2 different categories, this function
-	 * generates a unique key based on the current category's uuid and the product's uuid.
+	 * generates a unique key based on the current category's id and the product's id.
 	 *
 	 * @param {Product} product
 	 * @return {String}
 	 */
 	makeProductKey(product) {
-		return `${this.currentCategory.uuid}_${product.uuid}`;
+		return `${this.currentCategory.id}_${product.id}`;
 	}
 
 	/**
@@ -260,7 +260,7 @@ class CategorySidebar extends Component {
 
 		return (
 			<TouchableNativeFeedback
-				key={category.uuid}
+				key={category.id}
 				background={TouchableNativeFeedback.Ripple(styleVars.colors.orange2, false)}
 				onPress={() => { this.onCategoryPress(category); }}
 			>

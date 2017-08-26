@@ -3,7 +3,7 @@ import { inject } from 'mobx-react/native';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import CloseRegisterScreen from '../../components/screens/closeRegister/Screen';
 
-@inject('router', 'business', 'localizer', 'ui')
+@inject('router', 'business', 'register', 'localizer', 'ui')
 class CloseRegister extends Component {
 	/**
 	 * Closes the register. It is the responsibility of the component to ensure the data is valid
@@ -14,7 +14,7 @@ class CloseRegister extends Component {
 	 * @param {Decimal} POSTAmount
 	 */
 	onClose(amount, POSTRef, POSTAmount) {
-		const register = this.props.business.deviceRegister;
+		const register = this.props.register;
 		register.close(amount, POSTRef, POSTAmount);
 
 		this.props.ui.showToast(this.t('closeRegister.messages.closed'));

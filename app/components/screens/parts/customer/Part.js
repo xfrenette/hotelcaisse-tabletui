@@ -7,7 +7,7 @@ import FieldObject from 'hotelcaisse-app/dist/fields/Field';
 import Customer from 'hotelcaisse-app/dist/business/Customer';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { Field } from '../../../elements';
-import { Field as FormField, Label, Group } from '../../../elements/form';
+import { Field as FormField, Group, Label } from '../../../elements/form';
 
 const propTypes = {
 	fields: PropTypes.arrayOf(PropTypes.instanceOf(FieldObject)).isRequired,
@@ -30,14 +30,14 @@ class Part extends Component {
 	 */
 	fieldRefs = {};
 	/**
-	 * Reference to the next FieldObject for each FieldObject (key is uuid)
+	 * Reference to the next FieldObject for each FieldObject (key is id)
 	 *
 	 * @type {Object}
 	 */
 	nextField = {};
 	@observable
 	/**
-	 * Error messages for each Field (key is uuid). If a Field is not there, it has no error
+	 * Error messages for each Field (key is id). If a Field is not there, it has no error
 	 *
 	 * @type {Map}
 	 */
@@ -70,7 +70,7 @@ class Part extends Component {
 	}
 
 	/**
-	 * Fill the nextField object for the specified fields. Key will be the FieldObject UUID and
+	 * Fill the nextField object for the specified fields. Key will be the FieldObject ID and
 	 * value will be the next FieldObject. If it is the last FieldObject, its value will be null.
 	 *
 	 * @param {Array<FieldObject>} fields
@@ -82,7 +82,7 @@ class Part extends Component {
 				? null
 				: fields[index + 1];
 
-			this.nextField[field.uuid] = nextField || null;
+			this.nextField[field.id] = nextField || null;
 		});
 	}
 
@@ -94,7 +94,7 @@ class Part extends Component {
 	 * @return {FieldObject}
 	 */
 	getNextField(field) {
-		return this.nextField[field.uuid];
+		return this.nextField[field.id];
 	}
 
 	/**
@@ -104,7 +104,7 @@ class Part extends Component {
 	 * @return {Field}
 	 */
 	getFieldNode(field) {
-		return this.fieldRefs[field.uuid];
+		return this.fieldRefs[field.id];
 	}
 
 	/**
@@ -152,9 +152,9 @@ class Part extends Component {
 		const res = field.validate(value);
 
 		if (res) {
-			this.fieldErrors.set(field.uuid, this.t('errors.fieldInvalidValue'));
+			this.fieldErrors.set(field.id, this.t('errors.fieldInvalidValue'));
 		} else {
-			this.fieldErrors.delete(field.uuid);
+			this.fieldErrors.delete(field.id);
 		}
 	}
 
@@ -189,7 +189,7 @@ class Part extends Component {
 			);
 
 			return (
-				<FormField key={`row_${fieldRow[0].uuid}`}>
+				<FormField key={`row_${fieldRow[0].id}`}>
 					<Group>
 						{ fieldElements }
 					</Group>
@@ -209,16 +209,16 @@ class Part extends Component {
 		const value = this.props.customer.getFieldValue(field);
 
 		return (
-			<View key={field.uuid}>
+			<View key={field.id}>
 				<Label>{ field.label }</Label>
 				<Field
-					ref={(node) => { this.fieldRefs[field.uuid] = node; }}
+					ref={(node) => { this.fieldRefs[field.id] = node; }}
 					field={field}
 					onChangeValue={(val) => { this.onFieldChange(field, val); }}
 					onBlur={() => { this.onFieldBlur(field); }}
 					onSubmitEditing={() => { this.onFieldSubmit(field); }}
 					returnKeyType={isLastField ? 'done' : 'next'}
-					error={this.fieldErrors.get(field.uuid)}
+					error={this.fieldErrors.get(field.id)}
 					value={value}
 				/>
 			</View>

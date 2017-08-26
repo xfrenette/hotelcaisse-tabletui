@@ -1,15 +1,31 @@
 import React, { Component } from 'react';
-import { View, TextInput as NativeTextInput } from 'react-native';
+import { ScrollView, TextInput as NativeTextInput, View } from 'react-native';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react/native';
-import { Text, TextInput, NumberInput, Button, DenominationsInput } from '../../app/components/elements';
+import { inject, observer } from 'mobx-react/native';
+import { Button, NumberInput, TextInput } from '../../app/components/elements';
 
+@inject('localizer')
 @observer
 class TestScreen extends Component {
 	@observable
 	error = null;
 	@observable
-	nbRows = 1;
+	value = 4;
+	@observable
+	showDenominationsInput = false;
+	values = [
+		{ label: '0,05', value: 0 },
+		{ label: '0,10', value: 0 },
+		{ label: '0,25', value: 0 },
+		{ label: '1,00', value: 0 },
+		{ label: '2,00', value: 0 },
+		{ label: '5,00', value: 0 },
+		{ label: '10,00', value: 0 },
+		{ label: '20,00', value: 0 },
+		{ label: '50,00', value: 0 },
+		{ label: '100,00', value: 0 },
+	];
+	renderStartTime = new Date();
 
 	toggleError() {
 		if (this.error) {
@@ -17,6 +33,16 @@ class TestScreen extends Component {
 		} else {
 			this.error = 'Error example';
 		}
+	}
+
+	toggleDenominationsInput() {
+		requestAnimationFrame(() => {
+			this.showDenominationsInput = !this.showDenominationsInput;
+		});
+		/*InteractionManager.runAfterInteractions(() => {
+			console.log('b');
+			this.showDenominationsInput = !this.showDenominationsInput;
+		});*/
 	}
 
 	renderRows() {
@@ -45,10 +71,17 @@ class TestScreen extends Component {
 		/*
 		*/
 		return (
-			<View>
-				{ this.renderRows() }
-				<Button title="Add row" onPress={() => { this.nbRows += 1; }} />
-			</View>
+			<ScrollView>
+				<NumberInput
+					localizer={this.props.localizer}
+					value={this.value}
+					onChangeValue={(val) => { this.value = val; }}
+					showIncrementors
+					acceptDotAsDecimal
+					constraints={{ numericality: { greaterThanOrEqualTo: 0, onlyInteger: true } }}
+				/>
+				<NativeTextInput value="3" />
+			</ScrollView>
 		);
 	}
 }

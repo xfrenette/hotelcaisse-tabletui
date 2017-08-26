@@ -12,12 +12,11 @@ class RegisterOpenedGuard extends RouteGuard {
 	 */
 	id = 'RegisterOpenedGuard';
 	/**
-	 * Reference to the Business instance. We do not reference the deviceRegister, since a new one
-	 * may be created at any time and replace the current one.
+	 * Reference to the Register instance. See comment in RegisterNotOpenedGuard
 	 *
-	 * @type {Business}
+	 * @type {Register}
 	 */
-	business = null;
+	register = null;
 	/**
 	 * @see RouteGuard
 	 * @type {Boolean}
@@ -30,23 +29,18 @@ class RegisterOpenedGuard extends RouteGuard {
 	redirectTo = null;
 
 	/**
-	 * [allowed] property is based on the [state] property of the [deviceRegister] property of the
-	 * Business instance. If the Business has no deviceRegister, returns false.
+	 * [allowed] property is based on the [state] property of the Register instance.
 	 *
 	 * @return {Boolean}
 	 */
 	@computed
 	get allowed() {
-		if (!this.business.deviceRegister) {
-			return false;
-		}
-
-		return this.business.deviceRegister.state === STATES.OPENED;
+		return this.register.state === STATES.OPENED;
 	}
 
-	constructor(business, redirectTo = '/') {
+	constructor(register, redirectTo = '/') {
 		super();
-		this.business = business;
+		this.register = register;
 		this.redirectTo = redirectTo;
 	}
 }

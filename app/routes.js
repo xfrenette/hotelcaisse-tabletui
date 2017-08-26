@@ -33,14 +33,14 @@ export default ui => ({
 						{ path: '/order/items', component: OrderItems },
 						{ path: '/order/customer-roomSelections', component: CustomerRoomSelections },
 						{
-							guards: [new RegisterOpenedGuard(ui.app.business)],
+							guards: [new RegisterOpenedGuard(ui.app.register)],
 							routes: [
 								{ path: '/register/close', component: CloseRegister },
 								{ path: '/register/manage', component: ManageRegister },
 							],
 						},
 						{
-							guards: [new RegisterNotOpenedGuard(ui.app.business)],
+							guards: [new RegisterNotOpenedGuard(ui.app.register)],
 							routes: [
 								{ path: '/register/open', component: OpenRegister },
 							],

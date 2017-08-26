@@ -6,13 +6,8 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Room from 'hotelcaisse-app/dist/business/Room';
 import FieldObject from 'hotelcaisse-app/dist/fields/Field';
 import RoomSelection from 'hotelcaisse-app/dist/business/RoomSelection';
-import {
-	Button,
-	Message,
-	Text,
-	DatePicker,
-} from '../../../elements';
-import { Row, Cell } from '../../../elements/table';
+import { Button, DatePicker, Message, Text, } from '../../../elements';
+import { Cell, Row } from '../../../elements/table';
 import { Label } from '../../../elements/form';
 import RoomSelectionRow from './RoomSelectionRow';
 import typographyStyles from '../../../../styles/typography';
@@ -222,7 +217,7 @@ class RoomSelections extends Component {
 					<Cell
 						last={isLast}
 						style={[cellStyles.fieldHeader, cellStyles.field]}
-						key={field.uuid}
+						key={field.id}
 					>
 						<Text style={tableStyles.header}>{ field.label }</Text>
 					</Cell>

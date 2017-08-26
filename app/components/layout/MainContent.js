@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { View, ViewPropTypes } from 'react-native';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
 	children: PropTypes.node,
-	style: View.propTypes.style,
+	style: ViewPropTypes.style,
 	withSidebar: PropTypes.bool,
 };
 

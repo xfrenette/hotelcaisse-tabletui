@@ -102,6 +102,11 @@ describe('getStores()', () => {
 		expect(ui.getStores().business).toBe(ui.app.business);
 	});
 
+	test('contains register', () => {
+		ui.app = { register: { test: true } };
+		expect(ui.getStores().register).toBe(ui.app.register);
+	});
+
 	test('contains uuidGenerator', () => {
 		ui.uuidGenerator = { generate: () => {} };
 		expect(ui.getStores().uuidGenerator).toBe(ui.uuidGenerator);

@@ -5,7 +5,7 @@ import { STATES as REGISTER_STATES } from 'hotelcaisse-app/dist/business/Registe
 import Order from 'hotelcaisse-app/dist/business/Order';
 import HomeScreen from '../../components/screens/home/Screen';
 
-@inject('business', 'router', 'localizer', 'ui')
+@inject('register', 'router', 'localizer', 'ui')
 @observer
 class Home extends Component {
 	/**
@@ -136,8 +136,8 @@ class Home extends Component {
 	}
 
 	render() {
-		const registerState = this.props.business.deviceRegister
-			? this.props.business.deviceRegister.state
+		const registerState = this.props.register
+			? this.props.register.state
 			: REGISTER_STATES.CLOSED;
 
 		return (

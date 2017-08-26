@@ -3,19 +3,9 @@ import { inject } from 'mobx-react/native';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import OpenRegisterScreen from '../../components/screens/openRegister/Screen';
 
-@inject('router', 'business', 'localizer', 'ui', 'uuidGenerator')
+@inject('router', 'register', 'localizer', 'ui', 'uuidGenerator')
 class OpenRegister extends Component {
-	/**
-	 * New Register instance that will be created.
-	 *
-	 * @type {Register}
-	 */
-	newRegister = null;
-
 	componentWillMount() {
-		const uuid = this.props.uuidGenerator.generate();
-		this.newRegister = new Register();
-		this.newRegister.uuid = uuid;
 		this.opening = false;
 	}
 
@@ -30,10 +20,11 @@ class OpenRegister extends Component {
 	 * @param {Decimal} amount
 	 */
 	onOpen(employee, amount) {
-		// Order is important: first set the deviceRegister on business, then open it so the
-		// 'registerOpen' event may be correctly catch by Business.
-		this.props.business.deviceRegister = this.newRegister;
-		this.newRegister.open(employee, amount);
+		const uuid = this.props.uuidGenerator.generate();
+		const newRegister = new Register();
+		newRegister.uuid = uuid;
+		this.props.register.update(newRegister);
+		this.props.register.open(employee, amount);
 
 		this.props.ui.showToast(this.t('openRegister.messages.opened'));
 		this.props.router.replace('/');
