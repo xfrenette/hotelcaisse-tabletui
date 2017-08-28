@@ -121,8 +121,11 @@ class UI {
 	 * - app (HotelCaisse-app)
 	 * - showConsole (boolean) to show the floating console
 	 * - moneyDenominations : array of number of the different money denominations
-	 * 	(ex: [0.05, 0.1, 5, 10])
+	 * 	 (ex: [0.05, 0.1, 5, 10])
 	 * - ordersServer: Server instance which we can query to search and load additional Orders
+	 * - localStorages (object, optional) List of local storages where the app saves data. Key
+	 *   is the name, value is a io/dual/LocalStorage instance. It doesn't have to be set, but some
+	 *   features could use it.
 	 *
 	 * @param {Object} settings
 	 */

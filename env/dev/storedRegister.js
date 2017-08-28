@@ -7,6 +7,7 @@ import Register from 'hotelcaisse-app/dist/business/Register';
  */
 
 const register = new Register();
+register.uuid = 'register-uuid';
 
 const cashMovement1 = new CashMovement('cm1', new Decimal(12));
 cashMovement1.note = 'Test cash in avec une note qui est vraiment longue';

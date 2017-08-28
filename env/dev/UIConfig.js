@@ -59,14 +59,14 @@ const logger = new UILogger();
 // 'First' reader for the Business: takes different readers and returns the data of the first that
 // resolves and doesn't return null
 const businessStorage = new FirstReader([
-	//localBusinessStorage,
+	localBusinessStorage,
 	new BusinessServerReader(server),
 ]);
 
 // 'First' reader for the Register: takes different readers and returns the data of the first that
 // resolves and doesn't return null
 const registerStorage = new FirstReader([
-	//localRegisterStorage,
+	localRegisterStorage,
 	new RegisterServerReader(server),
 ]);
 
@@ -105,13 +105,17 @@ module.exports = {
 	// initialRoutes: ['/', '/orders'],
 	// initialRoutes: ['/', orderPath],
 	// initialRoutes: ['/', '/register/manage'],
-	initialRoutes: ['/', '/order/items'],
+	// initialRoutes: ['/', '/dev/localStorages'],
 	uuidGenerator: new TestUUIDGenerator(),
 	auth: testAuth,
 	locale: 'fr-CA',
 	currency: 'CAD',
 	showConsole: true,
 	moneyDenominations: [0.05, 0.1, 0.25, 1, 2, 5, 10, 20, 50, 100],
+	localStorages: {
+		'Register': localRegisterStorage,
+		'Business': localBusinessStorage,
+	},
 	strings: {
 		'fr-CA': strings,
 	},

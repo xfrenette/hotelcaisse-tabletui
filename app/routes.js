@@ -1,5 +1,6 @@
 import Home from './containers/screens/Home';
 import Loading from './containers/screens/Loading';
+import LocalStorages from './containers/screens/dev/LocalStorages';
 import Authentication from './containers/screens/Authentication';
 import OpenRegister from './containers/screens/OpenRegister';
 import CloseRegister from './containers/screens/CloseRegister';
@@ -20,6 +21,7 @@ import RegisterNotOpenedGuard from './lib/routeGuards/RegisterNotOpenedGuard';
 export default ui => ({
 	routes: [
 		{ path: '/loading', component: Loading },
+		{ path: '/dev/localStorages', component: LocalStorages },
 		{
 			guards: [new LoadedGuard(ui, '/loading')],
 			routes: [

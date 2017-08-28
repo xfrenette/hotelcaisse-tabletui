@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import {
-	View,
-	DrawerLayoutAndroid,
-	TouchableNativeFeedback,
-} from 'react-native';
+import { DrawerLayoutAndroid, TouchableNativeFeedback, View, } from 'react-native';
 import PropTypes from 'prop-types';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { Text, Title } from '../elements';
@@ -89,6 +85,7 @@ class AppMenu extends Component {
 		return (
 			<View style={layoutStyles.block}>
 				{ this.renderTitle(this.t('appMenu.dev.title')) }
+				{ this.renderItem(this.t('appMenu.dev.localStorages'), '/dev/localStorages')}
 				{ this.renderItem('Test', '/test')}
 			</View>
 		);

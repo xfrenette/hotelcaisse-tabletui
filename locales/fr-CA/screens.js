@@ -32,4 +32,9 @@ export default {
 			title: 'Ouverture de caisse',
 		},
 	},
+	dev: {
+		localStorages: {
+			title: 'Entreposages locaux',
+		},
+	},
 };
