@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import { serialize, deserialize, getDefaultModelSchema } from 'serializr';
+import { deserialize, getDefaultModelSchema, serialize } from 'serializr';
 import Dual from 'hotelcaisse-app/dist/io/dual/Dual';
 
 /**
@@ -40,13 +40,30 @@ class Local extends Dual {
 	}
 
 	/**
+	 * Clears data saved in the local storage
+	 * @return {Promise}
+	 */
+	clear() {
+		return AsyncStorage.removeItem(this.key);
+	}
+
+	/**
 	 * Retrieves the JSON data in AsyncStorage and deserializes it. Returns a Promise.
 	 *
 	 * @return {Promise}
 	 */
 	read() {
-		return AsyncStorage.getItem(this.key)
+		return this.readRaw()
 			.then(data => this.deserializeData(data));
+	}
+
+	/**
+	 * Retrieves the JSON data in AsyncStorage (as a string). Returns a Promise.
+	 *
+	 * @return {Promise}
+	 */
+	readRaw() {
+		return AsyncStorage.getItem(this.key)
 	}
 
 	/**
