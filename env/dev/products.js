@@ -78,7 +78,7 @@ productsData.forEach((productData) => {
 	if (productData.variants) {
 		productData.variants.forEach((variant, index) => {
 			const variantProduct = new Product();
-			variantProduct.uuid = getID();
+			variantProduct.id = getID();
 			variantProduct.name = variantLabels[index];
 			setProductPrice(variantProduct, variant);
 

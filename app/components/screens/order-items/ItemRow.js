@@ -5,13 +5,8 @@ import PropTypes from 'prop-types';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import styleVars from '../../../styles/variables';
-import {
-	Text,
-	NumberInput,
-	Dropdown,
-	SwipeDelete,
-} from '../../elements';
-import { Row, Cell } from '../../elements/table';
+import { Dropdown, NumberInput, SwipeDelete, Text, } from '../../elements';
+import { Cell, Row } from '../../elements/table';
 
 const propTypes = {
 	item: PropTypes.instanceOf(Item).isRequired,
@@ -154,7 +149,7 @@ class ItemRow extends Component {
 		if (product.isVariant) {
 			const options = product.parent.variants.map(variant => (
 				<Dropdown.Option
-					key={variant.uuid}
+					key={variant.id}
 					label={variant.name}
 					value={variant.uuid}
 				/>

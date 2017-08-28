@@ -12,7 +12,7 @@ class TestUUIDGenerator {
 
 	next() {
 		this.counter += 1;
-		return this.counter;
+		return `uuid_${this.counter}`;
 	}
 }
 

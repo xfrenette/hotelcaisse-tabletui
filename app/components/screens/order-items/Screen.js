@@ -1,26 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, Alert, BackHandler } from 'react-native';
+import { Alert, BackHandler, ScrollView, View } from 'react-native';
 import { inject } from 'mobx-react/native';
 import ProductCategory from 'hotelcaisse-app/dist/business/ProductCategory';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
-import {
-	TopBar,
-	BottomBar,
-	Screen,
-	MainContent,
-} from '../../layout';
-import {
-	Button,
-	Text,
-	BottomBarBackButton,
-	Title,
-	TextInput,
-	Message,
-} from '../../elements';
-import { Row, Cell } from '../../elements/table';
+import { BottomBar, MainContent, Screen, TopBar, } from '../../layout';
+import { BottomBarBackButton, Button, Message, Text, TextInput, Title, } from '../../elements';
+import { Cell, Row } from '../../elements/table';
 import CategorySidebar from './CategorySidebar';
 import ItemRow from './ItemRow';
 import CustomItemRow from './CustomItemRow';
@@ -382,7 +370,7 @@ class OrderItemsScreen extends Component {
 	 */
 	renderNewItem(item, isFirst) {
 		const uuid = item.uuid;
-		const isCustom = item.product.isCustom;
+		const isCustom = item.product.id === null;
 		const RowComponent = isCustom ? CustomItemRow : ItemRow;
 		let props = null;
 
