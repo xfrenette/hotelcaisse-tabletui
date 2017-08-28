@@ -24,7 +24,7 @@ class Sidebar extends Component {
 	 * @param {Object} mode
 	 */
 	onAddTransaction(amount, mode) {
-		if (!this.canAddTransaction) {
+		if (!this.props.canAddTransaction) {
 			return;
 		}
 
