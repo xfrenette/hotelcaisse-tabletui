@@ -1,8 +1,11 @@
 import Application from 'hotelcaisse-app/dist/Application';
+import ApiServer from 'hotelcaisse-app/dist/servers/Api';
+import ApiAuth from 'hotelcaisse-app/dist/auth/ApiServer';
 import Business from 'hotelcaisse-app/dist/business/Business';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import BusinessAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Business';
 import RegisterAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Register';
+import ServerAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Server';
 import FirstReader from 'hotelcaisse-app/dist/io/readers/First';
 import BusinessServerReader from 'hotelcaisse-app/dist/io/readers/business/Server';
 import RegisterServerReader from 'hotelcaisse-app/dist/io/readers/register/Server';
@@ -39,22 +42,40 @@ businessStorage.delay = 3000;
 
 */
 
-const server = new TestServer();
-//server.delay = 2000;
-server.business = storedBusiness;
-server.register = storedRegister;
-server.maxOrderLoads = 2;
+const useReal = false;
+let server;
+let auth;
+const localStorages = {};
+let serverStorage;
+
+const logger = new UILogger();
+
+if (useReal) {
+	serverStorage = new LocalStorage('hotelcaisse-app@server');
+	server = new ApiServer('http://192.168.1.116:8000/api/1.0/dev');
+	server.writer = serverStorage;
+	server.setLogger(logger);
+	auth = new ApiAuth(server);
+	localStorages['ApiServer'] = serverStorage;
+} else {
+	server = new TestServer();
+	//server.delay = 2000;
+	server.business = storedBusiness;
+	server.register = storedRegister;
+	server.maxOrderLoads = 2;
+
+	auth = new TestAuth();
+	auth.authenticated = true;
+	// auth.authenticated = false;
+	// auth.validCode = '1234';
+	// auth.delay = 500;
+}
 
 const localBusinessStorage = new LocalStorage('hotelcaisse-app@business', Business);
 const localRegisterStorage = new LocalStorage('hotelcaisse-app@register', Register);
 
-const testAuth = new TestAuth();
-testAuth.authenticated = true;
-// testAuth.authenticated = false;
-// testAuth.validCode = '1234';
-// testAuth.delay = 500;
-
-const logger = new UILogger();
+localStorages['Register'] = localRegisterStorage;
+localStorages['Business'] = localBusinessStorage;
 
 // 'First' reader for the Business: takes different readers and returns the data of the first that
 // resolves and doesn't return null
@@ -88,12 +109,16 @@ const appConfig = {
 	],
 };
 
+if (serverStorage) {
+	appConfig.plugins.unshift(new ServerAutoload(serverStorage, server)); // must be first
+}
+
 const app = new Application(appConfig);
 const orderPath = {
-	pathname: '/order/review-payments',
+	pathname: '/order',
 	state: {
 		order: dummyOrder(storedBusiness),
-		new: false,
+		new: true,
 	},
 };
 
@@ -102,20 +127,17 @@ module.exports = {
 	app,
 	logger,
 	ordersServer: server,
-	// initialRoutes: ['/', '/orders'],
-	// initialRoutes: ['/', orderPath],
+	// initialRoutes: ['/', '/order'],
+	initialRoutes: ['/', orderPath],
 	// initialRoutes: ['/', '/register/manage'],
 	// initialRoutes: ['/', '/dev/localStorages'],
 	uuidGenerator: new TestUUIDGenerator(),
-	auth: testAuth,
+	auth,
 	locale: 'fr-CA',
 	currency: 'CAD',
 	showConsole: true,
 	moneyDenominations: [0.05, 0.1, 0.25, 1, 2, 5, 10, 20, 50, 100],
-	localStorages: {
-		'Register': localRegisterStorage,
-		'Business': localBusinessStorage,
-	},
+	localStorages,
 	strings: {
 		'fr-CA': strings,
 	},

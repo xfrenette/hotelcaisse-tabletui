@@ -1,18 +1,17 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
-import {
-	View,
-	Text,
-	TouchableNativeFeedback,
-	TouchableOpacity,
-} from 'react-native';
+import { Text, TouchableNativeFeedback, TouchableOpacity, View, } from 'react-native';
 import buttonLayouts from '../../styles/buttons';
 
 const propTypes = {
 	title: PropTypes.string.isRequired,
 	type: PropTypes.string,
 	touchEffect: PropTypes.string,
+	preIcon: PropTypes.string,
+	preIconStyle: PropTypes.object,
+	postIcon: PropTypes.string,
+	postIconStyle: PropTypes.object,
 	layout: PropTypes.oneOfType([
 		PropTypes.object,
 		PropTypes.array,
@@ -23,6 +22,10 @@ const defaultProps = {
 	touchEffect: 'feedback',
 	type: null,
 	layout: null,
+	preIcon: null,
+	preIconStyle: null,
+	postIcon: null,
+	postIconStyle: null,
 };
 
 const Button = (props) => {
@@ -61,9 +64,15 @@ const Button = (props) => {
 		});
 	}
 
+	if (props.preIcon) {
+		preIcon = (
+			<Icon name={props.preIcon} style={[textStyles, styles.icon, props.preIconStyle]} />
+		);
+	}
+
 	if (type === 'back') {
 		preIcon = (
-			<Icon name="angle-left" style={[textStyles, styles.icon]} />
+			<Icon name="angle-left" style={[textStyles, styles.icon, props.preIconStyle]} />
 		);
 	}
 

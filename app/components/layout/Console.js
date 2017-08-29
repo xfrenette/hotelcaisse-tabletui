@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-	View,
-	Text,
-	TouchableWithoutFeedback,
-	ScrollView,
-	Button,
-} from 'react-native';
+import { Button, ScrollView, Text, TouchableWithoutFeedback, View, } from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 
@@ -107,7 +101,8 @@ class Console extends Component {
 		}
 
 		if (entry.data) {
-			data = <View style={styles.entryData}><Text>{ entry.data }</Text></View>;
+			const dataText = typeof entry.data === 'string' ? entry.data : JSON.stringify(entry.data);
+			data = <View style={styles.entryData}><Text>{ dataText }</Text></View>;
 		}
 
 		return (

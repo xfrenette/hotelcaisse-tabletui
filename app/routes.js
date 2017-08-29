@@ -9,6 +9,7 @@ import OrderItems from './containers/screens/OrderItems';
 import CustomerRoomSelections from './containers/screens/CustomerRoomSelections';
 import ReviewAndPayments from './containers/screens/reviewAndPayments/Container';
 import Orders from './containers/screens/Orders';
+import Order from './containers/screens/order/Container';
 
 import LoadedGuard from './lib/routeGuards/LoadedGuard';
 import AuthenticatedGuard from './lib/routeGuards/AuthenticatedGuard';
@@ -30,6 +31,7 @@ export default ui => ({
 					guards: [new AuthenticatedGuard(ui.auth, '/authenticate')],
 					routes: [
 						{ path: '/', exact: true, component: Home },
+						{ path: '/order', component: Order },
 						{ path: '/orders', component: Orders },
 						{ path: '/order/review-payments', component: ReviewAndPayments },
 						{ path: '/order/items', component: OrderItems },

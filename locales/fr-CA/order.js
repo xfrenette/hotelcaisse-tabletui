@@ -8,6 +8,12 @@ export default {
 		paid: 'Payé',
 		cannotSaveRegisterClosed: 'La caisse doit être ouverte pour pouvoir enregistrer les paiements et les remboursements.',
 	},
+	details: {
+		subTotal: 'Sous-total',
+		credits: 'Crédits',
+		taxes: 'Taxes',
+		payments: 'Paiements',
+	},
 	credit: 'Dépôt',
 	credits: {
 		label: 'Dépôts',
@@ -46,11 +52,12 @@ export default {
 		instructions: 'Les notes sont utilisées uniquement à l\'interne et n\'apparaitront pas sur la facture.',
 	},
 	actions: {
-		addCredit: 'Ajouter un dépôt',
+		addCredit: 'Ajouter un crédit',
 		savePayment: 'Enregistrer le paiement',
 		saveRefund: 'Enregistrer le remboursement',
 		startNew: 'Nouvelle',
 		continue: 'Continuer',
+		details: 'Détails',
 	},
 	categories: {
 		empty: 'Cette catégorie est vide',
@@ -71,6 +78,7 @@ export default {
 		actions: {
 			edit: 'Modifier les items',
 		},
+		refund: 'Remboursement',
 		qty: 'Qté',
 		unitPrice: 'Prix',
 		subtotal: 'Sous-total',

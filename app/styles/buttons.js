@@ -9,8 +9,7 @@ export default {
 		button: {
 			height: 2 * vars.verticalRhythm,
 			backgroundColor: vars.button.backgroundColor,
-			paddingLeft: 16,
-			paddingRight: 16,
+			paddingHorizontal: 16,
 			borderRadius: 3,
 			justifyContent: 'center',
 		},
@@ -35,8 +34,7 @@ export default {
 		button: {
 			height: vars.verticalRhythm,
 			backgroundColor: 'transparent',
-			paddingLeft: 0,
-			paddingRight: 0,
+			paddingHorizontal: 0,
 			borderRadius: 0,
 			justifyContent: 'flex-start',
 		},
@@ -45,17 +43,26 @@ export default {
 			fontSize: vars.baseFontSize,
 			lineHeight: vars.baseLineHeight,
 			includeFontPadding: false,
+			top: 1,
 		},
 	},
 	big: {
 		button: {
 			borderRadius: 3,
-			paddingLeft: 24,
-			paddingRight: 24,
+			paddingHorizontal: 24,
 		},
 		text: {
 			fontSize: vars.bigFontSize,
 			top: -1,
+		},
+	},
+	small: {
+		button: {
+			height: vars.verticalRhythm * 1.2,
+		},
+		text: {
+			lineHeight: vars.verticalRhythm,
+			fontSize: vars.smallFontSize,
 		},
 	},
 };

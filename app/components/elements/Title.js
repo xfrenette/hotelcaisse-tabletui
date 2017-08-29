@@ -22,12 +22,9 @@ Title.defaultProps = defaultProps;
 
 const styles = {
 	title: {
-		borderBottomWidth: 2,
-		borderBottomColor: styleVars.theme.mainColor,
 		fontSize: 15,
 		fontWeight: 'bold',
 		color: styleVars.theme.mainColor,
-		top: -2,
 	},
 };
 

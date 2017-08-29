@@ -111,7 +111,7 @@ function dummyOrder(business, latestCheckOutDate) {
 	order.customer = dummyCustomer(business.customerFields);
 	order.note = Math.random() > 0.5 ? faker.lorem.sentence() : null;
 
-	const nbItems = Math.ceil(Math.random() * 3);
+	const nbItems = Math.ceil(Math.random() * 3) + 1;
 
 	for (let i = nbItems - 1; i >= 0; i -= 1) {
 		order.items.push(dummyItem(business.products));

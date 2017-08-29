@@ -7,12 +7,14 @@ const propTypes = {
 	children: PropTypes.node,
 	style: ViewPropTypes.style,
 	withSidebar: PropTypes.bool,
+	expanded: PropTypes.bool,
 };
 
 const defaultProps = {
 	children: null,
 	style: null,
 	withSidebar: false,
+	expanded: false,
 };
 
 const MainContent = (props) => {
@@ -20,6 +22,10 @@ const MainContent = (props) => {
 
 	if (props.withSidebar) {
 		style.push(styles.withSidebar);
+	}
+
+	if (props.expanded) {
+		style.push(styles.expanded);
 	}
 
 	style.push(props.style);
@@ -41,6 +47,10 @@ const styles = {
 	},
 	withSidebar: {
 		paddingRight: styleVars.horizontalRhythm,
+	},
+	expanded: {
+		paddingVertical: styleVars.verticalRhythm,
+		paddingHorizontal: styleVars.horizontalRhythm,
 	},
 };
 
