@@ -80,7 +80,7 @@ class Container extends Component {
 				isNew={this.isNew}
 				canAddTransaction={this.canAddTransaction}
 				localizer={this.props.localizer}
-				CategorySidebar={CategorySidebar}
+				CategorySidebar={(props) => <CategorySidebar order={this.order} {...props} />}
 				BottomBar={(props) => <BottomBar order={this.order} {...props} />}
 				Items={(props) => <Items order={this.order} isNew={this.isNew} {...props} />}
 				onPressHome={() => { this.onPressHome(); }}

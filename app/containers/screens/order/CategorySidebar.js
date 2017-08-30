@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { inject } from 'mobx-react/native';
+import Item from 'hotelcaisse-app/dist/business/Item';
+import Order from 'hotelcaisse-app/dist/business/Order';
+import Product from 'hotelcaisse-app/dist/business/Product';
 import ComponentElement from '../../../components/screens/order/CategorySidebar';
 
-@inject('business', 'localizer')
+const propTypes = {
+	order: PropTypes.instanceOf(Order),
+};
+
+const defaultProps = {
+};
+
+@inject('business', 'localizer', 'uuidGenerator')
 class CategorySidebar extends Component {
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -14,6 +25,18 @@ class CategorySidebar extends Component {
 		return this.props.localizer.t(path);
 	}
 
+	onProductAdd(product) {
+		const productToAdd = product.hasVariants ? product.variants[0] : product;
+		const item = new Item(this.props.uuidGenerator.generate());
+		item.product = productToAdd;
+		this.props.order.items.push(item);
+	}
+
+	onCustomProductAdd() {
+		const customProduct = new Product();
+		this.onProductAdd(customProduct);
+	}
+
 	render() {
 		return (
 			<ComponentElement
@@ -22,10 +45,15 @@ class CategorySidebar extends Component {
 				emptyLabel={this.t('order.categories.empty')}
 				customProductLabel={this.t('order.customProduct')}
 				rootProductCategory={this.props.business.rootProductCategory}
+				onProductAdd={(p) => { this.onProductAdd(p); }}
+				onCustomProductAdd={() => { this.onCustomProductAdd(); }}
 				{...this.props}
 			/>
 		);
 	}
 }
+
+CategorySidebar.propTypes = propTypes;
+CategorySidebar.defaultProps = defaultProps;
 
 export default CategorySidebar;

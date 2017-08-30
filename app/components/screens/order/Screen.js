@@ -4,7 +4,7 @@ import { ScrollView, View, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
-import { Text, Title } from '../../elements';
+import { Text } from '../../elements';
 import { MainContent, Screen, TopBar } from '../../layout';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
@@ -114,18 +114,8 @@ class OrderScreen extends Component {
 										</View>
 									</View>
 								</View>
-
 								<View style={layoutStyles.block}>
 									<Items />
-								</View>
-								<View style={layoutStyles.block}>
-									<Title style={layoutStyles.title}>Crédits</Title>
-									<View style={{ alignItems: 'flex-start' }}>
-										<Button title="Ajouter un crédit" />
-									</View>
-								</View>
-								<View>
-									<Title>Paiements</Title>
 								</View>
 							</MainContent>
 						</ScrollView>

@@ -18,8 +18,8 @@ const propTypes = {
 	emptyLabel: PropTypes.string.isRequired,
 	customProductLabel: PropTypes.string.isRequired,
 	rootProductCategory: PropTypes.instanceOf(ProductCategory),
-	onProductPress: PropTypes.func,
-	onCustomProductPress: PropTypes.func,
+	onProductAdd: PropTypes.func,
+	onCustomProductAdd: PropTypes.func,
 };
 
 const defaultProps = {
@@ -27,8 +27,8 @@ const defaultProps = {
 	showCustomProduct: false,
 	rootProductCategory: null,
 	customProductLabel: '',
-	onProductPress: null,
-	onCustomProductPress: null,
+	onProductAdd: null,
+	onCustomProductAdd: null,
 };
 
 @observer
@@ -184,8 +184,8 @@ class CategorySidebar extends Component {
 	 * @param {Product} product
 	 */
 	onProductPress(product) {
-		if (this.props.onProductPress) {
-			this.props.onProductPress(product);
+		if (this.props.onProductAdd) {
+			this.props.onProductAdd(product);
 		}
 	}
 
@@ -193,8 +193,8 @@ class CategorySidebar extends Component {
 	 * When we press the "custom product" button
 	 */
 	onCustomProductPress() {
-		if (this.props.onCustomProductPress) {
-			this.props.onCustomProductPress();
+		if (this.props.onCustomProductAdd) {
+			this.props.onCustomProductAdd();
 		}
 	}
 

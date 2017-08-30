@@ -109,7 +109,7 @@ class ItemRow extends Component {
 		}
 
 		return (
-			<SwipeDelete label={this.t('actions.delete')} onDelete={() => { this.onRemove(); }}>
+			<SwipeDelete label={type} onDelete={() => { this.onRemove(); }}>
 				{ node }
 			</SwipeDelete>
 		);
@@ -226,6 +226,7 @@ class ItemRow extends Component {
 	}
 
 	render() {
+		console.log('render');
 		const row = (
 			<Row style={this.rowStyle} first={this.props.isFirst}>
 				<Cell first style={cellStyles.quantity}>

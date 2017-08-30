@@ -5,17 +5,18 @@ import { observer } from 'mobx-react/native';
 import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Item from 'hotelcaisse-app/dist/business/Item';
-import ItemRow from './Item';
 
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
-	items: PropTypes.arrayOf(PropTypes.instanceOf(Item)).isRequired,
-	isNew: PropTypes.bool,
+	Item: PropTypes.func.isRequired,
+	oldItems: PropTypes.arrayOf(PropTypes.instanceOf(Item)),
+	newItems: PropTypes.arrayOf(PropTypes.instanceOf(Item)),
 };
 
 const defaultProps = {
-	isNew: true,
+	oldItems: [],
+	newItems: [],
 };
 
 @observer
@@ -30,40 +31,49 @@ class Items extends Component {
 		return this.props.localizer.t(path);
 	}
 
-	render() {
-		const items = this.props.items.map((item, index) => {
-			//tmp
-			if (index === 1) {
-				item.quantity = -1 * item.quantity;
-			}
-			//end tmp
+	renderOldItems() {
+		const ItemRow = this.props.Item;
+
+		return this.props.oldItems.map((item, index) => {
 			return (
 				<ItemRow
 					key={item.uuid}
 					item={item}
 					localizer={this.props.localizer}
 					isFirst={index === 0}
-					swipeType="delete"
+					swipeType="refund"
 					editable={false}
 				/>
 			);
 		});
+	}
 
+	renderNewItems(first = false) {
+		const ItemRow = this.props.Item;
+
+		return this.props.newItems.map((item, index) => {
+			return (
+				<ItemRow
+					key={item.uuid}
+					item={item}
+					localizer={this.props.localizer}
+					isFirst={first && index === 0}
+					swipeType="delete"
+					editable={true}
+				/>
+			);
+		});
+	}
+
+	render() {
 		return (
 			<View>
-				{ items }
+				{ this.renderOldItems() }
+				{ this.renderNewItems(this.props.oldItems.length === 0) }
 			</View>
 		);
 	}
 }
-
-const viewStyles = {
-
-};
-
-const textStyles = {
-
-};
 
 Items.propTypes = propTypes;
 Items.defaultProps = defaultProps;
