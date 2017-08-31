@@ -55,13 +55,15 @@ class Items extends Component {
 		const ItemRow = this.props.Item;
 
 		return this.props.oldItems.map((item, index) => {
+			// Old refunds cannot be 'swipped' (cannot be removed, nor 'refunded')
+			const swipeType = item.quantity < 0 ? 'none' : 'refund';
 			return (
 				<ItemRow
 					key={item.uuid}
 					item={item}
 					localizer={this.props.localizer}
 					isFirst={index === 0}
-					swipeType="refund"
+					swipeType={swipeType}
 					editable={false}
 					onRefund={(q) => { this.onShowRefund(item, q); }}
 				/>

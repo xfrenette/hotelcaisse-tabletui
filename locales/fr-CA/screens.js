@@ -18,6 +18,9 @@ export default {
 			title: 'Paiement',
 		},
 	},
+	order: {
+		title: 'Inscription',
+	},
 	orders: {
 		title: 'Fiches',
 	},

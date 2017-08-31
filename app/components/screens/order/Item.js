@@ -16,7 +16,7 @@ const propTypes = {
 	onRefund: PropTypes.func,
 	onVariantChange: PropTypes.func,
 	isFirst: PropTypes.bool,
-	swipeType: PropTypes.oneOf(['delete', 'refund']),
+	swipeType: PropTypes.oneOf(['none', 'delete', 'refund']),
 	editable: PropTypes.bool,
 };
 
@@ -40,6 +40,14 @@ class ItemRow extends Component {
 	 */
 	t(path) {
 		return this.props.localizer.t(path);
+	}
+
+	get isRefund() {
+		return this.props.item.quantity < 0;
+	}
+
+	get editable() {
+		return this.props.editable && !this.isRefund;
 	}
 
 	/**
@@ -112,7 +120,8 @@ class ItemRow extends Component {
 	 * @param {string} type
 	 * @return {Node}
 	 */
-	makeSwipeable(node, type = null) {
+	makeSwipeable(node) {
+		const type = this.props.swipeType;
 		const valid = ['delete', 'refund'];
 
 		if (valid.indexOf(type) === -1) {
@@ -143,7 +152,7 @@ class ItemRow extends Component {
 	renderQuantity() {
 		const item = this.props.item;
 
-		if (this.props.editable) {
+		if (this.editable) {
 			return (
 				<NumberInput
 					value={item.quantity || null}
@@ -196,7 +205,7 @@ class ItemRow extends Component {
 			);
 		}
 
-		if (this.props.editable && product.isVariant) {
+		if (this.editable && product.isVariant) {
 			const options = product.parent.variants.map(variant => (
 				<Dropdown.Option
 					key={variant.id}
@@ -260,7 +269,7 @@ class ItemRow extends Component {
 			</Row>
 		);
 
-		return this.makeSwipeable(row, this.props.swipeType);
+		return this.makeSwipeable(row);
 	}
 }
 
