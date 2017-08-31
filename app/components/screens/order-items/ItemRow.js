@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import styleVars from '../../../styles/variables';
-import { Dropdown, NumberInput, SwipeDelete, Text, } from '../../elements';
+import { Dropdown, NumberInput, Swipeable, Text, } from '../../elements';
 import { Cell, Row } from '../../elements/table';
 
 const propTypes = {
@@ -93,7 +93,7 @@ class ItemRow extends Component {
 	}
 
 	/**
-	 * If deletable is true, wraps the Node in a SwipeDelete, else returns it
+	 * If deletable is true, wraps the Node in a Swipeable, else returns it
 	 *
 	 * @param {Node} node
 	 * @param {Boolean} deletable
@@ -105,9 +105,9 @@ class ItemRow extends Component {
 		}
 
 		return (
-			<SwipeDelete label={this.t('actions.delete')} onDelete={() => { this.onRemove(); }}>
+			<Swipeable label={this.t('actions.delete')} onPress={() => { this.onRemove(); }}>
 				{ node }
-			</SwipeDelete>
+			</Swipeable>
 		);
 	}
 

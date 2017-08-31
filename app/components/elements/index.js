@@ -10,7 +10,7 @@ import Title from './Title';
 import Modal from './Modal';
 import TrashButton from './TrashButton';
 import BottomBarBackButton from './BottomBarBackButton';
-import SwipeDelete from './SwipeDelete';
+import Swipeable from './Swipeable';
 import Field from './Field';
 import DatePicker from './DatePicker';
 
@@ -27,7 +27,7 @@ export {
 	Modal,
 	TrashButton,
 	BottomBarBackButton,
-	SwipeDelete,
+	Swipeable,
 	Field,
 	DatePicker,
 };

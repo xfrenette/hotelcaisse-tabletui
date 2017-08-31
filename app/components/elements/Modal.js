@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal as NativeModal, TouchableNativeFeedback } from 'react-native';
+import { Modal as NativeModal, TouchableNativeFeedback, View } from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { Text } from './index';
@@ -40,9 +40,9 @@ class Modal extends Component {
 	onRequestClose() {
 		if (this.props.onRequestClose) {
 			this.props.onRequestClose();
+		} else {
+			this.hide();
 		}
-
-		this.hide();
 	}
 
 	/**

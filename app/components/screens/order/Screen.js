@@ -10,6 +10,7 @@ import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
 import layoutStyles from '../../../styles/layout';
 import Button from '../../elements/Button';
+import Title from '../../elements/Title';
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer),
@@ -19,6 +20,7 @@ const propTypes = {
 	CategorySidebar: PropTypes.func.isRequired,
 	BottomBar: PropTypes.func.isRequired,
 	Items: PropTypes.func.isRequired,
+	CreditsTransactions: PropTypes.func.isRequired,
 	onPressHome: PropTypes.func,
 	onDone: PropTypes.func,
 };
@@ -50,6 +52,7 @@ class OrderScreen extends Component {
 		const CategorySidebar = this.props.CategorySidebar;
 		const BottomBar = this.props.BottomBar;
 		const Items = this.props.Items;
+		const CreditsTransactions = this.props.CreditsTransactions;
 
 		return (
 			<Screen>
@@ -114,8 +117,12 @@ class OrderScreen extends Component {
 										</View>
 									</View>
 								</View>
-								<View style={layoutStyles.block}>
+								<View style={layoutStyles.section}>
 									<Items />
+								</View>
+								<View>
+									<Title style={layoutStyles.title}>Transactions et crédits</Title>
+									<CreditsTransactions />
 								</View>
 							</MainContent>
 						</ScrollView>
@@ -155,7 +162,7 @@ const viewStyles = {
 	},
 	header: {
 		marginBottom: styleVars.verticalRhythm / 2,
-		borderBottomWidth: 2,
+		//borderBottomWidth: 2,
 		borderBottomColor: styleVars.theme.lineColor,
 		paddingBottom: styleVars.verticalRhythm,
 	},

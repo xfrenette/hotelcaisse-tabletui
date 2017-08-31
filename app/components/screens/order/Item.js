@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import styleVars from '../../../styles/variables';
-import { Dropdown, NumberInput, SwipeDelete, Text, } from '../../elements';
+import { Dropdown, NumberInput, Swipeable, Text, } from '../../elements';
 import { Cell, Row } from '../../elements/table';
 
 const propTypes = {
@@ -13,6 +13,7 @@ const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	onQuantityChange: PropTypes.func,
 	onRemove: PropTypes.func,
+	onRefund: PropTypes.func,
 	onVariantChange: PropTypes.func,
 	isFirst: PropTypes.bool,
 	swipeType: PropTypes.oneOf(['delete', 'refund']),
@@ -22,6 +23,7 @@ const propTypes = {
 const defaultProps = {
 	onQuantityChange: null,
 	onRemove: null,
+	onRefund: null,
 	onVariantChange: null,
 	isFirst: false,
 	swipeType: null,
@@ -79,6 +81,15 @@ class ItemRow extends Component {
 	}
 
 	/**
+	 * Called when the user presses the 'refund' button
+	 */
+	onRefund() {
+		if (this.props.onRefund) {
+			this.props.onRefund();
+		}
+	}
+
+	/**
 	 * Called when the user selects another variant of the parent product (only applicable when the
 	 * product shown is a variant). Receives the id of the new variant, but the variant product
 	 * instance will be sent to the onVariantChange function in the props.
@@ -95,7 +106,7 @@ class ItemRow extends Component {
 	}
 
 	/**
-	 * If type is 'delete' or 'refund', wraps the Node in a SwipeDelete, else returns it
+	 * If type is 'delete' or 'refund', wraps the Node in a Swipeable, else returns it
 	 *
 	 * @param {Node} node
 	 * @param {string} type
@@ -108,10 +119,19 @@ class ItemRow extends Component {
 			return node;
 		}
 
+		const props = {
+			label: this.t(`order.actions.${type === 'refund' ? 'refund' : 'remove'}`),
+			onPress: type === 'refund' ? () => { this.onRefund(); } : () => { this.onRemove(); },
+		};
+
+		if (type === 'refund') {
+			props.backgroundColor = styleVars.colors.blue1;
+		}
+
 		return (
-			<SwipeDelete label={type} onDelete={() => { this.onRemove(); }}>
+			<Swipeable  {...props}>
 				{ node }
-			</SwipeDelete>
+			</Swipeable>
 		);
 	}
 
@@ -226,7 +246,6 @@ class ItemRow extends Component {
 	}
 
 	render() {
-		console.log('render');
 		const row = (
 			<Row style={this.rowStyle} first={this.props.isFirst}>
 				<Cell first style={cellStyles.quantity}>

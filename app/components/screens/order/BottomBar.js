@@ -61,7 +61,7 @@ class BottomBar extends Component {
 
 		if (this.showDetails) {
 			details = this.detailsRows.map(([label, amount]) => {
-				const amountText = this.props.localizer.formatCurrency(amount);
+				const amountText = this.props.localizer.formatCurrency(amount, { style: 'accounting' });
 
 				return (
 					<View key={label} style={detailsTableStyles.row}>

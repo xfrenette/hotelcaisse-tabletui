@@ -5,13 +5,8 @@ import PropTypes from 'prop-types';
 import Decimal from 'decimal.js';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
-import {
-	TextInput,
-	NumberInput,
-	SwipeDelete,
-	Text,
-} from '../../elements';
-import { Row, Cell } from '../../elements/table';
+import { NumberInput, Swipeable, Text, TextInput, } from '../../elements';
+import { Cell, Row } from '../../elements/table';
 
 const propTypes = {
 	credit: PropTypes.instanceOf(Credit).isRequired,
@@ -197,9 +192,9 @@ class CreditRow extends Component {
 		const noteError = this.noteError;
 
 		return (
-			<SwipeDelete
+			<Swipeable
 				label={this.t('actions.delete')}
-				onDelete={this.props.onRemove}
+				onPress={this.props.onRemove}
 			>
 				<Row first={this.props.isFirst} style={styles.row}>
 					<Cell first style={cellStyles.note}>
@@ -229,7 +224,7 @@ class CreditRow extends Component {
 						/>
 					</Cell>
 				</Row>
-			</SwipeDelete>
+			</Swipeable>
 		);
 	}
 

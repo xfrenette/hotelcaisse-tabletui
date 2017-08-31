@@ -14,7 +14,9 @@ export default {
 		taxes: 'Taxes',
 		payments: 'Paiements',
 	},
-	credit: 'Dépôt',
+	credit: 'Crédit',
+	payment: 'Paiement',
+	refund: 'Remboursement',
 	credits: {
 		label: 'Dépôts',
 		empty: 'Pour ajouter un dépôt, appuyez le bouton ci-dessous',
@@ -35,6 +37,11 @@ export default {
 		fields: {
 			mode: 'Mode de paiement',
 			amount: 'Montant',
+		},
+	},
+	itemRefund: {
+		modal: {
+			title: 'Quantité à rembourser (maximum: %{max})',
 		},
 	},
 	refunds: {
@@ -58,6 +65,8 @@ export default {
 		startNew: 'Nouvelle',
 		continue: 'Continuer',
 		details: 'Détails',
+		remove: 'Retirer',
+		refund: 'Rembourser',
 	},
 	categories: {
 		empty: 'Cette catégorie est vide',

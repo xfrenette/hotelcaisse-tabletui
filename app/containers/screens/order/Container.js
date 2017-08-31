@@ -8,6 +8,7 @@ import Screen from '../../../components/screens/order/Screen';
 import CategorySidebar from './CategorySidebar';
 import BottomBar from './BottomBar';
 import Items from './Items';
+import CreditsTransactions from './CreditsTransactions';
 
 @inject('localizer', 'uuidGenerator', 'router', 'business', 'register', 'ui')
 @observer
@@ -83,6 +84,7 @@ class Container extends Component {
 				CategorySidebar={(props) => <CategorySidebar order={this.order} {...props} />}
 				BottomBar={(props) => <BottomBar order={this.order} {...props} />}
 				Items={(props) => <Items order={this.order} isNew={this.isNew} {...props} />}
+				CreditsTransactions={(props) => <CreditsTransactions order={this.order} {...props} />}
 				onPressHome={() => { this.onPressHome(); }}
 				onDone={() => { this.onDone(); }}
 			/>

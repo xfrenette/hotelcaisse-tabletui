@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import Order from 'hotelcaisse-app/dist/business/Order';
+import Item from 'hotelcaisse-app/dist/business/Item';
 import ComponentElement from '../../../components/screens/order/Items';
 import ItemContainer from './Item';
 
@@ -15,7 +16,7 @@ const defaultProps = {
 	isNew: false,
 };
 
-@inject('business', 'localizer')
+@inject('localizer', 'uuidGenerator')
 @observer
 class Items extends Component {
 	oldItemsUUID = [];
@@ -46,6 +47,13 @@ class Items extends Component {
 		return this.props.order.items.filter(item => this.oldItemsUUID.indexOf(item.uuid) !== -1);
 	}
 
+	onRefund(item, quantity) {
+		const refundItem = new Item(this.props.uuidGenerator.generate());
+		refundItem.product = item.product;
+		refundItem.quantity = -1 * quantity;
+		this.props.order.items.push(refundItem);
+	}
+
 	render() {
 		return (
 			<ComponentElement
@@ -53,6 +61,7 @@ class Items extends Component {
 				newItems={this.newItems}
 				oldItems={this.oldItems}
 				Item={(props) => <ItemContainer order={this.props.order} {...props} />}
+				onRefund={(i, q) => { this.onRefund(i, q); }}
 			/>
 		);
 	}

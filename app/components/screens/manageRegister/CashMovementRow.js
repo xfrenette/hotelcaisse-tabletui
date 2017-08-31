@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
-import {
-	Text,
-	SwipeDelete,
-} from '../../elements';
-import { Row, Cell } from '../../elements/table';
+import { Swipeable, Text, } from '../../elements';
+import { Cell, Row } from '../../elements/table';
 
 const propTypes = {
 	cashMovement: PropTypes.instanceOf(CashMovement).isRequired,
@@ -38,9 +35,9 @@ class CashMovementRow extends Component {
 		const formattedAmount = this.props.localizer.formatCurrency(amount);
 
 		return (
-			<SwipeDelete
+			<Swipeable
 				label={this.t('actions.delete')}
-				onDelete={this.props.onDelete}
+				onPress={this.props.onDelete}
 			>
 				<Row>
 					<Cell style={cellStyles.time} first><Text>{ time }</Text></Cell>
@@ -49,7 +46,7 @@ class CashMovementRow extends Component {
 						<Text>{ amount > 0 ? '+' : '' }{ formattedAmount }</Text>
 					</Cell>
 				</Row>
-			</SwipeDelete>
+			</Swipeable>
 		);
 	}
 }

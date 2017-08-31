@@ -6,7 +6,7 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Room from 'hotelcaisse-app/dist/business/Room';
 import FieldObject from 'hotelcaisse-app/dist/fields/Field';
 import RoomSelection from 'hotelcaisse-app/dist/business/RoomSelection';
-import { Dropdown, Field, SwipeDelete, } from '../../../elements';
+import { Dropdown, Field, Swipeable, } from '../../../elements';
 import { Cell, Row } from '../../../elements/table';
 
 const propTypes = {
@@ -166,9 +166,9 @@ class RoomSelectionRow extends Component {
 		const roomSelection = this.props.roomSelection;
 
 		return (
-			<SwipeDelete
+			<Swipeable
 				label={this.t('actions.delete')}
-				onDelete={() => { this.onDelete(roomSelection); }}
+				onPress={() => { this.onDelete(roomSelection); }}
 			>
 				<Row>
 					<Cell style={this.props.cellStyles.name} first>
@@ -176,7 +176,7 @@ class RoomSelectionRow extends Component {
 					</Cell>
 					{ this.renderFields() }
 				</Row>
-			</SwipeDelete>
+			</Swipeable>
 		);
 	}
 }

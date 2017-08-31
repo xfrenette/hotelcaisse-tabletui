@@ -5,6 +5,7 @@ import { observer } from 'mobx-react/native';
 import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Item from 'hotelcaisse-app/dist/business/Item';
+import ModalRefund from './ModalRefund';
 
 
 const propTypes = {
@@ -12,15 +13,22 @@ const propTypes = {
 	Item: PropTypes.func.isRequired,
 	oldItems: PropTypes.arrayOf(PropTypes.instanceOf(Item)),
 	newItems: PropTypes.arrayOf(PropTypes.instanceOf(Item)),
+	onRefund: PropTypes.func,
 };
 
 const defaultProps = {
 	oldItems: [],
 	newItems: [],
+	onRefund: null,
 };
 
 @observer
 class Items extends Component {
+	modalRef = null;
+	@observable
+	refundMaxQuantity = 1;
+	refundingItem = null;
+
 	/**
 	 * Simple alias to this.props.localizer.t
 	 *
@@ -29,6 +37,18 @@ class Items extends Component {
 	 */
 	t(path) {
 		return this.props.localizer.t(path);
+	}
+
+	onShowRefund(item) {
+		this.refundingItem = item;
+		this.refundMaxQuantity = item.quantity;
+		this.modalRef.show();
+	}
+
+	onRefund(quantity) {
+		if (this.props.onRefund) {
+			this.props.onRefund(this.refundingItem, quantity);
+		}
 	}
 
 	renderOldItems() {
@@ -43,6 +63,7 @@ class Items extends Component {
 					isFirst={index === 0}
 					swipeType="refund"
 					editable={false}
+					onRefund={(q) => { this.onShowRefund(item, q); }}
 				/>
 			);
 		});
@@ -65,11 +86,23 @@ class Items extends Component {
 		});
 	}
 
+	renderRefundModal() {
+		return (
+			<ModalRefund
+				ref={(node) => { this.modalRef = node; }}
+				localizer={this.props.localizer}
+				maxQuantity={this.refundMaxQuantity}
+				onRefund={(q) => { this.onRefund(q); }}
+			/>
+		);
+	}
+
 	render() {
 		return (
 			<View>
 				{ this.renderOldItems() }
 				{ this.renderNewItems(this.props.oldItems.length === 0) }
+				{ this.renderRefundModal() }
 			</View>
 		);
 	}

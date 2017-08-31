@@ -1,29 +1,31 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
-import Swipeable from 'react-native-swipeable';
+import RNSwipeable from 'react-native-swipeable';
 import { Text } from '../elements';
 import styleVars from '../../styles/variables';
 
 const propTypes = {
-	children: Swipeable.propTypes.children,
+	children: RNSwipeable.propTypes.children,
+	backgroundColor: PropTypes.string,
 	label: PropTypes.string,
-	onDelete: PropTypes.func,
+	onPress: PropTypes.func,
 };
 
 const defaultProps = {
 	children: null,
+	backgroundColor: styleVars.theme.dangerBackgroundColor,
 	label: '',
 	onDelete: null,
 };
 
-class SwipeDelete extends Component {
+class Swipeable extends Component {
 	/**
-	 * Called when the delete button is pressed
+	 * Called when the button is pressed
 	 */
-	onDelete() {
-		if (this.props.onDelete) {
-			this.props.onDelete();
+	onPress() {
+		if (this.props.onPress) {
+			this.props.onPress();
 		}
 	}
 
@@ -33,14 +35,18 @@ class SwipeDelete extends Component {
 	 * @return {Component}
 	 */
 	getRightButton() {
+		const buttonsStyle = {
+			backgroundColor: this.props.backgroundColor,
+		};
+
 		return [
 			<View style={styles.swipedContainer}>
-				<View style={styles.buttons}>
+				<View style={[styles.buttons, buttonsStyle]}>
 					<TouchableOpacity
-						style={[styles.rightSwipeItem, styles.delete]}
-						onPress={() => { this.onDelete(); }}
+						style={[styles.rightSwipeItem, styles.button]}
+						onPress={() => { this.onPress(); }}
 					>
-						<Text style={styles.deleteText}>{ this.props.label }</Text>
+						<Text style={styles.buttonText}>{ this.props.label }</Text>
 					</TouchableOpacity>
 				</View>
 			</View>,
@@ -49,12 +55,12 @@ class SwipeDelete extends Component {
 
 	render() {
 		return (
-			<Swipeable
+			<RNSwipeable
 				rightButtons={this.getRightButton()}
 				rightButtonWidth={buttonWidth + leftPadding}
 			>
 				{ this.props.children }
-			</Swipeable>
+			</RNSwipeable>
 		);
 	}
 }
@@ -68,7 +74,6 @@ const styles = {
 		paddingLeft: leftPadding,
 	},
 	buttons: {
-		backgroundColor: styleVars.theme.dangerBackgroundColor,
 		flex: 1,
 	},
 	rightSwipeItem: {
@@ -76,16 +81,16 @@ const styles = {
 		justifyContent: 'center',
 		width: buttonWidth,
 	},
-	delete: {
+	button: {
 		width: buttonWidth,
 	},
-	deleteText: {
+	buttonText: {
 		color: 'white',
 		textAlign: 'center',
 	},
 };
 
-SwipeDelete.propTypes = propTypes;
-SwipeDelete.defaultProps = defaultProps;
+Swipeable.propTypes = propTypes;
+Swipeable.defaultProps = defaultProps;
 
-export default SwipeDelete;
+export default Swipeable;
