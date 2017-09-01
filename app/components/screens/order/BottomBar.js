@@ -16,10 +16,12 @@ const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	order: PropTypes.instanceOf(Order).isRequired,
 	canAddTransaction: PropTypes.bool,
+	onCreditAdd: PropTypes.func,
 };
 
 const defaultProps = {
 	canAddTransaction: true,
+	onCreditAdd: null,
 };
 
 @observer
@@ -134,6 +136,7 @@ class BottomBar extends Component {
 						<View style={viewStyles.button}>
 							<Button
 								title={this.t('order.actions.addCredit')}
+								onPress={this.props.onCreditAdd}
 							/>
 						</View>
 						{ addTransactionButton }

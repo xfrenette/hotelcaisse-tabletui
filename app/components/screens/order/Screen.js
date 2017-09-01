@@ -21,8 +21,10 @@ const propTypes = {
 	BottomBar: PropTypes.func.isRequired,
 	Items: PropTypes.func.isRequired,
 	CreditsTransactions: PropTypes.func.isRequired,
+	ModalCredit: PropTypes.func.isRequired,
 	onPressHome: PropTypes.func,
 	onDone: PropTypes.func,
+	onCreditEdit: PropTypes.func,
 };
 
 const defaultProps = {
@@ -30,10 +32,13 @@ const defaultProps = {
 	isNew: false,
 	canAddTransaction: false,
 	onPressHome: null,
-	onDone: null
+	onDone: null,
+	onCreditEdit: null,
 };
 
 class OrderScreen extends Component {
+	modalCredit = null;
+
 	/**
 	 * Simple alias to this.props.localizer.t
 	 *
@@ -48,11 +53,18 @@ class OrderScreen extends Component {
 		return path;
 	}
 
+	onCreditEdit(credit) {
+		if (this.props.onCreditEdit) {
+			this.props.onCreditEdit(credit);
+		}
+	}
+
 	render() {
 		const CategorySidebar = this.props.CategorySidebar;
 		const BottomBar = this.props.BottomBar;
 		const Items = this.props.Items;
 		const CreditsTransactions = this.props.CreditsTransactions;
+		const ModalCredit = this.props.ModalCredit;
 
 		return (
 			<Screen>
@@ -122,14 +134,20 @@ class OrderScreen extends Component {
 								</View>
 								<View>
 									<Title style={layoutStyles.title}>Transactions et crédits</Title>
-									<CreditsTransactions />
+									<CreditsTransactions
+										onCreditEdit={(credit) => { this.onCreditEdit(credit); }}
+									/>
 								</View>
 							</MainContent>
 						</ScrollView>
-						<BottomBar style={viewStyles.totalBar} />
+						<BottomBar
+							style={viewStyles.totalBar}
+							onCreditAdd={() => { this.onCreditEdit(null); }}
+						/>
 					</View>
 					<CategorySidebar style={viewStyles.sidebar}/>
 				</View>
+				<ModalCredit />
 			</Screen>
 		);
 	}

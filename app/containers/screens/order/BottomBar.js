@@ -35,6 +35,7 @@ class BottomBar extends Component {
 				localizer={this.props.localizer}
 				order={this.props.order}
 				canAddTransaction={this.canAddTransaction}
+				{...this.props}
 			/>
 		);
 	}

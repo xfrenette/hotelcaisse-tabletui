@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { computed } from 'mobx';
+import { computed, observable } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import get from 'lodash.get';
 import Order from 'hotelcaisse-app/dist/business/Order';
@@ -9,6 +9,7 @@ import CategorySidebar from './CategorySidebar';
 import BottomBar from './BottomBar';
 import Items from './Items';
 import CreditsTransactions from './CreditsTransactions';
+import ModalCredit from './ModalCredit';
 
 @inject('localizer', 'uuidGenerator', 'router', 'business', 'register', 'ui')
 @observer
@@ -25,6 +26,8 @@ class Container extends Component {
 	 * @type {Boolean}
 	 */
 	isNew = false;
+	modalCredit = null;
+
 
 	/**
 	 * We can add transaction only if the register is opened
@@ -74,6 +77,10 @@ class Container extends Component {
 		}
 	}
 
+	onCreditEdit(credit) {
+		this.modalCredit.show(credit);
+	}
+
 	render() {
 		return (
 			<Screen
@@ -85,8 +92,16 @@ class Container extends Component {
 				BottomBar={(props) => <BottomBar order={this.order} {...props} />}
 				Items={(props) => <Items order={this.order} isNew={this.isNew} {...props} />}
 				CreditsTransactions={(props) => <CreditsTransactions order={this.order} {...props} />}
+				ModalCredit={(props) => (
+					<ModalCredit
+						ref={(n) => { this.modalCredit = n ? n.wrappedInstance : null; }}
+						order={this.order}
+						{...props}
+					/>
+				)}
 				onPressHome={() => { this.onPressHome(); }}
 				onDone={() => { this.onDone(); }}
+				onCreditEdit={(credit) => { this.onCreditEdit(credit); }}
 			/>
 		);
 	}

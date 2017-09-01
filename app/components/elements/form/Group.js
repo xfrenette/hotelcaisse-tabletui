@@ -47,7 +47,7 @@ const styles = {
 		flexDirection: 'row',
 	},
 	child: {
-		marginHorizontal:	styleVars.horizontalRhythm,
+		marginHorizontal: styleVars.horizontalRhythm,
 		flex: 1,
 	},
 	first: {

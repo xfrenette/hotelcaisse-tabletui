@@ -118,7 +118,7 @@ const orderPath = {
 	pathname: '/order',
 	state: {
 		order: dummyOrder(storedBusiness),
-		new: false,
+		new: true,
 	},
 };
 

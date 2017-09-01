@@ -14,7 +14,25 @@ export default {
 		taxes: 'Taxes',
 		payments: 'Paiements',
 	},
-	credit: 'Crédit',
+	credit: {
+		label: 'Crédit',
+		modal: {
+			edit: {
+				title: 'Modifier le crédit',
+			},
+			new: {
+				title: 'Ajouter un crédit',
+			},
+			fields: {
+				note: 'Description',
+				amount: 'Montant',
+			},
+			errors: {
+				note: 'Ne peut être vide',
+				amount: 'Doit être positif',
+			},
+		},
+	},
 	payment: 'Paiement',
 	refund: 'Remboursement',
 	credits: {

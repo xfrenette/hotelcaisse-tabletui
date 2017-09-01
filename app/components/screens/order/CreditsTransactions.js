@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { observable } from 'mobx';
 import { PropTypes as PropTypesMobx } from 'mobx-react';
 import { observer } from 'mobx-react/native';
-import { Text, View } from 'react-native';
+import { TouchableNativeFeedback, View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Transaction from 'hotelcaisse-app/dist/business/Transaction';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
+import { Text } from '../../elements';
 import { Cell, Row } from '../../elements/table';
 import styleVars from '../../../styles/variables';
 
@@ -15,9 +16,11 @@ const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	transactions: PropTypesMobx.observableArrayOf(PropTypes.instanceOf(Transaction)).isRequired,
 	credits: PropTypesMobx.observableArrayOf(PropTypes.instanceOf(Credit)).isRequired,
+	onCreditEdit: PropTypes.func,
 };
 
 const defaultProps = {
+	onCreditEdit: null,
 };
 
 @observer
@@ -32,24 +35,32 @@ class Transactions extends Component {
 		return this.props.localizer.t(path);
 	}
 
+	onCreditEdit(credit) {
+		if (this.props.onCreditEdit) {
+			this.props.onCreditEdit(credit);
+		}
+	}
+
 	renderElement(element, first) {
 		const amount = element.amount.toNumber() * -1;
 		const formattedAmount = this.props.localizer.formatCurrency(amount, { style: 'accounting' });
 		const formattedDate = this.props.localizer.formatDate(element.createdAt, { skeleton: 'MMMdHmm' });
 		let type;
 		let name;
+		let onPress = null;
 
 		if (element instanceof Transaction) {
 			const isRefund = amount > 0; // Do not forget that `amount` was multiplied by -1
 			type = this.t(`order.${isRefund ? 'refund' : 'payment'}`);
 			name = element.transactionMode.name;
 		} else {
-			type = this.t('order.credit');
+			type = this.t('order.credit.label');
 			name = element.note;
+			onPress = () => { this.onCreditEdit(element); };
 		}
 
-		return (
-			<Row key={element.uuid} first={first}>
+		let row = (
+			<Row first={first}>
 				<Cell style={cellStyles.date} first>
 					<Text>{ formattedDate }</Text>
 				</Cell>
@@ -64,6 +75,20 @@ class Transactions extends Component {
 				</Cell>
 			</Row>
 		);
+
+		let content = row;
+
+		if (onPress) {
+			content = (
+				<TouchableNativeFeedback onPress={onPress} style={{ backgroundColor: 'red' }}>
+					<View>
+						{ row }
+					</View>
+				</TouchableNativeFeedback>
+			);
+		}
+
+		return <View key={element.uuid}>{ content }</View>;
 	}
 
 	get orderedElements() {
