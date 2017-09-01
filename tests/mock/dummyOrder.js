@@ -34,8 +34,10 @@ function dummyCustomer(fields) {
 	fields.forEach((field) => {
 		if (field.role === 'customer.name') {
 			customer.setFieldValue(field, faker.name.findName());
-		} else if (field.role === 'customer.email') {
+		} else if (field.type === 'EmailField') {
 			customer.setFieldValue(field, faker.internet.email());
+		} else if (field.type === 'PhoneField') {
+			customer.setFieldValue(field, faker.phone.phoneNumber());
 		}
 	});
 

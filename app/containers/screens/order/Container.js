@@ -11,6 +11,7 @@ import Items from './Items';
 import CreditsTransactions from './CreditsTransactions';
 import ModalCredit from './ModalCredit';
 import ModalTransaction from './ModalTransaction';
+import Customer from './Customer';
 
 @inject('localizer', 'uuidGenerator', 'router', 'business', 'register', 'ui')
 @observer
@@ -112,6 +113,7 @@ class Container extends Component {
 						{...props}
 					/>
 				)}
+				Customer={(props) => <Customer order={this.order} {...props} />}
 				onPressHome={() => { this.onPressHome(); }}
 				onDone={() => { this.onDone(); }}
 				onCreditEdit={(credit) => { this.onCreditEdit(credit); }}

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ScrollView, View, } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
-import { Text } from '../../elements';
 import { MainContent, Screen, TopBar } from '../../layout';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
@@ -23,6 +21,7 @@ const propTypes = {
 	CreditsTransactions: PropTypes.func.isRequired,
 	ModalCredit: PropTypes.func.isRequired,
 	ModalTransaction: PropTypes.func.isRequired,
+	Customer: PropTypes.func.isRequired,
 	onPressHome: PropTypes.func,
 	onDone: PropTypes.func,
 	onCreditEdit: PropTypes.func,
@@ -71,6 +70,7 @@ class OrderScreen extends Component {
 		const CreditsTransactions = this.props.CreditsTransactions;
 		const ModalCredit = this.props.ModalCredit;
 		const ModalTransaction = this.props.ModalTransaction;
+		const Customer = this.props.Customer;
 
 		return (
 			<Screen>
@@ -97,43 +97,7 @@ class OrderScreen extends Component {
 									</View>
 								</View>
 								<View style={[viewStyles.header, layoutStyles.block]}>
-									<View style={viewStyles.customer}>
-										<View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
-											<Text style={textStyles.customerEmphasis}>Xavier Frenette</Text>
-										</View>
-										<View>
-											<View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-												<View style={{ flex: 1 }}>
-													<View style={{ flexDirection: 'row', alignItems: 'center'}}>
-														<Icon name="phone" style={{ paddingRight: 10 }} />
-														<Text>514-799-7770</Text>
-													</View>
-													<View style={{ flexDirection: 'row', alignItems: 'center'}}>
-														<Icon name="envelope" style={{ paddingRight: 10 }} />
-														<Text style={textStyles.customerLink}>xavier@xavierfrenette.com</Text>
-													</View>
-												</View>
-												<View style={{ flex: 1 }}>
-													<View style={{ flexDirection: 'row', alignItems: 'center'}}>
-														<Icon name="bed" style={{ paddingRight: 10 }} />
-														<Text style={{ fontWeight: 'bold' }}>Chambre 1, Chambre 7.1</Text>
-													</View>
-													<View style={{ flexDirection: 'row', alignItems: 'center'}}>
-														<Icon name="sign-in" style={{ paddingRight: 10 }} />
-														<Text>mar. 8 juil.</Text>
-														<Icon name="sign-out" style={{ paddingLeft: 20, paddingRight: 10 }} />
-														<Text>jeu. 10 juil.</Text>
-													</View>
-												</View>
-											</View>
-										</View>
-										<View style={{ marginTop: styleVars.verticalRhythm / 2 }}>
-											<Button
-												layout={[buttonLayouts.text]}
-												title="Modifier les informations"
-											/>
-										</View>
-									</View>
+									<Customer />
 								</View>
 								<View style={layoutStyles.section}>
 									<Items />
@@ -192,20 +156,9 @@ const viewStyles = {
 		borderBottomColor: styleVars.theme.lineColor,
 		paddingBottom: styleVars.verticalRhythm,
 	},
-	customer: {
-		flex: 1,
-	},
 };
 
 const textStyles = {
-	customerEmphasis: {
-		fontWeight: 'bold',
-		//color: styleVars.theme.mainColor,
-		fontSize: styleVars.bigFontSize,
-	},
-	customerLink: {
-		textDecorationLine: 'underline',
-	},
 };
 
 OrderScreen.propTypes = propTypes;

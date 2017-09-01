@@ -120,6 +120,8 @@ export default {
 		details: 'Détails',
 		remove: 'Retirer',
 		refund: 'Rembourser',
+		fillCustomer: 'Saisir les informations du client',
+		editCustomer: 'Modifier les informations',
 	},
 	categories: {
 		empty: 'Cette catégorie est vide',
