@@ -22,6 +22,7 @@ const propTypes = {
 	Items: PropTypes.func.isRequired,
 	CreditsTransactions: PropTypes.func.isRequired,
 	ModalCredit: PropTypes.func.isRequired,
+	ModalTransaction: PropTypes.func.isRequired,
 	onPressHome: PropTypes.func,
 	onDone: PropTypes.func,
 	onCreditEdit: PropTypes.func,
@@ -37,8 +38,6 @@ const defaultProps = {
 };
 
 class OrderScreen extends Component {
-	modalCredit = null;
-
 	/**
 	 * Simple alias to this.props.localizer.t
 	 *
@@ -59,12 +58,19 @@ class OrderScreen extends Component {
 		}
 	}
 
+	onTransactionEdit(transaction) {
+		if (this.props.onTransactionEdit) {
+			this.props.onTransactionEdit(transaction);
+		}
+	}
+
 	render() {
 		const CategorySidebar = this.props.CategorySidebar;
 		const BottomBar = this.props.BottomBar;
 		const Items = this.props.Items;
 		const CreditsTransactions = this.props.CreditsTransactions;
 		const ModalCredit = this.props.ModalCredit;
+		const ModalTransaction = this.props.ModalTransaction;
 
 		return (
 			<Screen>
@@ -143,11 +149,13 @@ class OrderScreen extends Component {
 						<BottomBar
 							style={viewStyles.totalBar}
 							onCreditAdd={() => { this.onCreditEdit(null); }}
+							onTransactionAdd={() => { this.onTransactionEdit(null); }}
 						/>
 					</View>
 					<CategorySidebar style={viewStyles.sidebar}/>
 				</View>
 				<ModalCredit />
+				<ModalTransaction />
 			</Screen>
 		);
 	}

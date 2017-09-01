@@ -17,11 +17,13 @@ const propTypes = {
 	order: PropTypes.instanceOf(Order).isRequired,
 	canAddTransaction: PropTypes.bool,
 	onCreditAdd: PropTypes.func,
+	onTransactionAdd: PropTypes.func,
 };
 
 const defaultProps = {
 	canAddTransaction: true,
 	onCreditAdd: null,
+	onTransactionAdd: null,
 };
 
 @observer
@@ -115,6 +117,7 @@ class BottomBar extends Component {
 					<Button
 						title={this.t('order.actions.savePayment')}
 						layout={buttonLayouts.primary}
+						onPress={this.props.onTransactionAdd}
 					/>
 				</View>
 			);

@@ -51,7 +51,7 @@ class Transactions extends Component {
 
 		if (element instanceof Transaction) {
 			const isRefund = amount > 0; // Do not forget that `amount` was multiplied by -1
-			type = this.t(`order.${isRefund ? 'refund' : 'payment'}`);
+			type = this.t(`order.transaction.${isRefund ? 'refund' : 'payment'}.label`);
 			name = element.transactionMode.name;
 		} else {
 			type = this.t('order.credit.label');

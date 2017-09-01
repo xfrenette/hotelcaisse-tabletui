@@ -33,8 +33,43 @@ export default {
 			},
 		},
 	},
-	payment: 'Paiement',
-	refund: 'Remboursement',
+	transaction: {
+		payment: {
+			label: 'Paiement',
+			modal: {
+				edit: {
+					title: 'Modifier le paiement',
+				},
+				new: {
+					title: 'Enregistrer le paiement',
+				},
+				fields: {
+					mode: 'Mode de paiement',
+					amount: 'Montant',
+				},
+			}
+		},
+		refund: {
+			label: 'Remboursement',
+			modal: {
+				edit: {
+					title: 'Modifier le remboursement',
+				},
+				new: {
+					title: 'Enregistrer le remboursement',
+				},
+				fields: {
+					mode: 'Mode de remboursement',
+					amount: 'Montant',
+				},
+			},
+		},
+		modal: {
+			errors: {
+				amount: 'Doit être positif',
+			},
+		}
+	},
 	credits: {
 		label: 'Dépôts',
 		empty: 'Pour ajouter un dépôt, appuyez le bouton ci-dessous',

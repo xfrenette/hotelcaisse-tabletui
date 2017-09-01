@@ -4,38 +4,40 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import Decimal from 'decimal.js';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
-import Credit from 'hotelcaisse-app/dist/business/Credit';
-import { Modal, NumberInput, TextInput } from '../../elements';
+import TransactionMode from 'hotelcaisse-app/dist/business/TransactionMode';
+import { Dropdown, Modal, NumberInput } from '../../elements';
 import { Field, Group, Label } from '../../elements/form';
 
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
-	credit: PropTypes.instanceOf(Credit),
+	transactionModes: PropTypes.arrayOf(PropTypes.instanceOf(TransactionMode)).isRequired,
+	transactionMode: PropTypes.instanceOf(TransactionMode).isRequired,
+	amount: PropTypes.number.isRequired,
+	isNew: PropTypes.bool,
 	onSave: PropTypes.func,
 	validate: PropTypes.func,
 };
 
 const defaultProps = {
-	credit: null,
+	isNew: true,
 	onSave: null,
 	validate: null,
 };
 
 @observer
-class ModalCredit extends Component {
+class ModalTransaction extends Component {
 	modalRef = null;
+	isRefund = false;
 	@observable
-	note = '';
+	mode = null;
 	@observable
 	amount = 0;
 	@observable
 	errors = {
-		note: null,
 		amount: null,
 	};
 	nodeRefs = {
-		note: null,
 		amount: null,
 	};
 
@@ -49,12 +51,14 @@ class ModalCredit extends Component {
 		return this.props.localizer.t(path);
 	}
 
-	get isNew() {
-		return this.props.credit === null;
+	get amountAsDecimal() {
+		return this.amount === null
+			? null
+			: new Decimal(this.amount).mul(this.isRefund ? -1 : 1);
 	}
 
-	get amountAsDecimal() {
-		return this.amount === null ? null : new Decimal(this.amount);
+	componentWillMount() {
+		this.resetInputs(this.props);
 	}
 
 	componentWillReceiveProps(props) {
@@ -63,13 +67,13 @@ class ModalCredit extends Component {
 
 	onSave() {
 		const values = {
-			note: this.note,
 			amount: this.amountAsDecimal,
 		};
 
 		if (this.validate(values)) {
 			if (this.props.onSave) {
-				this.props.onSave(this.props.credit, values.note, values.amount);
+				console.log('mode', this.mode);
+				this.props.onSave(this.mode, values.amount);
 			}
 
 			return true;
@@ -89,19 +93,15 @@ class ModalCredit extends Component {
 	}
 
 	resetInputs(newProps) {
-		this.errors.note = null;
 		this.errors.amount = null;
 
-		if (newProps.credit) {
-			this.note = newProps.credit.note;
-			this.amount = newProps.credit.amount.toNumber();
-		} else {
-			this.note = '';
-			this.amount = 0;
-		}
+		this.mode = newProps.transactionMode;
+		this.amount = Math.abs(newProps.amount);
+		this.isRefund = newProps.amount < 0;
 	}
 
 	show() {
+		this.resetInputs(this.props);
 		this.modalRef.show();
 	}
 
@@ -114,65 +114,46 @@ class ModalCredit extends Component {
 		return res === undefined;
 	}
 
-	onShow() {
-		this.nodeRefs.note.focus();
-	}
-
-	onNoteBlur() {
-		const valid = this.validate({ note: this.note });
-		if (!valid) {
-			this.errors.note = this.t('order.credit.modal.errors.note');
-		} else {
-			this.errors.note = null;
-		}
-	}
-
 	onAmountBlur() {
 		const valid = this.validate({ amount: this.amountAsDecimal });
+
 		if (!valid) {
-			this.errors.amount = this.t('order.credit.modal.errors.amount');
+			this.errors.amount = this.t('order.transaction.modal.errors.amount');
 		} else {
 			this.errors.amount = null;
 		}
 	}
 
 	render() {
+		const tPath = `order.transaction.${this.isRefund ? 'refund' : 'payment'}`;
 		const actions = {
 			'cancel': this.t('actions.cancel'),
 			'save': this.t('actions.save'),
 		};
+		const Option = Dropdown.Option;
+		const modeOptions = this.props.transactionModes.map(
+			tm => <Option key={tm.id} value={tm} label={tm.name} />
+		);
 
 		return (
 			<Modal
-				ref={(node) => {
-					this.modalRef = node;
-				}}
-				onShow={() => {
-					this.onShow();
-				}}
-				onActionPress={(a) => {
-					this.onActionPress(a);
-				}}
+				ref={(node) => { this.modalRef = node; }}
+				onActionPress={(a) => { this.onActionPress(a); }}
 				actions={actions}
-				title={this.t(`order.credit.modal.${this.isNew ? 'new' : 'edit'}.title`)}
+				title={this.t(`${tPath}.modal.${this.props.isNew ? 'new' : 'edit'}.title`)}
 			>
 				<Group>
 					<Field>
-						<Label>{this.t('order.credit.modal.fields.note')}</Label>
-						<TextInput
-							ref={(n) => { this.nodeRefs.note = n; }}
-							value={this.note}
-							onChangeText={(t) => { this.note = t; }}
-							returnKeyType="next"
-							onSubmitEditing={() => { this.nodeRefs.amount.focus(); }}
-							error={this.errors.note}
-							onBlur={() => { this.onNoteBlur(); }}
-							autoCapitalize="sentences"
-							selectTextOnFocus
-						/>
+						<Label>{this.t(`${tPath}.modal.fields.mode`)}</Label>
+						<Dropdown
+							selectedValue={this.mode}
+							onValueChange={(val) => { this.mode = val; }}
+						>
+							{ modeOptions }
+						</Dropdown>
 					</Field>
 					<Field>
-						<Label>{this.t('order.credit.modal.fields.amount')}</Label>
+						<Label>{this.t(`${tPath}.modal.fields.amount`)}</Label>
 						<NumberInput
 							ref={(n) => { this.nodeRefs.amount = n; }}
 							value={this.amount}
@@ -194,7 +175,7 @@ class ModalCredit extends Component {
 
 const viewStyles = {};
 
-ModalCredit.propTypes = propTypes;
-ModalCredit.defaultProps = defaultProps;
+ModalTransaction.propTypes = propTypes;
+ModalTransaction.defaultProps = defaultProps;
 
-export default ModalCredit;
+export default ModalTransaction;
