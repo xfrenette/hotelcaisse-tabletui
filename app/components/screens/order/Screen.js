@@ -21,10 +21,13 @@ const propTypes = {
 	CreditsTransactions: PropTypes.func.isRequired,
 	ModalCredit: PropTypes.func.isRequired,
 	ModalTransaction: PropTypes.func.isRequired,
+	ModalCustomer: PropTypes.func,
 	Customer: PropTypes.func.isRequired,
 	onPressHome: PropTypes.func,
 	onDone: PropTypes.func,
 	onCreditEdit: PropTypes.func,
+	onTransactionEdit: PropTypes.func,
+	onCustomerEdit: PropTypes.func,
 };
 
 const defaultProps = {
@@ -34,6 +37,8 @@ const defaultProps = {
 	onPressHome: null,
 	onDone: null,
 	onCreditEdit: null,
+	onTransactionEdit: null,
+	onCustomerEdit: null,
 };
 
 class OrderScreen extends Component {
@@ -70,6 +75,7 @@ class OrderScreen extends Component {
 		const CreditsTransactions = this.props.CreditsTransactions;
 		const ModalCredit = this.props.ModalCredit;
 		const ModalTransaction = this.props.ModalTransaction;
+		const ModalCustomer = this.props.ModalCustomer;
 		const Customer = this.props.Customer;
 
 		return (
@@ -97,7 +103,7 @@ class OrderScreen extends Component {
 									</View>
 								</View>
 								<View style={[viewStyles.header, layoutStyles.block]}>
-									<Customer />
+									<Customer onCustomerEdit={this.props.onCustomerEdit} />
 								</View>
 								<View style={layoutStyles.section}>
 									<Items />
@@ -114,12 +120,14 @@ class OrderScreen extends Component {
 							style={viewStyles.totalBar}
 							onCreditAdd={() => { this.onCreditEdit(null); }}
 							onTransactionAdd={() => { this.onTransactionEdit(null); }}
+							onCustomerEdit={this.props.onCustomerEdit}
 						/>
 					</View>
 					<CategorySidebar style={viewStyles.sidebar}/>
 				</View>
 				<ModalCredit />
 				<ModalTransaction />
+				<ModalCustomer />
 			</Screen>
 		);
 	}

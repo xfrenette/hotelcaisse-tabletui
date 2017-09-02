@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { inject } from 'mobx-react/native';
+import { inject, observer } from 'mobx-react/native';
+import { computed } from 'mobx';
 import Order from 'hotelcaisse-app/dist/business/Order';
+import { STATES } from 'hotelcaisse-app/dist/business/Register';
 import ComponentElement from '../../../components/screens/order/BottomBar';
 
 const propTypes = {
@@ -14,6 +16,7 @@ const defaultProps = {
 };
 
 @inject('localizer', 'register')
+@observer
 class BottomBar extends Component {
 	/**
 	 * Simple alias to this.props.localizer.t
@@ -25,8 +28,14 @@ class BottomBar extends Component {
 		return this.props.localizer.t(path);
 	}
 
+	@computed
 	get canAddTransaction() {
-		return true;
+		return this.props.register.state === STATES.OPENED;
+	}
+
+	@computed
+	get customerFilled() {
+		return this.props.order.customer.fieldValues.size > 0;
 	}
 
 	render() {
@@ -35,6 +44,7 @@ class BottomBar extends Component {
 				localizer={this.props.localizer}
 				order={this.props.order}
 				canAddTransaction={this.canAddTransaction}
+				customerFilled={this.customerFilled}
 				{...this.props}
 			/>
 		);

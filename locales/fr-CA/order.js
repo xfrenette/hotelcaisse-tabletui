@@ -109,7 +109,20 @@ export default {
 	},
 	note: {
 		label: 'Notes',
-		instructions: 'Les notes sont utilisées uniquement à l\'interne et n\'apparaitront pas sur la facture.',
+		instructions: 'Les notes sont utilisées uniquement à l\'interne et n\'apparaitront pas' +
+			' sur la facture.',
+	},
+	addTransactionError: {
+		registerClosed: {
+			title: 'Caisse fermée',
+			message: 'Les paiements et remboursements peuvent être enregistrés seulement quand' +
+				' la caisse est ouverte.',
+		},
+		nullBalance: {
+			title: 'Aucun solde',
+			message: 'Cette inscription a été payée en totalité, vous ne pouvez enregistrer un' +
+				' paiement supplémentaire.',
+		},
 	},
 	actions: {
 		addCredit: 'Ajouter un crédit',
@@ -121,9 +134,13 @@ export default {
 		remove: 'Retirer',
 		refund: 'Rembourser',
 		fillCustomer: 'Saisir les informations du client',
+		fillCustomerShort: 'Saisir informations client',
 		editCustomer: 'Modifier les informations',
 	},
 	customer: {
+		modal: {
+			title: 'Informations du client et chambres',
+		},
 		customerInfo: 'Informations du client',
 		roomSelectionsInfo: 'Chambres',
 	},

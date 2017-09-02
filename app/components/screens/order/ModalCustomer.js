@@ -86,14 +86,10 @@ class ModalCustomer extends Component {
 
 		return (
 			<Modal
-				ref={(node) => {
-					this.modalRef = node;
-				}}
-				onActionPress={(a) => {
-					this.onActionPress(a);
-				}}
+				ref={(node) => { this.modalRef = node; }}
+				onActionPress={(a) => { this.onActionPress(a); }}
 				actions={actions}
-				title='tmp'
+				title={this.t('order.customer.modal.title')}
 				animationType="slide"
 				fullScreen
 			>

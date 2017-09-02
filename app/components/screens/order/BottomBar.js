@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import Decimal from 'decimal.js';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
@@ -16,14 +16,18 @@ const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	order: PropTypes.instanceOf(Order).isRequired,
 	canAddTransaction: PropTypes.bool,
+	customerFilled: PropTypes.bool,
 	onCreditAdd: PropTypes.func,
 	onTransactionAdd: PropTypes.func,
+	onCustomerEdit: PropTypes.func,
 };
 
 const defaultProps = {
 	canAddTransaction: true,
+	customerFilled: false,
 	onCreditAdd: null,
 	onTransactionAdd: null,
+	onCustomerEdit: null,
 };
 
 @observer
@@ -56,6 +60,27 @@ class BottomBar extends Component {
 			[this.t('order.details.credits'), this.props.order.creditsTotal.mul(-1).toNumber()],
 			[this.t('order.details.payments'), this.props.order.transactionsTotal.mul(-1).toNumber()],
 		];
+	}
+
+	onAddTransactionPress() {
+		let errorTitle = null;
+		let errorMessage = null;
+
+		if (!this.props.canAddTransaction) {
+			errorTitle = this.t('order.addTransactionError.registerClosed.title');
+			errorMessage = this.t('order.addTransactionError.registerClosed.message');
+		} else if (this.props.order.balance.eq(0)) {
+			errorTitle = this.t('order.addTransactionError.nullBalance.title');
+			errorMessage = this.t('order.addTransactionError.nullBalance.message');
+		}
+
+		if (errorMessage) {
+			Alert.alert(errorTitle, errorMessage);
+		} else {
+			if (this.props.onTransactionAdd) {
+				this.props.onTransactionAdd();
+			}
+		}
 	}
 
 	renderDetails() {
@@ -107,22 +132,35 @@ class BottomBar extends Component {
 	render() {
 		const balance = this.props.order.balance;
 		const nullBalance = balance.eq(0);
+		const canAddTransaction = this.props.canAddTransaction;
+		const customerFilled = this.props.customerFilled;
 
-		let addTransactionButton = null;
-		let doneButtonLayout = buttonLayouts.primary;
+		let addTransactionButtonLayout = nullBalance || !canAddTransaction
+			? buttonLayouts.disabled
+			: buttonLayouts.primary ;
+		let doneButtonLayout = nullBalance && customerFilled
+			? buttonLayouts.primary
+			: buttonLayouts.default;
 
-		if (!nullBalance) {
-			addTransactionButton = (
-				<View style={viewStyles.button}>
-					<Button
-						title={this.t('order.actions.savePayment')}
-						layout={buttonLayouts.primary}
-						onPress={this.props.onTransactionAdd}
-					/>
-				</View>
-			);
-			doneButtonLayout = buttonLayouts.default;
-		}
+		const addTransactionButton = (
+			<View style={viewStyles.button}>
+				<Button
+					title={this.t('order.actions.savePayment')}
+					layout={addTransactionButtonLayout}
+					onPress={() => { this.onAddTransactionPress(); }}
+				/>
+			</View>
+		);
+
+		const fillCustomerButton = (
+			<View style={viewStyles.button}>
+				<Button
+					title={this.t('order.actions.fillCustomerShort')}
+					layout={buttonLayouts.primary}
+					onPress={this.props.onCustomerEdit}
+				/>
+			</View>
+		);
 
 		return (
 			<View style={viewStyles.bottomBar}>
@@ -142,7 +180,7 @@ class BottomBar extends Component {
 								onPress={this.props.onCreditAdd}
 							/>
 						</View>
-						{ addTransactionButton }
+						{ this.props.customerFilled ? addTransactionButton : fillCustomerButton }
 						<View style={viewStyles.button}>
 							<Button
 								title={this.t('actions.done')}

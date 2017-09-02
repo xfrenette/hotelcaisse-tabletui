@@ -11,6 +11,7 @@ import Items from './Items';
 import CreditsTransactions from './CreditsTransactions';
 import ModalCredit from './ModalCredit';
 import ModalTransaction from './ModalTransaction';
+import ModalCustomer from './ModalCustomer';
 import Customer from './Customer';
 
 @inject('localizer', 'uuidGenerator', 'router', 'business', 'register', 'ui')
@@ -30,6 +31,7 @@ class Container extends Component {
 	isNew = false;
 	modalCredit = null;
 	modalTransaction = null;
+	modalCustomer = null;
 
 
 	/**
@@ -88,6 +90,10 @@ class Container extends Component {
 		this.modalTransaction.show(transaction);
 	}
 
+	onCustomerEdit() {
+		this.modalCustomer.show();
+	}
+
 	render() {
 		return (
 			<Screen
@@ -113,11 +119,19 @@ class Container extends Component {
 						{...props}
 					/>
 				)}
+				ModalCustomer={(props) => (
+					<ModalCustomer
+						ref={(n) => { this.modalCustomer = n ? n.wrappedInstance : null; }}
+						order={this.order}
+						{...props}
+					/>
+				)}
 				Customer={(props) => <Customer order={this.order} {...props} />}
 				onPressHome={() => { this.onPressHome(); }}
 				onDone={() => { this.onDone(); }}
 				onCreditEdit={(credit) => { this.onCreditEdit(credit); }}
 				onTransactionEdit={(transaction) => { this.onTransactionEdit(transaction); }}
+				onCustomerEdit={() => { this.onCustomerEdit(); }}
 			/>
 		);
 	}

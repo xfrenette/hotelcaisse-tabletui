@@ -22,6 +22,7 @@ const colors = {
 	grey1: '#e1e1e1',
 	grey2: '#aaaaaa',
 	lightGrey1: '#fafafa',
+	lightGrey2: '#f1f1f1',
 	green1: '#31c544',
 	green2: '#279b36',
 	transparentBlack1: 'rgba(0, 0, 0, 0.4)',

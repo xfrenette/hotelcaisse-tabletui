@@ -30,6 +30,16 @@ export default {
 		},
 		rippleColor: vars.colors.green2,
 	},
+	disabled: {
+		button: {
+			borderWidth: 1,
+			borderColor: vars.colors.grey1,
+			backgroundColor: vars.colors.lightGrey1,
+		},
+		text: {
+			color: vars.colors.grey2,
+		},
+	},
 	text: {
 		button: {
 			height: vars.verticalRhythm,

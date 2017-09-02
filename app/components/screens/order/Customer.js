@@ -19,12 +19,11 @@ const propTypes = {
 	customer: PropTypes.instanceOf(CustomerModel).isRequired,
 	customerFields: PropTypes.arrayOf(PropTypes.instanceOf(Field)).isRequired,
 	roomSelections: PropTypesMobx.observableArrayOf(PropTypes.instanceOf(RoomSelection)).isRequired,
-	ModalCustomer: PropTypes.func,
-	onShowModal: PropTypes.func,
+	onCustomerEdit: PropTypes.func,
 };
 
 const defaultProps = {
-	onShowModal: null,
+	onCustomerEdit: null,
 };
 
 const visibleFieldTypes = {
@@ -59,17 +58,13 @@ class Customer extends Component {
 		return this.props.customer.getFieldValue(customerField);
 	}
 
-	showCustomerModal() {
-		this.modal.show();
-	}
-
 	renderNoData() {
 		return (
 			<View style={viewStyles.buttons}>
 				<Button
 					title={this.t('order.actions.fillCustomer')}
 					layout={[buttonLayouts.default, buttonLayouts.small]}
-					onPress={this.props.onShowModal}
+					onPress={this.props.onCustomerEdit}
 				/>
 			</View>
 		);
@@ -158,7 +153,7 @@ class Customer extends Component {
 					<Button
 						layout={[buttonLayouts.default, buttonLayouts.small]}
 						title={this.t('order.actions.editCustomer')}
-						onPress={this.props.onShowModal}
+						onPress={this.props.onCustomerEdit}
 					/>
 				</View>
 			</View>
@@ -166,12 +161,9 @@ class Customer extends Component {
 	}
 
 	render() {
-		const ModalCustomer = this.props.ModalCustomer;
-		
 		return (
 			<View>
 				{ this.hasData ? this.renderCustomerRoomSelections() : this.renderNoData() }
-				<ModalCustomer />
 			</View>
 		);
 	}
