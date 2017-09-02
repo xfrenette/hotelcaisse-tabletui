@@ -12,7 +12,9 @@ import CreditsTransactions from './CreditsTransactions';
 import ModalCredit from './ModalCredit';
 import ModalTransaction from './ModalTransaction';
 import ModalCustomer from './ModalCustomer';
+import ModalNotes from './ModalNotes';
 import Customer from './Customer';
+import Header from './Header';
 
 @inject('localizer', 'uuidGenerator', 'router', 'business', 'register', 'ui')
 @observer
@@ -32,6 +34,7 @@ class Container extends Component {
 	modalCredit = null;
 	modalTransaction = null;
 	modalCustomer = null;
+	modalNotes = null;
 
 
 	/**
@@ -94,6 +97,10 @@ class Container extends Component {
 		this.modalCustomer.show();
 	}
 
+	onNotesEdit() {
+		this.modalNotes.show();
+	}
+
 	render() {
 		return (
 			<Screen
@@ -126,12 +133,21 @@ class Container extends Component {
 						{...props}
 					/>
 				)}
+				ModalNotes={(props) => (
+					<ModalNotes
+						ref={(n) => { this.modalNotes = n ? n.wrappedInstance : null; }}
+						order={this.order}
+						{...props}
+					/>
+				)}
 				Customer={(props) => <Customer order={this.order} {...props} />}
+				Header={(props) => <Header order={this.order} {...props} />}
 				onPressHome={() => { this.onPressHome(); }}
 				onDone={() => { this.onDone(); }}
 				onCreditEdit={(credit) => { this.onCreditEdit(credit); }}
 				onTransactionEdit={(transaction) => { this.onTransactionEdit(transaction); }}
 				onCustomerEdit={() => { this.onCustomerEdit(); }}
+				onNotesEdit={() => { this.onNotesEdit(); }}
 			/>
 		);
 	}

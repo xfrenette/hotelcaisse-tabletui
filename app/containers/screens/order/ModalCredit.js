@@ -45,7 +45,7 @@ class ModalCredit extends Component {
 			<ComponentElement
 				ref={(node) => { this.modal = node; }}
 				localizer={this.props.localizer}
-				validate = { Credit.validate }
+				validate={ Credit.validate }
 				onSave={(c, n, a) => { this.onSave(c, n, a); }}
 				credit={this.editingCredit}
 			/>

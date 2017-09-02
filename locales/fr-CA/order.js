@@ -107,10 +107,13 @@ export default {
 			amount: 'Montant',
 		},
 	},
-	note: {
-		label: 'Notes',
-		instructions: 'Les notes sont utilisées uniquement à l\'interne et n\'apparaitront pas' +
-			' sur la facture.',
+	notes: {
+		modal: {
+			title: 'Editer les notes',
+			instructions: 'Les notes sont utilisées uniquement à l\'interne et n\'apparaitront pas' +
+				' sur la facture.',
+			placeholder: '(Aucune note. Saisir ici une note pour cette inscription.)',
+		},
 	},
 	addTransactionError: {
 		registerClosed: {
@@ -136,6 +139,7 @@ export default {
 		fillCustomer: 'Saisir les informations du client',
 		fillCustomerShort: 'Saisir informations client',
 		editCustomer: 'Modifier les informations',
+		editNotes: 'Éditer les notes',
 	},
 	customer: {
 		modal: {

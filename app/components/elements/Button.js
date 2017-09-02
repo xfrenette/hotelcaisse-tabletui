@@ -9,9 +9,9 @@ const propTypes = {
 	type: PropTypes.string,
 	touchEffect: PropTypes.string,
 	preIcon: PropTypes.string,
-	preIconStyle: PropTypes.object,
+	preIconStyle: Icon.propTypes.style,
 	postIcon: PropTypes.string,
-	postIconStyle: PropTypes.object,
+	postIconStyle: Icon.propTypes.style,
 	layout: PropTypes.oneOfType([
 		PropTypes.object,
 		PropTypes.array,
@@ -64,15 +64,21 @@ const Button = (props) => {
 		});
 	}
 
-	if (props.preIcon) {
+	let preIconName = props.preIcon;
+
+	if (type === 'back') {
+		preIconName = "angle-left";
+	}
+
+	if (preIconName) {
 		preIcon = (
-			<Icon name={props.preIcon} style={[textStyles, styles.icon, props.preIconStyle]} />
+			<Icon name={preIconName} style={[textStyles, styles.icon, styles.preIcon, props.preIconStyle]} />
 		);
 	}
 
-	if (type === 'back') {
-		preIcon = (
-			<Icon name="angle-left" style={[textStyles, styles.icon, props.preIconStyle]} />
+	if (props.postIcon) {
+		postIcon = (
+			<Icon name={props.postIcon} style={[textStyles, styles.icon, styles.postIcon, props.postIconStyle]} />
 		);
 	}
 
@@ -94,9 +100,13 @@ const styles = {
 	icon: {
 		lineHeight: 18,
 		fontSize: 18,
+	},
+	preIcon: {
 		paddingRight: 7,
 	},
-
+	postIcon: {
+		paddingLeft: 7,
+	},
 	button: {
 		flexDirection: 'row',
 		alignItems: 'center',

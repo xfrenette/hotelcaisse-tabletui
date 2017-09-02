@@ -110,7 +110,7 @@ function dummyRoomSelection(rooms, fields, latestCheckOutDate = new Date()) {
 
 function dummyOrder(business, latestCheckOutDate) {
 	const order = new Order(generateUUID());
-	//order.customer = dummyCustomer(business.customerFields);
+	order.customer = dummyCustomer(business.customerFields);
 	order.note = Math.random() > 0.5 ? faker.lorem.sentence() : null;
 
 	const nbItems = Math.ceil(Math.random() * 3) + 1;
