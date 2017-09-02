@@ -61,7 +61,7 @@ class ModalTransaction extends Component {
 			<ComponentElement
 				ref={(node) => { this.modal = node; }}
 				localizer={this.props.localizer}
-				validate = { Transaction.validate }
+				validate={ Transaction.validate }
 				onSave={(m, a) => { this.onSave(m, a); }}
 				transactionModes={this.modes}
 				transactionMode={this.mode}

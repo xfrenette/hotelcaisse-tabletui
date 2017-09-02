@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal as NativeModal, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	Modal as NativeModal,
+	ScrollView,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
+import omit from 'lodash.omit';
 import { Text } from './index';
 import styleVars from '../../styles/variables';
 
@@ -13,6 +20,7 @@ const propTypes = {
 	onShow: PropTypes.func,
 	children: PropTypes.node.isRequired,
 	actions: PropTypes.object,
+	fullScreen: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -21,7 +29,10 @@ const defaultProps = {
 	onActionPress: null,
 	onShow: null,
 	actions: null,
+	fullScreen: false,
 };
+
+const regularWidth = 500;
 
 @observer
 class Modal extends Component {
@@ -88,9 +99,11 @@ class Modal extends Component {
 			}
 
 			return (
-				<TouchableNativeFeedback key={key} onPress={() => { this.onActionPress(key); }}>
+				<TouchableNativeFeedback key={key} onPress={() => {
+					this.onActionPress(key);
+				}}>
 					<View style={actionStyles}>
-						<Text style={styles.actionText}>{ label }</Text>
+						<Text style={styles.actionText}>{label}</Text>
 					</View>
 				</TouchableNativeFeedback>
 			);
@@ -100,11 +113,13 @@ class Modal extends Component {
 	render() {
 		let title = null;
 		let actions = null;
+		let width = regularWidth;
+		let height = null;
 
 		if (this.props.title) {
 			title = (
 				<View style={styles.title}>
-					<Text style={styles.titleText}>{ this.props.title }</Text>
+					<Text style={styles.titleText}>{this.props.title}</Text>
 				</View>
 			);
 		}
@@ -112,25 +127,56 @@ class Modal extends Component {
 		if (this.props.actions) {
 			actions = (
 				<View style={styles.actions}>
-					{ this.renderActions() }
+					{this.renderActions()}
 				</View>
 			);
 		}
 
+		if (this.props.fullScreen) {
+			const dim = Dimensions.get('window');
+			width = dim.width - 100;
+			height = dim.height - 100;
+		}
+
+		const modalStyle = { width, };
+
+		if (height) {
+			modalStyle.height = height;
+		}
+
+		let content = (
+			<View style={styles.content}>
+				{ this.props.children }
+			</View>
+		);
+
+		if (this.props.fullScreen) {
+			content = (
+				<ScrollView>
+					{ content }
+				</ScrollView>
+			);
+		}
+
+		const modalProps = omit(this.props, [
+			'title', 'onRequestClose', 'onActionPress', 'onShow', 'children', 'actions', 'fullScreen'
+		]);
+
 		return (
 			<NativeModal
 				visible={this.visible}
-				onRequestClose={() => { this.onRequestClose(); }}
+				onRequestClose={() => {
+					this.onRequestClose();
+				}}
 				animationType="none"
 				transparent
 				onShow={this.props.onShow}
+				{...modalProps}
 			>
 				<View style={styles.background}>
-					<View style={styles.modal} elevation={4}>
+					<View style={[styles.modal, modalStyle]} elevation={4}>
 						{ title }
-						<View style={styles.content}>
-							{ this.props.children }
-						</View>
+						{ content }
 						{ actions }
 					</View>
 				</View>
@@ -155,7 +201,6 @@ const styles = {
 
 	modal: {
 		backgroundColor: styleVars.colors.white1,
-		width: 500,
 	},
 
 	title: {

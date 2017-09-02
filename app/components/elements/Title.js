@@ -25,6 +25,9 @@ const styles = {
 		fontSize: 15,
 		fontWeight: 'bold',
 		color: styleVars.theme.mainColor,
+		borderBottomWidth: 2,
+		borderBottomColor: styleVars.theme.mainColor,
+		top: -2,
 	},
 };
 

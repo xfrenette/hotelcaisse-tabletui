@@ -80,6 +80,7 @@ const nbAdultsField = new NumberField();
 nbAdultsField.id = 412;
 nbAdultsField.label = 'Adultes (18+)';
 nbAdultsField.defaultValue = 1;
+nbAdultsField.required = true;
 nbAdultsField.constraints = numberFieldConstraints;
 const nbTeensField = new NumberField();
 nbTeensField.id = 413;

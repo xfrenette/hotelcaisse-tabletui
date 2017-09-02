@@ -123,6 +123,10 @@ export default {
 		fillCustomer: 'Saisir les informations du client',
 		editCustomer: 'Modifier les informations',
 	},
+	customer: {
+		customerInfo: 'Informations du client',
+		roomSelectionsInfo: 'Chambres',
+	},
 	categories: {
 		empty: 'Cette catégorie est vide',
 	},
