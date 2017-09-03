@@ -15,7 +15,7 @@ const defaultProps = {
 	isNew: false,
 };
 
-@inject('localizer', 'register')
+@inject('localizer', 'register', 'ui')
 @observer
 class BottomBar extends Component {
 	/**
@@ -38,6 +38,10 @@ class BottomBar extends Component {
 		return this.props.order.customer.fieldValues.size > 0;
 	}
 
+	onBack() {
+		this.props.ui.goBackOrGoHome();
+	}
+
 	render() {
 		return (
 			<ComponentElement
@@ -46,6 +50,7 @@ class BottomBar extends Component {
 				canAddTransaction={this.canAddTransaction}
 				customerFilled={this.customerFilled}
 				itemsCount={this.props.order.items.length}
+				onBack={() => { this.onBack(); }}
 				{...this.props}
 			/>
 		);

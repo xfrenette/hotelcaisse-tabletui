@@ -7,11 +7,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Decimal from 'decimal.js';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
-import { Text } from '../../elements';
+import { BottomBarBackButton, Text } from '../../elements';
 import styleVars from '../../../styles/variables';
 import buttonLayouts from '../../../styles/buttons';
 import Button from '../../elements/Button';
-
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
@@ -22,6 +21,7 @@ const propTypes = {
 	onCreditAdd: PropTypes.func,
 	onTransactionAdd: PropTypes.func,
 	onCustomerEdit: PropTypes.func,
+	onBack: PropTypes.func,
 };
 
 const defaultProps = {
@@ -31,6 +31,7 @@ const defaultProps = {
 	onCreditAdd: null,
 	onTransactionAdd: null,
 	onCustomerEdit: null,
+	onBack: null,
 };
 
 @observer
@@ -190,10 +191,9 @@ class BottomBar extends Component {
 					{ this.renderDetails() }
 				</View>
 				<View style={viewStyles.buttons}>
-					<Button
+					<BottomBarBackButton
 						title={this.t('actions.cancel')}
-						layout={buttonLayouts.text}
-						type="back"
+						onPress={this.props.onBack}
 					/>
 					<View style={viewStyles.buttonGroup}>
 						<View style={viewStyles.button}>
