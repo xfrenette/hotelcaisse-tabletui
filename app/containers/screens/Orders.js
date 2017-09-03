@@ -86,7 +86,7 @@ class Orders extends Component {
 	 */
 	onOrderPress(order) {
 		this.props.router.push({
-			pathname: '/order/review-payments',
+			pathname: '/order',
 			state: {
 				order,
 				new: false,

@@ -128,7 +128,7 @@ module.exports = {
 	logger,
 	ordersServer: server,
 	// initialRoutes: ['/', '/order'],
-	initialRoutes: ['/', orderPath],
+	// initialRoutes: ['/', orderPath],
 	// initialRoutes: ['/', '/register/manage'],
 	// initialRoutes: ['/', '/dev/localStorages'],
 	uuidGenerator: new TestUUIDGenerator(),

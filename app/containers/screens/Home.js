@@ -101,11 +101,10 @@ class Home extends Component {
 	}
 
 	/**
-	 * Goes to the Order items screen with a new Order that is saved as a draft.
+	 * Goes to the Order items screen with a new Order.
 	 */
 	createOrder() {
 		const order = new Order();
-		this.props.ui.orderDraft = order;
 		this.editOrder(order);
 	}
 
@@ -116,7 +115,7 @@ class Home extends Component {
 	 */
 	editOrder(order) {
 		this.goToPath({
-			pathname: '/order/items',
+			pathname: '/order',
 			state: {
 				order,
 				new: true,
