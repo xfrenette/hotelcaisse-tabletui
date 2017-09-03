@@ -26,6 +26,7 @@ class Container extends Component {
 	 * @type {Order}
 	 */
 	order = null;
+	oldTransactions = [];
 	/**
 	 * If the Order is a new one or an already existing one (already saved)
 	 *
@@ -63,10 +64,15 @@ class Container extends Component {
 		this.order = order || new Order(this.props.uuidGenerator.generate());
 		this.order.customer.fields = this.props.business.customerFields;
 		this.isNew = get(this.props, 'location.state.new', false);
+		this.saveOldTransactions();
 
 		if (!this.isNew) {
 			this.order.recordChanges();
 		}
+	}
+
+	saveOldTransactions() {
+		this.oldTransactions = this.order.transactions.map(t => t.uuid);
 	}
 
 	/**
@@ -123,7 +129,13 @@ class Container extends Component {
 				CategorySidebar={(props) => <CategorySidebar order={this.order} {...props} />}
 				BottomBar={(props) => <BottomBar order={this.order} {...props} />}
 				Items={(props) => <Items order={this.order} isNew={this.isNew} {...props} />}
-				CreditsTransactions={(props) => <CreditsTransactions order={this.order} {...props} />}
+				CreditsTransactions={(props) => (
+					<CreditsTransactions
+						order={this.order}
+						oldTransactions={this.oldTransactions}
+						{...props}
+					/>
+				)}
 				ModalCredit={(props) => (
 					<ModalCredit
 						ref={(n) => { this.modalCredit = n ? n.wrappedInstance : null; }}

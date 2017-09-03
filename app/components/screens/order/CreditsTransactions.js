@@ -15,14 +15,20 @@ import styleVars from '../../../styles/variables';
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	transactions: PropTypesMobx.observableArrayOf(PropTypes.instanceOf(Transaction)).isRequired,
+	oldTransactions: PropTypes.arrayOf(PropTypes.string),
 	credits: PropTypesMobx.observableArrayOf(PropTypes.instanceOf(Credit)).isRequired,
 	onCreditEdit: PropTypes.func,
+	onTransactionEdit: PropTypes.func,
 	onCreditRemove: PropTypes.func,
+	onTransactionRemove: PropTypes.func,
 };
 
 const defaultProps = {
+	oldTransactions: [],
 	onCreditEdit: null,
+	onTransactionEdit: null,
 	onCreditRemove: null,
+	onTransactionRemove: null,
 };
 
 @observer
@@ -49,6 +55,18 @@ class Transactions extends Component {
 		}
 	}
 
+	onTransactionEdit(transaction) {
+		if (this.props.onTransactionEdit) {
+			this.props.onTransactionEdit(transaction);
+		}
+	}
+
+	onTransactionRemove(transaction) {
+		if (this.props.onTransactionRemove) {
+			this.props.onTransactionRemove(transaction);
+		}
+	}
+
 	renderElement(element, first) {
 		const amount = element.amount.toNumber() * -1;
 		const formattedAmount = this.props.localizer.formatCurrency(amount, { style: 'accounting' });
@@ -63,6 +81,13 @@ class Transactions extends Component {
 			const isRefund = amount > 0; // Do not forget that `amount` was multiplied by -1
 			type = this.t(`order.transaction.${isRefund ? 'refund' : 'payment'}.label`);
 			name = element.transactionMode.name;
+
+			// If this transaction is new (not in oldTransactions), it is swipeable and editable
+			if (this.props.oldTransactions.indexOf(element.uuid) === -1) {
+				onPress = () => { this.onTransactionEdit(element); };
+				swipeLabel = this.t('actions.remove');
+				onSwipePress=() => { this.onTransactionRemove(element); };
+			}
 		} else {
 			type = this.t('order.credit.label');
 			name = element.note;

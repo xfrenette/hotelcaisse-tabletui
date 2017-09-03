@@ -121,6 +121,7 @@ class OrderScreen extends Component {
 									{ transactionCreditsTitle }
 									<CreditsTransactions
 										onCreditEdit={(credit) => { this.onCreditEdit(credit); }}
+										onTransactionEdit={this.props.onTransactionEdit}
 									/>
 								</View>
 							</MainContent>

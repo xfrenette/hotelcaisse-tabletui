@@ -19,6 +19,10 @@ class CreditsTransactions extends Component {
 		this.props.order.credits.remove(credit);
 	}
 
+	onTransactionRemove(transaction) {
+		this.props.order.transactions.remove(transaction);
+	}
+
 	render() {
 		const props = omit(this.props, ['order']);
 		return (
@@ -27,6 +31,7 @@ class CreditsTransactions extends Component {
 				transactions={this.props.order.transactions}
 				credits={this.props.order.credits}
 				onCreditRemove={(c) => { this.onCreditRemove(c); }}
+				onTransactionRemove={(c) => { this.onTransactionRemove(c); }}
 				{...props}
 			/>
 		);
