@@ -54,8 +54,7 @@ class Customer extends Component {
 	}
 
 	get customerName() {
-		const customerField = this.props.customerFields.find(f => f.role === 'customer.name');
-		return this.props.customer.getFieldValue(customerField);
+		return this.props.customer.get('customer.name');
 	}
 
 	renderNoData() {
