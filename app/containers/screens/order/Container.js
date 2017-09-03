@@ -62,6 +62,7 @@ class Container extends Component {
 		const order = get(this.props, 'location.state.order', null);
 		this.order = order || new Order(this.props.uuidGenerator.generate());
 		this.order.customer.fields = this.props.business.customerFields;
+		this.order.localizer = this.props.localizer;
 
 		this.isNew = get(this.props, 'location.state.new', false);
 		this.saveOldTransactions();
