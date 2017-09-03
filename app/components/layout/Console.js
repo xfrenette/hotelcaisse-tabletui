@@ -122,7 +122,7 @@ class Console extends Component {
 	renderOpenedConsole() {
 		return (
 			<View style={styles.opened} elevation={10}>
-				<ScrollView style={styles.entries}>
+				<ScrollView contentContainerStyle={styles.entries}>
 					{ this.renderEntries() }
 				</ScrollView>
 				<View style={styles.actions}>
@@ -178,9 +178,7 @@ const styles = {
 		right: 0,
 		bottom: 0,
 	},
-
 	entries: {
-		flex: 1,
 		padding,
 	},
 

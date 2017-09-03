@@ -53,13 +53,11 @@ class LocalStorages extends Component {
 			return (
 				<View key={key} style={layoutStyles.section}>
 					<Title style={layoutStyles.title}>{key}</Title>
-					<ScrollView style={viewStyles.content}>
-						<View>
-							<Text>
-								{content || this.t('dev.localStorages.empty')}
-							</Text>
-						</View>
-					</ScrollView>
+					<View style={viewStyles.content}>
+						<Text>
+							{content || this.t('dev.localStorages.empty')}
+						</Text>
+					</View>
 					<View style={viewStyles.buttons}>
 						<Button
 							title={this.t('dev.localStorages.actions.clear')}
@@ -79,7 +77,9 @@ class LocalStorages extends Component {
 					onPressHome={this.props.onPressHome}
 				/>
 				<MainContent>
-					{this.renderStorages()}
+					<ScrollView>
+						{this.renderStorages()}
+					</ScrollView>
 				</MainContent>
 			</Screen>
 		);
@@ -93,7 +93,6 @@ const viewStyles = {
 	},
 	content: {
 		marginBottom: styleVars.verticalRhythm,
-		height: 5 * styleVars.verticalRhythm,
 	},
 };
 
