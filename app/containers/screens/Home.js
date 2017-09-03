@@ -104,8 +104,7 @@ class Home extends Component {
 	 * Goes to the Order items screen with a new Order.
 	 */
 	createOrder() {
-		const order = new Order();
-		this.editOrder(order);
+		this.editOrder(null);
 	}
 
 	/**
