@@ -102,6 +102,10 @@ class Customer extends Component {
 		let endDate;
 		const rooms = [];
 
+		if (!this.props.roomSelections.length) {
+			return;
+		}
+
 		this.props.roomSelections.forEach((rs) => {
 			rooms.push(rs.room.name);
 
