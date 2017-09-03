@@ -226,7 +226,7 @@ class BottomBar extends Component {
 						{ this.props.customerFilled ? addTransactionButton : fillCustomerButton }
 						<View style={viewStyles.button}>
 							<Button
-								title={this.t('actions.done')}
+								title={this.t('actions.save')}
 								layout={doneButtonLayout}
 								onPress={() => { this.onDone(); }}
 							/>

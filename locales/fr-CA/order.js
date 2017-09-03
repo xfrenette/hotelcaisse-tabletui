@@ -6,7 +6,8 @@ export default {
 		toCollect: 'À percevoir',
 		toRefund: 'À rembourser',
 		paid: 'Payé',
-		cannotSaveRegisterClosed: 'La caisse doit être ouverte pour pouvoir enregistrer les paiements et les remboursements.',
+		cannotSaveRegisterClosed: 'La caisse doit être ouverte pour pouvoir ajouter les paiements' +
+		' et les remboursements.',
 	},
 	details: {
 		subTotal: 'Sous-total',
@@ -46,7 +47,7 @@ export default {
 					title: 'Modifier le paiement',
 				},
 				new: {
-					title: 'Enregistrer le paiement',
+					title: 'Ajouter le paiement',
 				},
 				fields: {
 					mode: 'Mode de paiement',
@@ -61,7 +62,7 @@ export default {
 					title: 'Modifier le remboursement',
 				},
 				new: {
-					title: 'Enregistrer le remboursement',
+					title: 'Ajouter le remboursement',
 				},
 				fields: {
 					mode: 'Mode de remboursement',
@@ -90,7 +91,7 @@ export default {
 	payments: {
 		label: 'Paiements',
 		modal: {
-			title: 'Enregistrer le paiement',
+			title: 'Ajouter le paiement',
 		},
 		fields: {
 			mode: 'Mode de paiement',
@@ -119,7 +120,7 @@ export default {
 	refunds: {
 		label: 'Remboursements',
 		modal: {
-			title: 'Enregistrer le remboursement',
+			title: 'Ajouter le remboursement',
 		},
 		fields: {
 			mode: 'Mode de remboursement',
@@ -137,19 +138,19 @@ export default {
 	addTransactionError: {
 		registerClosed: {
 			title: 'Caisse fermée',
-			message: 'Les paiements et remboursements peuvent être enregistrés seulement quand' +
+			message: 'Les paiements et remboursements peuvent être ajoutés seulement quand' +
 				' la caisse est ouverte.',
 		},
 		nullBalance: {
 			title: 'Aucun solde',
-			message: 'Cette inscription a été payée en totalité, vous ne pouvez enregistrer un' +
+			message: 'Cette inscription a été payée en totalité, vous ne pouvez ajouter un' +
 				' paiement supplémentaire.',
 		},
 	},
 	actions: {
 		addCredit: 'Ajouter un crédit',
-		savePayment: 'Enregistrer le paiement',
-		saveRefund: 'Enregistrer le remboursement',
+		savePayment: 'Ajouter le paiement',
+		saveRefund: 'Ajouter le remboursement',
 		startNew: 'Nouvelle',
 		continue: 'Continuer',
 		details: 'Détails',
@@ -204,17 +205,19 @@ export default {
 	doneNonZeroBalance: {
 		payment: {
 			title: 'Montant à percevoir',
-			message: 'Il reste un montant à percevoir. Confirmez-vous que vous souhaitez continuer sans enregistrer un paiement ?',
+			message: 'Il reste un montant à percevoir. Confirmez-vous que vous souhaitez' +
+			' enregistrer et quitter sans ajouter le paiement ?',
 		},
 		refund: {
 			title: 'Montant à rembourser',
-			message: 'Il reste un montant à rembourser. Confirmez-vous que vous souhaitez continuer sans enregistrer un remboursement ?',
+			message: 'Il reste un montant à rembourser. Confirmez-vous que vous souhaitez' +
+			' enregistrer et quitter sans ajouter le remboursement ?',
 		},
 	},
 	quitNotSaved: {
 		new: {
 			title: 'Définir comme brouillon ?',
-			message: 'Cette inscription n\'a pas été terminée. Souhaitez-vous la définir comme' +
+			message: 'Cette inscription n\'a pas été enregistrée. Souhaitez-vous la définir comme' +
 			' brouillon pour la continuer plus tard ?',
 		},
 		old: {
