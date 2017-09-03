@@ -7,10 +7,9 @@ import { TouchableNativeFeedback, View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Transaction from 'hotelcaisse-app/dist/business/Transaction';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
-import { Swipeable, Text } from '../../elements';
+import { Message, Swipeable, Text } from '../../elements';
 import { Cell, Row } from '../../elements/table';
 import styleVars from '../../../styles/variables';
-
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
@@ -144,10 +143,17 @@ class Transactions extends Component {
 	}
 
 	render() {
-		const elements = this.orderedElements.map((element, i) => this.renderElement(element, i === 0));
+		const orderedElements = this.orderedElements;
+
+		if (!orderedElements.length) {
+			return null;
+		}
+
+		const elements = orderedElements.map((element, i) => this.renderElement(element, i === 0));
 		return (
 			<View>
 				{ elements }
+				<Message>{ this.t('order.transactions.message') }</Message>
 			</View>
 		);
 	}

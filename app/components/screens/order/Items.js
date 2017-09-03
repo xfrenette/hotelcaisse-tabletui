@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import ModalRefund from './ModalRefund';
-import Text from '../../elements/Text';
+import { Message, Text } from '../../elements';
 import typographyStyles from '../../../styles/typography';
 
 
@@ -123,6 +123,7 @@ class Items extends Component {
 			<View>
 				{ this.renderOldItems() }
 				{ this.renderNewItems(this.props.oldItems.length === 0) }
+				<Message>{ this.t('order.items.message') }</Message>
 				{ this.renderRefundModal() }
 			</View>
 		);

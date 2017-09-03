@@ -35,6 +35,8 @@ export default {
 	},
 	transactions: {
 		label: 'Transactions et crédits',
+		message: 'Glisser une transaction ou un crédit vers la gauche pour le retirer. Noter que' +
+		' les transactions déjà enregistrées ne peuvent plus être retirées.',
 	},
 	transaction: {
 		payment: {
@@ -173,6 +175,8 @@ export default {
 		labelNew: 'Nouveaux items',
 		labelFixed: 'Items actuels',
 		empty: 'Pour débuter, ajoutez un premier item depuis les produits à droite.',
+		message: 'Glisser un item vers la gauche pour le retirer (nouveaux items) ou le' +
+		' rembourser (anciens items).',
 		fields: {
 			customProductName: 'Nom du produit (obligatoire)',
 		},
