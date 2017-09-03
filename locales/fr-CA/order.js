@@ -211,6 +211,17 @@ export default {
 			message: 'Il reste un montant à rembourser. Confirmez-vous que vous souhaitez continuer sans enregistrer un remboursement ?',
 		},
 	},
+	quitNotSaved: {
+		new: {
+			title: 'Définir comme brouillon ?',
+			message: 'Cette inscription n\'a pas été terminée. Souhaitez-vous la définir comme' +
+			' brouillon pour la continuer plus tard ?',
+		},
+		old: {
+			title: 'Quitter sans enregistrer',
+			message: 'Si vous quittez, les modifications seront perdues. Souhaitez-vous quitter ?',
+		},
+	},
 	list: {
 		empty: 'Aucune fiche n\'a encore été créée.',
 		current: 'Clients actuels',

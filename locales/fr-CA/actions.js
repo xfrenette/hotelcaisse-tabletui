@@ -1,6 +1,8 @@
 export default {
 	cancel: 'Annuler',
 	ok: 'OK',
+	yes: 'Oui',
+	no: 'Non',
 	retry: 'Recommencer',
 	done: 'Terminer',
 	add: 'Ajouter',

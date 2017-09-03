@@ -21,7 +21,7 @@ const propTypes = {
 	onCreditAdd: PropTypes.func,
 	onTransactionAdd: PropTypes.func,
 	onCustomerEdit: PropTypes.func,
-	onBack: PropTypes.func,
+	onCancel: PropTypes.func,
 };
 
 const defaultProps = {
@@ -31,7 +31,7 @@ const defaultProps = {
 	onCreditAdd: null,
 	onTransactionAdd: null,
 	onCustomerEdit: null,
-	onBack: null,
+	onCancel: null,
 };
 
 @observer
@@ -193,7 +193,7 @@ class BottomBar extends Component {
 				<View style={viewStyles.buttons}>
 					<BottomBarBackButton
 						title={this.t('actions.cancel')}
-						onPress={this.props.onBack}
+						onPress={this.props.onCancel}
 					/>
 					<View style={viewStyles.buttonGroup}>
 						<View style={viewStyles.button}>

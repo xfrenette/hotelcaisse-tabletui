@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ScrollView, View, } from 'react-native';
+import { Alert, BackHandler, ScrollView, View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import { MainContent, Screen, TopBar } from '../../layout';
@@ -14,6 +14,7 @@ const propTypes = {
 	isNew: PropTypes.bool,
 	canAddTransaction: PropTypes.bool,
 	hasTransactionsOrCredits: PropTypes.bool,
+	saveDraft: PropTypes.func,
 	CategorySidebar: PropTypes.func.isRequired,
 	BottomBar: PropTypes.func.isRequired,
 	Items: PropTypes.func.isRequired,
@@ -25,7 +26,8 @@ const propTypes = {
 	ModalCustomProduct: PropTypes.func,
 	Customer: PropTypes.func.isRequired,
 	Header: PropTypes.func.isRequired,
-	onPressHome: PropTypes.func,
+	onHome: PropTypes.func,
+	onBack: PropTypes.func,
 	onDone: PropTypes.func,
 	onCreditEdit: PropTypes.func,
 	onTransactionEdit: PropTypes.func,
@@ -38,7 +40,9 @@ const defaultProps = {
 	isNew: false,
 	hasTransactionsOrCredits: false,
 	canAddTransaction: false,
-	onPressHome: null,
+	saveDraft: null,
+	onHome: null,
+	onBack: null,
 	onDone: null,
 	onCreditEdit: null,
 	onTransactionEdit: null,
@@ -47,6 +51,8 @@ const defaultProps = {
 };
 
 class OrderScreen extends Component {
+	backHandler = null;
+
 	/**
 	 * Simple alias to this.props.localizer.t
 	 *
@@ -59,6 +65,61 @@ class OrderScreen extends Component {
 		}
 
 		return path;
+	}
+
+	componentWillMount() {
+		this.installBackHandler();
+	}
+
+	componentWillUnmount() {
+		this.removeBackHandler();
+	}
+
+	installBackHandler() {
+		this.backHandler = () => { this.onBack(); return true; };
+		BackHandler.addEventListener('hardwareBackPress', this.backHandler);
+	}
+
+	removeBackHandler() {
+		BackHandler.removeEventListener('hardwareBackPress', this.backHandler);
+		this.backHandler = null;
+	}
+
+	confirmQuit(callback) {
+		if (this.props.isNew) {
+			Alert.alert(
+				this.t('order.quitNotSaved.new.title'),
+				this.t('order.quitNotSaved.new.message'),
+				[
+					{ text: this.t('actions.cancel') },
+					{ text: this.t('actions.no'), onPress: () => { callback.call(); } },
+					{ text: this.t('actions.yes'), onPress: () => { this.saveDraft(); callback.call(); } },
+				],
+			)
+		} else {
+			Alert.alert(
+				this.t('order.quitNotSaved.old.title'),
+				this.t('order.quitNotSaved.old.message'),
+				[
+					{ text: this.t('actions.no') },
+					{ text: this.t('actions.yes'), onPress: () => { callback.call(); } },
+				],
+			)
+		}
+	}
+
+	saveDraft() {
+		if (this.props.saveDraft) {
+			this.props.saveDraft();
+		}
+	}
+
+	onBack() {
+		this.confirmQuit(this.props.onBack);
+	}
+
+	onHomePress() {
+		this.confirmQuit(this.props.onHome);
 	}
 
 	onCreditEdit(credit) {
@@ -99,7 +160,7 @@ class OrderScreen extends Component {
 			<Screen>
 				<TopBar
 					title={this.t('screens.order.title')}
-					onPressHome={this.props.onPressHome}
+					onPressHome={() => { this.onHomePress(); }}
 				/>
 				<View style={viewStyles.container}>
 					<View style={viewStyles.col1}>
@@ -131,6 +192,7 @@ class OrderScreen extends Component {
 							onCreditAdd={() => { this.onCreditEdit(null); }}
 							onTransactionAdd={() => { this.onTransactionEdit(null); }}
 							onCustomerEdit={this.props.onCustomerEdit}
+							onCancel={() => { this.onBack(); }}
 						/>
 					</View>
 					<CategorySidebar

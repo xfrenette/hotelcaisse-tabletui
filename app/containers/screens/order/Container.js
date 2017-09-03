@@ -39,7 +39,6 @@ class Container extends Component {
 	modalNotes = null;
 	modalCustomProduct = null;
 
-
 	/**
 	 * We can add transaction only if the register is opened
 	 *
@@ -63,6 +62,7 @@ class Container extends Component {
 		const order = get(this.props, 'location.state.order', null);
 		this.order = order || new Order(this.props.uuidGenerator.generate());
 		this.order.customer.fields = this.props.business.customerFields;
+
 		this.isNew = get(this.props, 'location.state.new', false);
 		this.saveOldTransactions();
 
@@ -75,11 +75,31 @@ class Container extends Component {
 		this.oldTransactions = this.order.transactions.map(t => t.uuid);
 	}
 
+	resetOrder() {
+		if (!this.isNew) {
+			this.order.revertChanges();
+		}
+	}
+
+	saveDraft() {
+		this.props.ui.orderDraft = this.order;
+	}
+
+	clearDraft() {
+		this.props.ui.orderDraft = null;
+	}
+
 	/**
 	 * When the user presses the 'Home' button
 	 */
-	onPressHome() {
+	onHome() {
+		this.resetOrder();
 		this.props.router.replace('/');
+	}
+
+	onBack() {
+		this.resetOrder();
+		this.props.ui.goBackOrGoHome();
 	}
 
 	/**
@@ -87,7 +107,7 @@ class Container extends Component {
 	 * business and we go home, else we commit the changes and go back.
 	 */
 	onDone() {
-		this.props.ui.orderDraft = null;
+		this.clearDraft();
 
 		if (this.isNew) {
 			this.props.business.addOrder(this.order);
@@ -126,6 +146,7 @@ class Container extends Component {
 				canAddTransaction={this.canAddTransaction}
 				hasTransactionsOrCredits={this.hasTransactionsOrCredits}
 				localizer={this.props.localizer}
+				saveDraft={() => { this.saveDraft(); }}
 				CategorySidebar={(props) => <CategorySidebar order={this.order} {...props} />}
 				BottomBar={(props) => <BottomBar order={this.order} {...props} />}
 				Items={(props) => <Items order={this.order} isNew={this.isNew} {...props} />}
@@ -173,8 +194,9 @@ class Container extends Component {
 				)}
 				Customer={(props) => <Customer order={this.order} {...props} />}
 				Header={(props) => <Header order={this.order} {...props} />}
-				onPressHome={() => { this.onPressHome(); }}
+				onHome={() => { this.onHome(); }}
 				onDone={() => { this.onDone(); }}
+				onBack={() => { this.onBack(); }}
 				onCreditEdit={(credit) => { this.onCreditEdit(credit); }}
 				onTransactionEdit={(transaction) => { this.onTransactionEdit(transaction); }}
 				onCustomerEdit={() => { this.onCustomerEdit(); }}
