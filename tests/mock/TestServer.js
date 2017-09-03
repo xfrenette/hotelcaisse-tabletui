@@ -15,7 +15,7 @@ class TestServer extends Server {
 	 *
 	 * @see Server
 	 */
-	nextOrders(from, quantity) {
+	nextOrders(quantity, from) {
 		const orders = [];
 
 		if (!from) {

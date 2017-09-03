@@ -66,7 +66,7 @@ class Orders extends Component {
 
 		this.loading = true;
 		requestAnimationFrame(() => {
-			this.props.ordersServer.nextOrders(from, NB_ORDERS_TO_LOAD)
+			this.props.ordersServer.nextOrders(NB_ORDERS_TO_LOAD, from)
 				.then((orders) => {
 					this.loading = false;
 
