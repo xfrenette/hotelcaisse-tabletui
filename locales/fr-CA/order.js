@@ -33,6 +33,9 @@ export default {
 			},
 		},
 	},
+	transactions: {
+		label: 'Transactions et crédits',
+	},
 	transaction: {
 		payment: {
 			label: 'Paiement',
@@ -169,7 +172,7 @@ export default {
 		label: 'Items',
 		labelNew: 'Nouveaux items',
 		labelFixed: 'Items actuels',
-		empty: 'Ajoutez un item depuis les produits à droite.',
+		empty: 'Pour débuter, ajoutez un premier item depuis les produits à droite.',
 		fields: {
 			customProductName: 'Nom du produit (obligatoire)',
 		},

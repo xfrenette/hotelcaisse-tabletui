@@ -6,6 +6,8 @@ import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import ModalRefund from './ModalRefund';
+import Text from '../../elements/Text';
+import typographyStyles from '../../../styles/typography';
 
 
 const propTypes = {
@@ -110,7 +112,13 @@ class Items extends Component {
 		);
 	}
 
-	render() {
+	renderNoItems() {
+		return (
+			<Text style={typographyStyles.empty}>{ this.t('order.items.empty') }</Text>
+		);
+	}
+
+	renderItems() {
 		return (
 			<View>
 				{ this.renderOldItems() }
@@ -118,6 +126,14 @@ class Items extends Component {
 				{ this.renderRefundModal() }
 			</View>
 		);
+	}
+
+	render() {
+		if (this.props.oldItems.length || this.props.newItems.length) {
+			return this.renderItems();
+		}
+
+		return this.renderNoItems();
 	}
 }
 

@@ -15,6 +15,10 @@ const defaultProps = {
 
 @inject('localizer')
 class CreditsTransactions extends Component {
+	onCreditRemove(credit) {
+		this.props.order.credits.remove(credit);
+	}
+
 	render() {
 		const props = omit(this.props, ['order']);
 		return (
@@ -22,6 +26,7 @@ class CreditsTransactions extends Component {
 				localizer={this.props.localizer}
 				transactions={this.props.order.transactions}
 				credits={this.props.order.credits}
+				onCreditRemove={(c) => { this.onCreditRemove(c); }}
 				{...props}
 			/>
 		);

@@ -13,6 +13,7 @@ const propTypes = {
 	order: PropTypes.instanceOf(Order),
 	isNew: PropTypes.bool,
 	canAddTransaction: PropTypes.bool,
+	hasTransactionsOrCredits: PropTypes.bool,
 	CategorySidebar: PropTypes.func.isRequired,
 	BottomBar: PropTypes.func.isRequired,
 	Items: PropTypes.func.isRequired,
@@ -35,6 +36,7 @@ const propTypes = {
 const defaultProps = {
 	localizer: null,
 	isNew: false,
+	hasTransactionsOrCredits: false,
 	canAddTransaction: false,
 	onPressHome: null,
 	onDone: null,
@@ -89,6 +91,9 @@ class OrderScreen extends Component {
 		const ModalCustomProduct = this.props.ModalCustomProduct;
 		const Customer = this.props.Customer;
 		const Header = this.props.Header;
+		const transactionCreditsTitle = this.props.hasTransactionsOrCredits
+			? <Title style={layoutStyles.title}>{ this.t('order.transactions.label') }</Title>
+			: null
 
 		return (
 			<Screen>
@@ -105,13 +110,15 @@ class OrderScreen extends Component {
 									<Customer onCustomerEdit={this.props.onCustomerEdit} />
 								</View>
 								<View style={layoutStyles.section}>
-									<Title style={layoutStyles.title}>Items*</Title>
+									<Title style={layoutStyles.title}>
+										{ this.t('order.items.label') }
+									</Title>
 									<Items
 										onCustomProductEdit={this.props.onCustomProductEdit}
 									/>
 								</View>
 								<View>
-									<Title style={layoutStyles.title}>Transactions et crédits*</Title>
+									{ transactionCreditsTitle }
 									<CreditsTransactions
 										onCreditEdit={(credit) => { this.onCreditEdit(credit); }}
 									/>

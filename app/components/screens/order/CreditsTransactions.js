@@ -7,7 +7,7 @@ import { TouchableNativeFeedback, View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Transaction from 'hotelcaisse-app/dist/business/Transaction';
 import Credit from 'hotelcaisse-app/dist/business/Credit';
-import { Text } from '../../elements';
+import { Swipeable, Text } from '../../elements';
 import { Cell, Row } from '../../elements/table';
 import styleVars from '../../../styles/variables';
 
@@ -17,10 +17,12 @@ const propTypes = {
 	transactions: PropTypesMobx.observableArrayOf(PropTypes.instanceOf(Transaction)).isRequired,
 	credits: PropTypesMobx.observableArrayOf(PropTypes.instanceOf(Credit)).isRequired,
 	onCreditEdit: PropTypes.func,
+	onCreditRemove: PropTypes.func,
 };
 
 const defaultProps = {
 	onCreditEdit: null,
+	onCreditRemove: null,
 };
 
 @observer
@@ -41,6 +43,12 @@ class Transactions extends Component {
 		}
 	}
 
+	onCreditRemove(credit) {
+		if (this.props.onCreditRemove) {
+			this.props.onCreditRemove(credit);
+		}
+	}
+
 	renderElement(element, first) {
 		const amount = element.amount.toNumber() * -1;
 		const formattedAmount = this.props.localizer.formatCurrency(amount, { style: 'accounting' });
@@ -48,6 +56,8 @@ class Transactions extends Component {
 		let type;
 		let name;
 		let onPress = null;
+		let swipeLabel = null;
+		let onSwipePress = null;
 
 		if (element instanceof Transaction) {
 			const isRefund = amount > 0; // Do not forget that `amount` was multiplied by -1
@@ -57,6 +67,8 @@ class Transactions extends Component {
 			type = this.t('order.credit.label');
 			name = element.note;
 			onPress = () => { this.onCreditEdit(element); };
+			swipeLabel = this.t('actions.remove');
+			onSwipePress=() => {this.onCreditRemove(element); };
 		}
 
 		let row = (
@@ -86,6 +98,14 @@ class Transactions extends Component {
 					</View>
 				</TouchableNativeFeedback>
 			);
+		}
+
+		if (swipeLabel) {
+			content = (
+				<Swipeable label={swipeLabel} onPress={onSwipePress}>
+					{ content }
+				</Swipeable>
+			)
 		}
 
 		return <View key={element.uuid}>{ content }</View>;

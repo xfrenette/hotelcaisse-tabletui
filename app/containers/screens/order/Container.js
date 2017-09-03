@@ -49,6 +49,11 @@ class Container extends Component {
 		return this.props.register.state === STATES.OPENED;
 	}
 
+	@computed
+	get hasTransactionsOrCredits() {
+		return !!(this.order.transactions.length || this.order.credits.length);
+	}
+
 	/**
 	 * When mounting, get the Order and 'isNew' from the location. If it is not new, we start
 	 * recording changes.
@@ -113,6 +118,7 @@ class Container extends Component {
 				order={this.order}
 				isNew={this.isNew}
 				canAddTransaction={this.canAddTransaction}
+				hasTransactionsOrCredits={this.hasTransactionsOrCredits}
 				localizer={this.props.localizer}
 				CategorySidebar={(props) => <CategorySidebar order={this.order} {...props} />}
 				BottomBar={(props) => <BottomBar order={this.order} {...props} />}

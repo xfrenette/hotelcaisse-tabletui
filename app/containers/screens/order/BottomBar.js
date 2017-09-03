@@ -45,6 +45,7 @@ class BottomBar extends Component {
 				order={this.props.order}
 				canAddTransaction={this.canAddTransaction}
 				customerFilled={this.customerFilled}
+				itemsCount={this.props.order.items.length}
 				{...this.props}
 			/>
 		);

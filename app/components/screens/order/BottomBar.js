@@ -17,6 +17,7 @@ const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	order: PropTypes.instanceOf(Order).isRequired,
 	canAddTransaction: PropTypes.bool,
+	itemsCount: PropTypes.number,
 	customerFilled: PropTypes.bool,
 	onCreditAdd: PropTypes.func,
 	onTransactionAdd: PropTypes.func,
@@ -25,6 +26,7 @@ const propTypes = {
 
 const defaultProps = {
 	canAddTransaction: true,
+	itemsCount: 0,
 	customerFilled: false,
 	onCreditAdd: null,
 	onTransactionAdd: null,
@@ -107,7 +109,7 @@ class BottomBar extends Component {
 			});
 		}
 
-		if (balance === 0) {
+		if (balance === 0 && this.props.itemsCount > 0) {
 			balanceText = (
 				<View style={viewStyles.balancePaid}>
 					<Icon name="check-circle" style={textStyles.balanceAmountIcon} />

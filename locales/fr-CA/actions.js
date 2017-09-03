@@ -11,4 +11,5 @@ export default {
 	leave: 'Quitter',
 	edit: 'Modifier',
 	confirm: 'Confirmer',
+	remove: 'Retirer',
 };
