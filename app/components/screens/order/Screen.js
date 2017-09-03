@@ -193,6 +193,7 @@ class OrderScreen extends Component {
 							onTransactionAdd={() => { this.onTransactionEdit(null); }}
 							onCustomerEdit={this.props.onCustomerEdit}
 							onCancel={() => { this.onBack(); }}
+							onDone={this.props.onDone}
 						/>
 					</View>
 					<CategorySidebar

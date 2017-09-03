@@ -22,6 +22,7 @@ const propTypes = {
 	onTransactionAdd: PropTypes.func,
 	onCustomerEdit: PropTypes.func,
 	onCancel: PropTypes.func,
+	onDone: PropTypes.func,
 };
 
 const defaultProps = {
@@ -32,6 +33,7 @@ const defaultProps = {
 	onTransactionAdd: null,
 	onCustomerEdit: null,
 	onCancel: null,
+	onDone: null,
 };
 
 @observer
@@ -84,6 +86,25 @@ class BottomBar extends Component {
 			if (this.props.onTransactionAdd) {
 				this.props.onTransactionAdd();
 			}
+		}
+	}
+
+	onDone() {
+		const balance = this.props.order.balance;
+		const doneCallback = this.props.onDone || (() => {});
+
+		if (!balance.eq(0)) {
+			const path = `order.doneNonZeroBalance.${balance.gt(0) ? 'payment' : 'refund'}`;
+			Alert.alert(
+				this.t(`${path}.title`),
+				this.t(`${path}.message`),
+				[
+					{ text: this.t('actions.cancel') },
+					{ text: this.t('actions.confirm'), onPress: () => { doneCallback.call(); } },
+				]
+			);
+		} else {
+			doneCallback.call();
 		}
 	}
 
@@ -207,6 +228,7 @@ class BottomBar extends Component {
 							<Button
 								title={this.t('actions.done')}
 								layout={doneButtonLayout}
+								onPress={() => { this.onDone(); }}
 							/>
 						</View>
 					</View>
