@@ -39,18 +39,35 @@ class OrderItem extends Component {
 		const order = this.props.order;
 		order.customer.fields = this.props.customerFields;
 		const customerName = order.customer.get('customer.name');
-		const checkInDate = this.props.localizer.formatDate(
-			order.earliestCheckInDate,
-			{ skeleton: 'MMMEd' }
-		);
-		const checkOutDate = this.props.localizer.formatDate(
-			order.latestCheckOutDate,
-			{ skeleton: 'MMMEd' }
-		);
+		const checkInDate = order.earliestCheckInDate;
+		const checkOutDate = order.latestCheckOutDate;
+		let checkInOutNode = null;
+
 		const balanceAmount = order.balance;
 		const rooms = order.roomSelections.map(rs => rs.room.name).join(', ');
 
 		let balanceNode = <View style={styles.balance} />;
+
+		if (checkInDate && checkOutDate) {
+			const checkInDateText = this.props.localizer.formatDate(
+				checkInDate,
+				{ skeleton: 'MMMEd' }
+			);
+			const checkOutDateText = this.props.localizer.formatDate(
+				checkOutDate,
+				{ skeleton: 'MMMEd' }
+			);
+
+			checkInOutNode = (
+				<View style={styles.checkInOut}>
+					<Text>{ checkInDateText }</Text>
+					<View style={styles.checkInOutArrow}>
+					<Icon name="long-arrow-right" />
+					</View>
+					<Text>{ checkOutDateText }</Text>
+				</View>
+			);
+		}
 
 		if (!balanceAmount.eq(0)) {
 			const typeStyle = balanceAmount.gt(0) ? textStyles.toCollect : textStyles.toRefund
@@ -72,13 +89,7 @@ class OrderItem extends Component {
 					<Text style={[styles.customerName, textStyles.customerName]}>{ customerName }</Text>
 					<View style={styles.roomSelections}>
 						<Text style={textStyles.room}>{ rooms }</Text>
-						<View style={styles.checkInOut}>
-							<Text>{ checkInDate }</Text>
-							<View style={styles.checkInOutArrow}>
-								<Icon name="long-arrow-right" />
-							</View>
-							<Text>{ checkOutDate }</Text>
-						</View>
+						{ checkInOutNode }
 					</View>
 					{ balanceNode }
 				</View>
