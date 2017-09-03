@@ -467,7 +467,7 @@ class OrderItemsScreen extends Component {
 					rootProductCategory={this.props.rootProductCategory}
 					backButtonLabel={this.t('actions.back')}
 					emptyLabel={this.t('order.categories.empty')}
-					customProductLabel={this.t('order.customProduct')}
+					customProductLabel={this.t('order.customProduct.label')}
 					onProductPress={(product) => { this.onProductAdd(product); }}
 					onCustomProductPress={this.props.onCustomProductAdd}
 				/>

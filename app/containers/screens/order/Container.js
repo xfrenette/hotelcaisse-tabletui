@@ -13,6 +13,7 @@ import ModalCredit from './ModalCredit';
 import ModalTransaction from './ModalTransaction';
 import ModalCustomer from './ModalCustomer';
 import ModalNotes from './ModalNotes';
+import ModalCustomProduct from './ModalCustomProduct';
 import Customer from './Customer';
 import Header from './Header';
 
@@ -35,6 +36,7 @@ class Container extends Component {
 	modalTransaction = null;
 	modalCustomer = null;
 	modalNotes = null;
+	modalCustomProduct = null;
 
 
 	/**
@@ -101,6 +103,10 @@ class Container extends Component {
 		this.modalNotes.show();
 	}
 
+	onCustomProductEdit(product) {
+		this.modalCustomProduct.show(product);
+	}
+
 	render() {
 		return (
 			<Screen
@@ -140,6 +146,13 @@ class Container extends Component {
 						{...props}
 					/>
 				)}
+				ModalCustomProduct={(props) => (
+					<ModalCustomProduct
+						ref={(n) => { this.modalCustomProduct = n ? n.wrappedInstance : null; }}
+						order={this.order}
+						{...props}
+					/>
+				)}
 				Customer={(props) => <Customer order={this.order} {...props} />}
 				Header={(props) => <Header order={this.order} {...props} />}
 				onPressHome={() => { this.onPressHome(); }}
@@ -148,6 +161,7 @@ class Container extends Component {
 				onTransactionEdit={(transaction) => { this.onTransactionEdit(transaction); }}
 				onCustomerEdit={() => { this.onCustomerEdit(); }}
 				onNotesEdit={() => { this.onNotesEdit(); }}
+				onCustomProductEdit={(p) => { this.onCustomProductEdit(p); }}
 			/>
 		);
 	}

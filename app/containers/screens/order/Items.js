@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import omit from 'lodash.omit';
 import PropTypes from 'prop-types';
 import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
@@ -55,6 +56,7 @@ class Items extends Component {
 	}
 
 	render() {
+		const otherProps = omit(this.props, ['order', 'isNew']);
 		return (
 			<ComponentElement
 				localizer={this.props.localizer}
@@ -62,6 +64,7 @@ class Items extends Component {
 				oldItems={this.oldItems}
 				Item={(props) => <ItemContainer order={this.props.order} {...props} />}
 				onRefund={(i, q) => { this.onRefund(i, q); }}
+				{...otherProps}
 			/>
 		);
 	}

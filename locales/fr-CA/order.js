@@ -92,6 +92,20 @@ export default {
 			amount: 'Montant',
 		},
 	},
+	customProduct: {
+		label: 'Produit spécial',
+		modal: {
+			title: 'Produit spécial',
+			fields: {
+				name: 'Nom du produit',
+				price: 'Prix',
+			},
+			errors: {
+				name: 'Ne peut être vide',
+				price: 'Doit être positif',
+			},
+		},
+	},
 	itemRefund: {
 		modal: {
 			title: 'Quantité à rembourser (maximum: %{max})',
@@ -151,7 +165,6 @@ export default {
 	categories: {
 		empty: 'Cette catégorie est vide',
 	},
-	customProduct: 'Produit spécial',
 	items: {
 		label: 'Items',
 		labelNew: 'Nouveaux items',

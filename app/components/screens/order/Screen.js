@@ -21,6 +21,7 @@ const propTypes = {
 	ModalTransaction: PropTypes.func.isRequired,
 	ModalCustomer: PropTypes.func,
 	ModalNotes: PropTypes.func,
+	ModalCustomProduct: PropTypes.func,
 	Customer: PropTypes.func.isRequired,
 	Header: PropTypes.func.isRequired,
 	onPressHome: PropTypes.func,
@@ -70,6 +71,12 @@ class OrderScreen extends Component {
 		}
 	}
 
+	onCustomProductAdd() {
+		if (this.props.onCustomProductEdit) {
+			this.props.onCustomProductEdit(null);
+		}
+	}
+
 	render() {
 		const CategorySidebar = this.props.CategorySidebar;
 		const BottomBar = this.props.BottomBar;
@@ -79,6 +86,7 @@ class OrderScreen extends Component {
 		const ModalTransaction = this.props.ModalTransaction;
 		const ModalCustomer = this.props.ModalCustomer;
 		const ModalNotes = this.props.ModalNotes;
+		const ModalCustomProduct = this.props.ModalCustomProduct;
 		const Customer = this.props.Customer;
 		const Header = this.props.Header;
 
@@ -98,7 +106,9 @@ class OrderScreen extends Component {
 								</View>
 								<View style={layoutStyles.section}>
 									<Title style={layoutStyles.title}>Items*</Title>
-									<Items />
+									<Items
+										onCustomProductEdit={this.props.onCustomProductEdit}
+									/>
 								</View>
 								<View>
 									<Title style={layoutStyles.title}>Transactions et crédits*</Title>
@@ -115,12 +125,16 @@ class OrderScreen extends Component {
 							onCustomerEdit={this.props.onCustomerEdit}
 						/>
 					</View>
-					<CategorySidebar style={viewStyles.sidebar}/>
+					<CategorySidebar
+						style={viewStyles.sidebar}
+						onCustomProductAdd={() => { this.onCustomProductAdd(); }}
+					/>
 				</View>
 				<ModalCredit />
 				<ModalTransaction />
 				<ModalCustomer />
 				<ModalNotes />
+				<ModalCustomProduct />
 			</Screen>
 		);
 	}

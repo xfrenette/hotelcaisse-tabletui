@@ -14,12 +14,14 @@ const propTypes = {
 	oldItems: PropTypes.arrayOf(PropTypes.instanceOf(Item)),
 	newItems: PropTypes.arrayOf(PropTypes.instanceOf(Item)),
 	onRefund: PropTypes.func,
+	onCustomProductEdit: PropTypes.func,
 };
 
 const defaultProps = {
 	oldItems: [],
 	newItems: [],
 	onRefund: null,
+	onCustomProductEdit: null,
 };
 
 @observer
@@ -51,6 +53,12 @@ class Items extends Component {
 		}
 	}
 
+	onCustomProductEdit(product) {
+		if (this.props.onCustomProductEdit) {
+			this.props.onCustomProductEdit(product);
+		}
+	}
+
 	renderOldItems() {
 		const ItemRow = this.props.Item;
 
@@ -75,6 +83,8 @@ class Items extends Component {
 		const ItemRow = this.props.Item;
 
 		return this.props.newItems.map((item, index) => {
+			const isCustom = item.product.id === null;
+
 			return (
 				<ItemRow
 					key={item.uuid}
@@ -83,6 +93,7 @@ class Items extends Component {
 					isFirst={first && index === 0}
 					swipeType="delete"
 					editable={true}
+					onPress={isCustom ? () => { this.onCustomProductEdit(item.product); } : null}
 				/>
 			);
 		});

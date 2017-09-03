@@ -144,15 +144,9 @@ class ModalCredit extends Component {
 
 		return (
 			<Modal
-				ref={(node) => {
-					this.modalRef = node;
-				}}
-				onShow={() => {
-					this.onShow();
-				}}
-				onActionPress={(a) => {
-					this.onActionPress(a);
-				}}
+				ref={(node) => { this.modalRef = node; }}
+				onShow={() => { this.onShow(); }}
+				onActionPress={(a) => { this.onActionPress(a); }}
 				actions={actions}
 				title={this.t(`order.credit.modal.${this.isNew ? 'new' : 'edit'}.title`)}
 			>

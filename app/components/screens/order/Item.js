@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { TouchableNativeFeedback, View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import PropTypes from 'prop-types';
 import Item from 'hotelcaisse-app/dist/business/Item';
@@ -15,6 +15,7 @@ const propTypes = {
 	onRemove: PropTypes.func,
 	onRefund: PropTypes.func,
 	onVariantChange: PropTypes.func,
+	onPress: PropTypes.func,
 	isFirst: PropTypes.bool,
 	swipeType: PropTypes.oneOf(['none', 'delete', 'refund']),
 	editable: PropTypes.bool,
@@ -25,6 +26,7 @@ const defaultProps = {
 	onRemove: null,
 	onRefund: null,
 	onVariantChange: null,
+	onPress: null,
 	isFirst: false,
 	swipeType: null,
 	editable: true,
@@ -187,6 +189,7 @@ class ItemRow extends Component {
 		const item = this.props.item;
 		const product = item.product;
 		const productForName = product.isVariant ? product.parent : product;
+		const isCustom = productForName.id === null;
 		let preText = null;
 		let description = null;
 		let variantsDropdown = null;
@@ -201,6 +204,14 @@ class ItemRow extends Component {
 			description = (
 				<Text style={[textStyles.productDescription, refundedStyle]}>
 					{ productForName.description}
+				</Text>
+			);
+		}
+
+		if (isCustom) {
+			description = (
+				<Text style={textStyles.customProduct}>
+					({this.t('order.customProduct.label')})
 				</Text>
 			);
 		}
@@ -255,7 +266,7 @@ class ItemRow extends Component {
 	}
 
 	render() {
-		const row = (
+		let row = (
 			<Row style={this.rowStyle} first={this.props.isFirst}>
 				<Cell first style={cellStyles.quantity}>
 					{ this.renderQuantity() }
@@ -268,6 +279,16 @@ class ItemRow extends Component {
 				</Cell>
 			</Row>
 		);
+
+		if (this.props.onPress) {
+			row = (
+				<TouchableNativeFeedback onPress={this.props.onPress}>
+					<View>
+						{row}
+					</View>
+				</TouchableNativeFeedback>
+			);
+		}
 
 		return this.makeSwipeable(row);
 	}
@@ -321,6 +342,10 @@ const textStyles = {
 		// color: styleVars.colors.grey2,
 		// fontStyle: 'italic',
 	},
+	customProduct: {
+		color: styleVars.colors.grey2,
+		fontStyle: 'italic',
+	}
 };
 
 const cellStyles = {

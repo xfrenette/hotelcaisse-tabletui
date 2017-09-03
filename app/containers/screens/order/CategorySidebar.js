@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { inject } from 'mobx-react/native';
 import Item from 'hotelcaisse-app/dist/business/Item';
 import Order from 'hotelcaisse-app/dist/business/Order';
-import Product from 'hotelcaisse-app/dist/business/Product';
 import ComponentElement from '../../../components/screens/order/CategorySidebar';
 
 const propTypes = {
@@ -32,21 +31,15 @@ class CategorySidebar extends Component {
 		this.props.order.items.push(item);
 	}
 
-	onCustomProductAdd() {
-		const customProduct = new Product();
-		this.onProductAdd(customProduct);
-	}
-
 	render() {
 		return (
 			<ComponentElement
 				showCustomProduct={true}
 				backButtonLabel={this.t('actions.back')}
 				emptyLabel={this.t('order.categories.empty')}
-				customProductLabel={this.t('order.customProduct')}
+				customProductLabel={this.t('order.customProduct.label')}
 				rootProductCategory={this.props.business.rootProductCategory}
 				onProductAdd={(p) => { this.onProductAdd(p); }}
-				onCustomProductAdd={() => { this.onCustomProductAdd(); }}
 				{...this.props}
 			/>
 		);
