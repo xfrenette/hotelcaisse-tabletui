@@ -70,6 +70,8 @@ class Orders extends Component {
 				.then((orders) => {
 					this.loading = false;
 
+					orders.forEach((order) => { order.localizer = this.props.localizer; });
+
 					if (orders.length) {
 						this.addOrders(orders);
 					} else {
