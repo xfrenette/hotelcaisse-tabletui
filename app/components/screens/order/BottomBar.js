@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { Alert, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Decimal from 'decimal.js';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
@@ -85,7 +86,8 @@ class BottomBar extends Component {
 
 	renderDetails() {
 		const balance = this.props.order.balance.toNumber();
-		const balanceText = this.props.localizer.formatCurrency(balance);
+		let balanceText;
+		const isRefund = balance < 0;
 		let details = null;
 
 		if (this.showDetails) {
@@ -105,12 +107,29 @@ class BottomBar extends Component {
 			});
 		}
 
+		if (balance === 0) {
+			balanceText = (
+				<View style={viewStyles.balancePaid}>
+					<Icon name="check-circle" style={textStyles.balanceAmountIcon} />
+					<Text style={textStyles.balanceAmount}>{ this.t('order.balance.paid') }</Text>
+				</View>
+			);
+		} else {
+			balanceText = (
+				<Text style={[textStyles.balanceAmount, isRefund ? textStyles.balanceAmountRefund : null]}>
+					{this.props.localizer.formatCurrency(Math.abs(balance))}
+				</Text>
+			);
+		}
+
 		return (
 			<View>
 				{ details }
 				<View style={detailsTableStyles.row}>
 					<View style={detailsTableStyles.th}>
-						<Text style={textStyles.balanceLabel}>{ this.t('order.balance.toPay') }</Text>
+						<Text style={[textStyles.balanceLabel, isRefund ? textStyles.balanceAmountRefund : null]}>
+							{ balance === 0 ? null : this.t(`order.balance.${isRefund ? 'toRefund' : 'toCollect'}`) }
+						</Text>
 						<View style={viewStyles.seeDetailsButton}>
 							<Button
 								layout={buttonLayouts.text}
@@ -122,7 +141,7 @@ class BottomBar extends Component {
 						</View>
 					</View>
 					<View style={detailsTableStyles.td}>
-						<Text style={textStyles.balanceAmount}>{ balanceText }</Text>
+						{ balanceText }
 					</View>
 				</View>
 			</View>
@@ -132,6 +151,7 @@ class BottomBar extends Component {
 	render() {
 		const balance = this.props.order.balance;
 		const nullBalance = balance.eq(0);
+		const isRefund = balance < 0;
 		const canAddTransaction = this.props.canAddTransaction;
 		const customerFilled = this.props.customerFilled;
 
@@ -145,7 +165,7 @@ class BottomBar extends Component {
 		const addTransactionButton = (
 			<View style={viewStyles.button}>
 				<Button
-					title={this.t('order.actions.savePayment')}
+					title={this.t(`order.actions.${isRefund ? 'saveRefund' : 'savePayment'}`)}
 					layout={addTransactionButtonLayout}
 					onPress={() => { this.onAddTransactionPress(); }}
 				/>
@@ -220,20 +240,26 @@ const viewStyles = {
 	seeDetailsButton: {
 		marginLeft: 16,
 	},
+	balancePaid: {
+		flexDirection: 'row',
+	},
 };
 
 const detailsTableStyles = {
 	row: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		width: 320,
 	},
 	th: {
-		width: 200,
 		flexDirection: 'row',
+		width: 225,
+		alignItems: 'center',
 	},
 	td: {
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
+		alignItems: 'center',
 	},
 };
 
@@ -247,10 +273,19 @@ const textStyles = {
 		fontWeight: 'bold',
 		fontSize: styleVars.bigFontSize,
 	},
+	balanceAmountIcon: {
+		color: styleVars.colors.green1,
+		fontSize: styleVars.verticalRhythm,
+		marginRight: 10,
+	},
 	balanceAmount: {
 		fontWeight: 'bold',
 		fontSize: styleVars.verticalRhythm,
+		lineHeight: styleVars.verticalRhythm + 3,
 		color: styleVars.colors.green1,
+	},
+	balanceAmountRefund: {
+		color: styleVars.colors.orange1,
 	},
 	detailsIcon: {
 		fontSize: 12,
