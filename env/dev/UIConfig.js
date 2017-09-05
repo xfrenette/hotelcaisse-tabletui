@@ -2,6 +2,7 @@ import Application from 'hotelcaisse-app/dist/Application';
 import ApiServer from 'hotelcaisse-app/dist/servers/Api';
 import ApiAuth from 'hotelcaisse-app/dist/auth/ApiServer';
 import Business from 'hotelcaisse-app/dist/business/Business';
+import Order from 'hotelcaisse-app/dist/business/Order';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import BusinessAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Business';
 import RegisterAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Register';
@@ -20,7 +21,7 @@ import UILogger from '../../app/lib/UILogger';
 import TestAuth from '../../tests/mock/TestAuth';
 import TestServer from '../../tests/mock/TestServer';
 import dummyOrder from '../../tests/mock/dummyOrder';
-import TestUUIDGenerator from '../../tests/mock/TestUUIDGenerator';
+import UUIDGenerator from '../../app/lib/UUIDGenerator';
 import strings from '../../locales/fr-CA';
 
 /*
@@ -42,7 +43,7 @@ businessStorage.delay = 3000;
 
 */
 
-const useReal = false;
+const useReal = true;
 let server;
 let auth;
 const localStorages = {};
@@ -94,18 +95,22 @@ const registerStorage = new FirstReader([
 const appConfig = {
 	logger,
 	plugins: [
+		// Autosave plugins to local local writers must be before autoloads, since the latter will
+		// load objects that must be saved once loaded
+
+		// Auto save Business to local
+		new BusinessSaveWriter(localBusinessStorage),
+		// Auto save Register to local
+		new RegisterSaveWriter(localRegisterStorage),
+
 		// Autoload the business
 		new BusinessAutoload(businessStorage),
 		// Autoload the business
 		new RegisterAutoload(registerStorage),
 		// Auto save Business to server
 		new BusinessSaveServer(server),
-		// Auto save Business to local
-		new BusinessSaveWriter(localBusinessStorage),
 		// Auto save Register to server
 		new RegisterSaveServer(server),
-		// Auto save Register to local
-		new RegisterSaveWriter(localRegisterStorage),
 	],
 };
 
@@ -117,7 +122,7 @@ const app = new Application(appConfig);
 const orderPath = {
 	pathname: '/order',
 	state: {
-		order: dummyOrder(storedBusiness),
+		order: null,//dummyOrder(storedBusiness),
 		new: false,
 	},
 };
@@ -129,9 +134,9 @@ module.exports = {
 	ordersServer: server,
 	// initialRoutes: ['/', '/order'],
 	// initialRoutes: ['/', orderPath],
-	// initialRoutes: ['/', '/register/manage'],
+	// initialRoutes: ['/', '/orders'],
 	// initialRoutes: ['/', '/dev/localStorages'],
-	uuidGenerator: new TestUUIDGenerator(),
+	uuidGenerator: new UUIDGenerator(),
 	auth,
 	locale: 'fr-CA',
 	currency: 'CAD',
