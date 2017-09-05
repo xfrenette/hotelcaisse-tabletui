@@ -26,9 +26,8 @@ class Console extends Component {
 	@observable
 	entries = [];
 
-	constructor(props) {
-		super(props);
-		this.listenToLogger(props.logger);
+	componentWillMount() {
+		this.listenToLogger(this.props.logger);
 	}
 
 	componentWillReceiveProps(newProps) {
