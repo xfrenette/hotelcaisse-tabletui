@@ -111,10 +111,17 @@ class Container extends Component {
 		this.clearDraft();
 
 		if (this.isNew) {
-			this.props.business.addOrder(this.order);
+			this.order.freeze();
+			this.props.business.orderCreated(this.order);
 			this.props.router.replace('/');
 		} else {
-			this.order.commitChanges();
+			const changes = this.order.commitChanges();
+
+			if (changes.hasChanges()) {
+				this.order.freeze();
+				this.props.business.orderChanged(this.order, changes);
+			}
+
 			this.props.router.goBack();
 		}
 	}
