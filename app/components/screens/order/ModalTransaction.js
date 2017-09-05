@@ -72,7 +72,6 @@ class ModalTransaction extends Component {
 
 		if (this.validate(values)) {
 			if (this.props.onSave) {
-				console.log('mode', this.mode);
 				this.props.onSave(this.mode, values.amount);
 			}
 
