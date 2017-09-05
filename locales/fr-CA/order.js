@@ -225,6 +225,11 @@ export default {
 			message: 'Si vous quittez, les modifications seront perdues. Souhaitez-vous quitter ?',
 		},
 	},
+	notValid: {
+		title: 'Inscription non complète',
+		message: 'Cette inscription n\'est pas bien complétée. Assurez-vous d\'avoir bien saisi' +
+		' les informations du client et que les items, transactions et crédits sont tous valides.',
+	},
 	list: {
 		empty: 'Aucune fiche n\'a encore été créée.',
 		current: 'Clients actuels',

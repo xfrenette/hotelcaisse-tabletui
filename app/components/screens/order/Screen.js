@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { inject } from 'mobx-react/native';
 import { Alert, BackHandler, ScrollView, View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Order from 'hotelcaisse-app/dist/business/Order';
@@ -15,6 +16,7 @@ const propTypes = {
 	canAddTransaction: PropTypes.bool,
 	hasTransactionsOrCredits: PropTypes.bool,
 	saveDraft: PropTypes.func,
+	validate: PropTypes.func,
 	CategorySidebar: PropTypes.func.isRequired,
 	BottomBar: PropTypes.func.isRequired,
 	Items: PropTypes.func.isRequired,
@@ -41,6 +43,7 @@ const defaultProps = {
 	hasTransactionsOrCredits: false,
 	canAddTransaction: false,
 	saveDraft: null,
+	validate: null,
 	onHome: null,
 	onBack: null,
 	onDone: null,
@@ -50,6 +53,7 @@ const defaultProps = {
 	onNotesEdit: null,
 };
 
+@inject('ui')
 class OrderScreen extends Component {
 	backHandler = null;
 
@@ -111,6 +115,27 @@ class OrderScreen extends Component {
 	saveDraft() {
 		if (this.props.saveDraft) {
 			this.props.saveDraft();
+		}
+	}
+
+	validate() {
+		if (!this.props.validate) {
+			return true;
+		}
+
+		return this.props.validate() === undefined;
+	}
+
+	onDone() {
+		if (this.validate()) {
+			if (this.props.onDone) {
+				this.props.onDone();
+			}
+		} else {
+			this.props.ui.showErrorAlert(
+				this.t('order.notValid.title'),
+				this.t('order.notValid.message')
+			);
 		}
 	}
 
@@ -193,7 +218,7 @@ class OrderScreen extends Component {
 							onTransactionAdd={() => { this.onTransactionEdit(null); }}
 							onCustomerEdit={this.props.onCustomerEdit}
 							onCancel={() => { this.onBack(); }}
-							onDone={this.props.onDone}
+							onDone={() => { this.onDone(); }}
 						/>
 					</View>
 					<CategorySidebar

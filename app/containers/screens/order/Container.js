@@ -90,6 +90,10 @@ class Container extends Component {
 		this.props.ui.orderDraft = null;
 	}
 
+	validate() {
+		return this.order.validate();
+	}
+
 	/**
 	 * When the user presses the 'Home' button
 	 */
@@ -104,8 +108,8 @@ class Container extends Component {
 	}
 
 	/**
-	 * When the user presses the 'Done' button. We clear the draft. If new order, we add it to the
-	 * business and we go home, else we commit the changes and go back.
+	 * When the user presses the 'Done' button. The order must be valid before calling this
+	 * method. We clear the draft, inform the Business of a new / modified Order and go back.
 	 */
 	onDone() {
 		this.clearDraft();
@@ -155,6 +159,7 @@ class Container extends Component {
 				hasTransactionsOrCredits={this.hasTransactionsOrCredits}
 				localizer={this.props.localizer}
 				saveDraft={() => { this.saveDraft(); }}
+				validate={() => this.validate()}
 				CategorySidebar={(props) => <CategorySidebar order={this.order} {...props} />}
 				BottomBar={(props) => <BottomBar order={this.order} {...props} />}
 				Items={(props) => <Items order={this.order} isNew={this.isNew} {...props} />}
