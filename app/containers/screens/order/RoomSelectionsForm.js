@@ -127,9 +127,9 @@ class RoomSelectionsForm extends Component {
 	 * updates the checkout date.
 	 */
 	restrictOutDate() {
-		// if (this.outDate.getTime() <= this.inDate.getTime()) {
-		// 	this.onDateChanged('out', getTomorrowOf(this.inDate));
-		// }
+		if (this.outDate.getTime() <= this.inDate.getTime()) {
+			this.onDateChanged('out', getTomorrowOf(this.inDate));
+		}
 	}
 
 	/**
