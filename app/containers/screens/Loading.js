@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import get from 'lodash.get';
 import { autorun } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import { STATES } from '../../lib/UI';
@@ -19,7 +19,9 @@ class Loading extends Component {
 	 * When mounting, listen for loaded signal to redirect.
 	 */
 	componentWillMount() {
-		this.redirectWhenLoaded();
+		if (get(this.props, 'location.state.redirectWhenLoaded', true)) {
+			this.redirectWhenLoaded();
+		}
 	}
 
 	/**
