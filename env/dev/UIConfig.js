@@ -8,6 +8,7 @@ import Register from 'hotelcaisse-app/dist/business/Register';
 import BusinessAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Business';
 import RegisterAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Register';
 import ServerAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Server';
+import ApiServerUpdatesListener from 'hotelcaisse-app/dist/plugins/ApiServerUpdatesListener';
 import FirstReader from 'hotelcaisse-app/dist/io/readers/First';
 import BusinessServerReader from 'hotelcaisse-app/dist/io/readers/business/Server';
 import RegisterServerReader from 'hotelcaisse-app/dist/io/readers/register/Server';
@@ -44,7 +45,7 @@ businessStorage.delay = 3000;
 
 */
 
-const useReal = false;
+const useReal = true;
 let server;
 let auth;
 const localStorages = {};
@@ -55,6 +56,7 @@ const logger = new UILogger();
 
 if (useReal) {
 	serverStorage = new LocalStorage('hotelcaisse-app@server');
+	// Do not forget to set application later
 	server = new ApiServer('http://192.168.1.116:8000/api/1.0/dev');
 	server.writer = serverStorage;
 	server.setLogger(logger);
@@ -117,8 +119,9 @@ const appConfig = {
 	],
 };
 
-if (serverStorage) {
+if (useReal) {
 	appConfig.plugins.unshift(new ServerAutoload(serverStorage, server)); // must be first
+	appConfig.plugins.unshift(new ApiServerUpdatesListener(server));
 }
 
 const app = new Application(appConfig);
@@ -143,7 +146,7 @@ module.exports = {
 	ordersServer: server,
 	// initialRoutes: [loadingPath],
 	// initialRoutes: ['/', orderPath],
-	initialRoutes: ['/', '/orders'],
+	// initialRoutes: ['/', '/orders'],
 	// initialRoutes: ['/', '/register/manage'],
 	uuidGenerator: new UUIDGenerator(),
 	auth,
