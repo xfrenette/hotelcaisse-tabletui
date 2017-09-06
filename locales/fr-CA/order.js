@@ -12,8 +12,8 @@ export default {
 	details: {
 		subTotal: 'Sous-total',
 		credits: 'Crédits',
-		taxes: 'Taxes',
 		payments: 'Paiements',
+		total: 'Total',
 	},
 	credit: {
 		label: 'Crédit',

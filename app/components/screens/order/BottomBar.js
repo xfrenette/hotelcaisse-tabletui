@@ -56,14 +56,13 @@ class BottomBar extends Component {
 	}
 
 	get detailsRows() {
-		const taxesSum = this.props.order.taxesTotals.reduce(
-			(prevTotal, tax) => prevTotal.add(tax.amount),
-			new Decimal(0)
-		);
+		const taxes = this.props.order.taxesTotals.map(tax => [tax.name, tax.amount.toNumber()]);
+
 		return [
 			[this.t('order.details.subTotal'), this.props.order.itemsSubtotal.toNumber()],
-			[this.t('order.details.taxes'), taxesSum.toNumber()],
+			...taxes,
 			[this.t('order.details.credits'), this.props.order.creditsTotal.mul(-1).toNumber()],
+			[this.t('order.details.total'), this.props.order.total.toNumber()],
 			[this.t('order.details.payments'), this.props.order.transactionsTotal.mul(-1).toNumber()],
 		];
 	}
@@ -116,7 +115,9 @@ class BottomBar extends Component {
 
 		if (this.showDetails) {
 			details = this.detailsRows.map(([label, amount]) => {
-				const amountText = this.props.localizer.formatCurrency(amount, { style: 'accounting' });
+				const amountText = typeof amount === 'number'
+					? this.props.localizer.formatCurrency(amount, { style: 'accounting' })
+					: null;
 
 				return (
 					<View key={label} style={detailsTableStyles.row}>
