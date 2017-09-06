@@ -88,7 +88,8 @@ function addTransactions(order, modes) {
 	}
 }
 
-function dummyRoomSelection(rooms, fields, latestCheckOutDate = new Date()) {
+function dummyRoomSelection(rooms, fields, latestCheckOutDate) {
+	latestCheckOutDate = latestCheckOutDate || new Date();
 	latestCheckOutDate.setHours(0, 0, 0, 0);
 	const endDate = dateBefore(latestCheckOutDate, Math.floor(Math.random() * 2));
 	const startDate = dateBefore(endDate, Math.ceil(Math.random() * 3));
@@ -108,8 +109,9 @@ function dummyRoomSelection(rooms, fields, latestCheckOutDate = new Date()) {
 	return roomSelection;
 }
 
-function dummyOrder(business, latestCheckOutDate) {
+function dummyOrder(business, latestCheckOutDate, localizer) {
 	const order = new Order(generateUUID());
+	order.localizer = localizer;
 	order.customer = dummyCustomer(business.customerFields);
 	order.note = Math.random() > 0.5 ? faker.lorem.sentence() : null;
 

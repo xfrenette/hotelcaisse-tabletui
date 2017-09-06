@@ -3,6 +3,7 @@ import ApiServer from 'hotelcaisse-app/dist/servers/Api';
 import ApiAuth from 'hotelcaisse-app/dist/auth/ApiServer';
 import Business from 'hotelcaisse-app/dist/business/Business';
 import Order from 'hotelcaisse-app/dist/business/Order';
+import Localizer from 'hotelcaisse-app/dist/Localizer';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import BusinessAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Business';
 import RegisterAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Register';
@@ -43,11 +44,12 @@ businessStorage.delay = 3000;
 
 */
 
-const useReal = true;
+const useReal = false;
 let server;
 let auth;
 const localStorages = {};
 let serverStorage;
+const dummyLocalizer = new Localizer('fr-CA', 'CAD');
 
 const logger = new UILogger();
 
@@ -60,6 +62,7 @@ if (useReal) {
 	localStorages['ApiServer'] = serverStorage;
 } else {
 	server = new TestServer();
+	server.localizer = dummyLocalizer;
 	//server.delay = 2000;
 	server.business = storedBusiness;
 	server.register = storedRegister;
@@ -122,8 +125,14 @@ const app = new Application(appConfig);
 const orderPath = {
 	pathname: '/order',
 	state: {
-		order: null,//dummyOrder(storedBusiness),
-		new: false,
+		order: dummyOrder(storedBusiness, null, dummyLocalizer),
+		new: true,
+	},
+};
+const loadingPath = {
+	pathname: '/loading',
+	state: {
+		redirectWhenLoaded: false,
 	},
 };
 
@@ -132,10 +141,10 @@ module.exports = {
 	app,
 	logger,
 	ordersServer: server,
-	// initialRoutes: ['/', '/order'],
+	// initialRoutes: [loadingPath],
 	// initialRoutes: ['/', orderPath],
-	// initialRoutes: ['/', '/orders'],
-	// initialRoutes: ['/', '/dev/localStorages'],
+	initialRoutes: ['/', '/orders'],
+	// initialRoutes: ['/', '/register/manage'],
 	uuidGenerator: new UUIDGenerator(),
 	auth,
 	locale: 'fr-CA',

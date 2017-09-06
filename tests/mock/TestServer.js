@@ -8,6 +8,7 @@ class TestServer extends Server {
 	ordersLoadingCount = 0;
 	// After this amount of loading, we return an empty array. Set to null to disable
 	maxOrderLoads = null;
+	localizer = null; // Used when making dummy orders, to round decimals
 
 	/**
 	 * We create [number] dummy Order with random data. If a [from] Order is supplied, the next ones
@@ -36,7 +37,7 @@ class TestServer extends Server {
 		}
 
 		for (let i = quantity - 1; i >= 0; i -= 1) {
-			const order = dummyOrder(this.business, lastCheckOutDate);
+			const order = dummyOrder(this.business, lastCheckOutDate, this.localizer);
 			lastCheckOutDate = order.latestCheckOutDate;
 			orders.push(order);
 		}
