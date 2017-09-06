@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TouchableNativeFeedback, View } from 'react-native';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import PropTypes from 'prop-types';
 import Item from 'hotelcaisse-app/dist/business/Item';
@@ -11,6 +12,7 @@ import { Cell, Row } from '../../elements/table';
 const propTypes = {
 	item: PropTypes.instanceOf(Item).isRequired,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
+	validateQuantity: PropTypes.func,
 	onQuantityChange: PropTypes.func,
 	onRemove: PropTypes.func,
 	onRefund: PropTypes.func,
@@ -22,6 +24,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+	validateQuantity: null,
 	onQuantityChange: null,
 	onRemove: null,
 	onRefund: null,
@@ -34,6 +37,9 @@ const defaultProps = {
 
 @observer
 class ItemRow extends Component {
+	@observable
+	quantityError = null;
+
 	/**
 	 * Simple alias to this.props.localizer.t
 	 *
@@ -70,12 +76,26 @@ class ItemRow extends Component {
 		return cellStyles.totalPrice;
 	}
 
+	validateQuantity(q) {
+		if (!this.props.validateQuantity) {
+			return true;
+		}
+
+		return this.props.validateQuantity(q) === undefined;
+	}
+
 	/**
 	 * Called when the quantity input value changes
 	 *
 	 * @param {Number} quantity
 	 */
 	onQuantityChange(quantity) {
+		if (!this.validateQuantity(quantity)) {
+			this.quantityError = this.t('errors.fieldInvalidValueShort');
+			return;
+		}
+
+		this.quantityError = null;
 		if (this.props.onQuantityChange) {
 			this.props.onQuantityChange(quantity || 0);
 		}
@@ -163,6 +183,7 @@ class ItemRow extends Component {
 					selectTextOnFocus
 					onChangeValue={(value) => { this.onQuantityChange(value); }}
 					constraints={{ numericality: { greaterThanOrEqualTo: 1 } }}
+					error={this.quantityError}
 				/>
 			);
 		}

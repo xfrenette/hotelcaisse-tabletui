@@ -3,6 +3,7 @@ export default {
 		closedExternally: 'La caisse a été fermée depuis un autre appareil.',
 	},
 	fieldInvalidValue: 'Cette valeur est invalide',
+	fieldInvalidValueShort: 'Valeur invalide',
 	invalidFieldsAlert: {
 		title: 'Erreur',
 		message: 'Certains champs sont en erreur, veuillez les vérifier.',
