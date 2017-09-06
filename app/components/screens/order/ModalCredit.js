@@ -27,7 +27,6 @@ class ModalCredit extends Component {
 	modalRef = null;
 	@observable
 	note = '';
-	@observable
 	amount = 0;
 	@observable
 	errors = {
@@ -169,7 +168,7 @@ class ModalCredit extends Component {
 						<Label>{this.t('order.credit.modal.fields.amount')}</Label>
 						<NumberInput
 							ref={(n) => { this.nodeRefs.amount = n; }}
-							value={this.amount}
+							defaultValue={this.amount}
 							onChangeValue={(v) => { this.amount = v; }}
 							type="money"
 							localizer={this.props.localizer}

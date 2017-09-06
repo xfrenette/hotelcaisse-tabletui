@@ -3,35 +3,41 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react/native';
+import omit from 'lodash.omit';
 import escapeStringRegexp from 'escape-string-regexp';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
-import validate from 'hotelcaisse-app/dist/Validator';
 import TextInput from '../TextInput';
 import Incrementor from './Incrementor';
 import styleVars from '../../../styles/variables';
 
 const propTypes = {
-	value: PropTypes.number,
+	defaultValue: PropTypes.number,
 	acceptDotAsDecimal: PropTypes.bool,
 	style: TextInput.propTypes.style,
 	type: PropTypes.string,
 	showIncrementors: PropTypes.bool,
-	onChangeValue: PropTypes.func,
 	localizer: PropTypes.instanceOf(Localizer),
-	constraints: PropTypes.object,
+	onChangeValue: PropTypes.func,
 };
 
 const defaultProps = {
-	value: null,
+	defaultValue: null,
 	acceptDotAsDecimal: true,
 	style: null,
 	type: null,
-	onChangeValue: null,
 	localizer: null,
 	showIncrementors: false,
-	constraints: null,
+	onChangeValue: null,
 };
 
+/**
+ * Note that, unlike TextInput, the NumberInput value cannot be controlled by props updates
+ * (because it is too complex to manage cases like going from '3.0002' to '3.000' without
+ * knowing if we should erase the extra '0000' or not). It has a defaultValue attribute which is
+ * the value to show at first, and, when modified, calls its onChangeValue prop. If the input
+ * value has not change the number value (ex: going from '3.00' to '3.0' and then to '3.'), the
+ * onChangeValue will not be called
+ */
 @observer
 class NumberInput extends Component {
 	/**
@@ -41,6 +47,11 @@ class NumberInput extends Component {
 	 */
 	@observable
 	inputText = '';
+	/**
+	 * Value (as a number) currently in the text field
+	 * @type {number}
+	 */
+	value = null;
 	/**
 	 * Reference to the TextInput node
 	 *
@@ -56,13 +67,15 @@ class NumberInput extends Component {
 
 	componentWillMount() {
 		this.saveDecimalSeparator(this.props.localizer);
-		this.updateInputText(this.props.value);
+		this.value = this.props.defaultValue;
+		this.updateInputText(this.props.defaultValue);
 	}
 
 	componentWillReceiveProps(newProps) {
-		// If the value changed, update the text input
-		if (newProps.value !== this.props.value) {
-			this.updateInputText(newProps.value);
+		// If the defaultValue changed, update the text input
+		if (newProps.defaultValue !== this.props.defaultValue) {
+			this.value = newProps.defaultValue;
+			this.updateInputText(newProps.defaultValue);
 		}
 
 		// If the localizer changed, update the decimal separator
@@ -72,26 +85,28 @@ class NumberInput extends Component {
 	}
 
 	/**
-	 * Called when the text input text changes. Parses the text and calls tryChangeValue
+	 * Called when the text input text changes. Parses the text and calls changeValue
 	 *
 	 * @param {string} text
 	 */
 	onChangeText(text) {
+		if (!this.textIsValid(text)) {
+			return;
+		}
+
 		const newValue = this.parseValue(text);
 
-		if (newValue !== this.props.value) {
-			// If the value changed
-			this.tryChangeValue(newValue);
-		} else if (this.textIsValid(text)) {
-			// If the value didn't change but it is a valid displayable text, we update the input text
-			let inputText = text;
-
-			if (this.props.acceptDotAsDecimal && this.decimalSeparator !== '.') {
-				inputText = inputText.replace('.', this.decimalSeparator);
-			}
-
-			this.inputText = inputText;
+		if (newValue !== this.value) {
+			this.onChangeValue(newValue);
 		}
+
+		let inputText = text;
+
+		if (this.props.acceptDotAsDecimal && this.decimalSeparator !== '.') {
+			inputText = inputText.replace('.', this.decimalSeparator);
+		}
+
+		this.inputText = inputText;
 	}
 
 	/**
@@ -145,6 +160,7 @@ class NumberInput extends Component {
 	 * @param {Number} value
 	 */
 	onChangeValue(value) {
+		this.value = value;
 		if (this.props.onChangeValue) {
 			this.props.onChangeValue(value);
 		}
@@ -157,15 +173,12 @@ class NumberInput extends Component {
 	 * @return {Number}
 	 */
 	parseValue(text) {
-		if (typeof text !== 'string') {
+		if (typeof text !== 'string' || text === '') {
 			return null;
 		}
 
-		let cleanedText = text;
-
 		// Replace the decimalSeparator with a dot to parse
-		cleanedText = text.replace(this.decimalSeparator, '.');
-
+		const cleanedText = text.replace(this.decimalSeparator, '.');
 		const number = Number.parseFloat(cleanedText);
 
 		if (Number.isNaN(number)) {
@@ -173,24 +186,6 @@ class NumberInput extends Component {
 		}
 
 		return number;
-	}
-
-	/**
-	 * Returns true if the value respects the restrictions received
-	 *
-	 * @param {Number} value
-	 * @return {Boolean}
-	 */
-	valueIsValid(value) {
-		const constraints = this.props.constraints || {};
-
-		if (typeof constraints.numericality !== 'object') {
-			constraints.numericality = {};
-		}
-
-		constraints.numericality.noStrings = true;
-
-		return validate({ value }, { value: constraints }) === undefined;
 	}
 
 	/**
@@ -208,7 +203,7 @@ class NumberInput extends Component {
 	 * @return {Boolean}
 	 */
 	textIsValid(text) {
-		if (text === null) {
+		if (text === null || text === '') {
 			return true;
 		}
 
@@ -256,24 +251,23 @@ class NumberInput extends Component {
 	}
 
 	/**
-	 * Adjust the value by an increment "type" (1 or -1). Calls tryChangeValue().
+	 * Adjust the value by an increment "type" (1 or -1). Calls changeValue().
 	 *
 	 * @param {Number} type  1 or -1
 	 */
 	incrementValue(type) {
-		const currentValue = typeof this.props.value === 'number' ? this.props.value : 0;
-		this.tryChangeValue(currentValue + type);
+		const currentValue = typeof this.value === 'number' ? this.value : 0;
+		this.changeValue(currentValue + type);
 	}
 
 	/**
-	 * If the received value is valid, trigger the onChangeValue, else does nothing.
+	 * Manual change of value. Update the text input and trigger the onChangeValue.
 	 *
 	 * @param {Number} value
 	 */
-	tryChangeValue(value) {
-		if (this.valueIsValid(value)) {
-			this.onChangeValue(value);
-		}
+	changeValue(value) {
+		this.updateInputText(value);
+		this.onChangeValue(value);
 	}
 
 	/**
@@ -341,7 +335,7 @@ class NumberInput extends Component {
 	 * @return {Component}
 	 */
 	render() {
-		const { value, ...other } = this.props;
+		const otherProps = omit(this.props, ['defaultValue']);
 		const style = [this.getTextInputStyles(), this.props.style];
 		const preText = this.getTextInputPreText();
 		const postText = this.getTextInputPostText();
@@ -349,7 +343,7 @@ class NumberInput extends Component {
 		return (
 			<View>
 				<TextInput
-					{...other}
+					{...otherProps}
 					defaultValue={null}
 					ref={(node) => { this.textInputNode = node; }}
 					value={this.inputText}

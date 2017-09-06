@@ -213,7 +213,7 @@ class CustomItemRow extends ItemRow {
 				error={this.errors.price}
 				onChangeValue={(value) => { this.price = value; }}
 				onBlur={() => { this.onPriceBlur(); }}
-				value={this.price}
+				defaultValue={this.price}
 				selectTextOnFocus
 				constraints={{ numericality: { greaterThanOrEqualTo: 0 } }}
 			/>

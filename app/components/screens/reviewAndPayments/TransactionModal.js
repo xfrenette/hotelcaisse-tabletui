@@ -142,7 +142,7 @@ class TransactionModal extends Component {
 						<NumberInput
 							type="money"
 							localizer={this.props.localizer}
-							value={this.amount}
+							defaultValue={this.amount}
 							onChangeValue={(val) => { this.amount = val; }}
 							selectTextOnFocus
 						/>

@@ -60,7 +60,7 @@ function setProductPrice(product, rawPrice) {
 	const tps = netPrice.mul(0.05).toDecimalPlaces(5);
 	const tvq = netPrice.mul(0.09975).toDecimalPlaces(5);
 
-	product.price = price.sub(tps).sub(tvq);
+	product.price = price.sub(tps).sub(tvq).toDecimalPlaces(2);
 	product.taxes.push(new AppliedTax(123, 'TPS', tps));
 	product.taxes.push(new AppliedTax(123, 'TVQ', tvq));
 }

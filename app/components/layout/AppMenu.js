@@ -86,7 +86,7 @@ class AppMenu extends Component {
 			<View style={layoutStyles.block}>
 				{ this.renderTitle(this.t('appMenu.dev.title')) }
 				{ this.renderItem(this.t('appMenu.dev.localStorages'), '/dev/localStorages')}
-				{ this.renderItem('Test', '/test')}
+				{ this.renderItem('Test', '/dev/test')}
 			</View>
 		);
 	}

@@ -52,7 +52,6 @@ class CloseRegisterScreen extends Component {
 	 *
 	 * @type {Number}
 	 */
-	@observable
 	POSTAmount = 0;
 	/**
 	 * Object associating denominations to their amount value.
@@ -330,7 +329,7 @@ class CloseRegisterScreen extends Component {
 									<View>
 										<NumberInput
 											ref={(node) => { this.nodeRefs.POSTAmount = node; }}
-											value={this.POSTAmount}
+											defaultValue={0}
 											type="money"
 											label={this.t('closeRegister.fields.POSTAmount')}
 											onChangeValue={(value) => { this.onPOSTAmountChange(value); }}

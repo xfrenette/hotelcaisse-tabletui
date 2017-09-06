@@ -121,7 +121,7 @@ class ItemRow extends Component {
 
 		return (
 			<NumberInput
-				value={item.quantity || null}
+				defaultValue={item.quantity || null}
 				showIncrementors
 				selectTextOnFocus
 				onChangeValue={(value) => { this.onQuantityChange(value); }}

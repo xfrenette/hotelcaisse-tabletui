@@ -213,7 +213,7 @@ class CreditRow extends Component {
 					<Cell last style={cellStyles.amount}>
 						<NumberInput
 							ref={(node) => { this.nodeRefs.amount = node; }}
-							value={this.amount}
+							defaultValue={this.amount}
 							type="money"
 							localizer={this.props.localizer}
 							selectTextOnFocus

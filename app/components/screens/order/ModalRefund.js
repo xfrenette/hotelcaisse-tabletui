@@ -7,7 +7,6 @@ import Localizer from 'hotelcaisse-app/dist/Localizer';
 import validate from 'hotelcaisse-app/dist/Validator';
 import { Modal, NumberInput } from '../../elements';
 
-
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	maxQuantity: PropTypes.number,
@@ -19,10 +18,8 @@ const defaultProps = {
 	onRefund: null,
 };
 
-@observer
 class ModalRefund extends Component {
 	modalRef = null;
-	@observable
 	quantityValue = 1;
 
 	/**
@@ -84,9 +81,8 @@ class ModalRefund extends Component {
 				<View style={viewStyles.modalContent}>
 					<View style={viewStyles.inputContainer}>
 						<NumberInput
-							value={this.quantityValue}
+							defaultValue={this.quantityValue}
 							showIncrementors
-							constraints={this.valueConstraints}
 							onChangeValue={(v) => { this.quantityValue = v; }}
 						/>
 					</View>

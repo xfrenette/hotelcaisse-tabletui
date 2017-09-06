@@ -248,7 +248,7 @@ class AddModal extends Component {
 						<Label>{ this.t('manageRegister.modal.fields.amount') }</Label>
 						<NumberInput
 							ref={(node) => { this.nodeRefs.amountInput = node; }}
-							value={this.values.amount}
+							defaultValue={0}
 							type="money"
 							localizer={this.props.localizer}
 							onChangeValue={(value) => { this.values.amount = value; }}

@@ -24,9 +24,7 @@ const defaultProps = {
 @observer
 class ModalCustomProduct extends Component {
 	modalRef = null;
-	@observable
 	name = '';
-	@observable
 	price = 0;
 	@observable
 	errors = {
@@ -155,7 +153,7 @@ class ModalCustomProduct extends Component {
 						<Label>{this.t('order.customProduct.modal.fields.name')}</Label>
 						<TextInput
 							ref={(n) => { this.nodeRefs.name = n; }}
-							value={this.name}
+							defaultValue={this.name}
 							onChangeText={(t) => { this.name = t; }}
 							returnKeyType="next"
 							onSubmitEditing={() => { this.nodeRefs.price.focus(); }}
@@ -169,7 +167,7 @@ class ModalCustomProduct extends Component {
 						<Label>{this.t('order.customProduct.modal.fields.price')}</Label>
 						<NumberInput
 							ref={(n) => { this.nodeRefs.price = n; }}
-							value={this.price}
+							defaultValue={this.price}
 							onChangeValue={(v) => { this.price = v; }}
 							type="money"
 							localizer={this.props.localizer}

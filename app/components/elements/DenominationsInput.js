@@ -213,7 +213,7 @@ class DenominationsInput extends Component {
 				<View style={styles.numberInputContainer}>
 					<NumberInput
 						ref={(node) => { this.nodeRefs[field.label] = node; }}
-						value={field.value}
+						defaultValue={field.value}
 						localizer={this.props.localizer}
 						onChangeValue={(val) => { this.fieldValueChanged(field, val); }}
 						onSubmitEditing={() => { this.focusNextField(field); }}

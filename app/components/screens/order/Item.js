@@ -157,12 +157,10 @@ class ItemRow extends Component {
 		if (this.editable) {
 			return (
 				<NumberInput
-					value={item.quantity || null}
+					defaultValue={item.quantity || null}
 					showIncrementors
 					selectTextOnFocus
-					onChangeValue={(value) => {
-						this.onQuantityChange(value);
-					}}
+					onChangeValue={(value) => { this.onQuantityChange(value); }}
 					constraints={{ numericality: { greaterThanOrEqualTo: 1 } }}
 				/>
 			);
