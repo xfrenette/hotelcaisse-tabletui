@@ -70,14 +70,14 @@ class OrderItem extends Component {
 		}
 
 		if (!balanceAmount.eq(0)) {
-			const typeStyle = balanceAmount.gt(0) ? textStyles.toCollect : textStyles.toRefund
+			const typeStyle = balanceAmount.gt(0) ? textStyles.toCollect : textStyles.toRefund;
 			balanceNode = (
 				<View style={styles.balance}>
 					<Text style={[textStyles.balanceLabel, typeStyle]}>
 						{ this.t(`order.balance.${balanceAmount.gt(0) ? 'toCollect' : 'toRefund'}`) }
 					</Text>
 					<Text style={[textStyles.balance, typeStyle]}>
-						{ this.props.localizer.formatCurrency(balanceAmount.toNumber())}
+						{ this.props.localizer.formatCurrency(balanceAmount.abs().toNumber())}
 					</Text>
 				</View>
 			);
