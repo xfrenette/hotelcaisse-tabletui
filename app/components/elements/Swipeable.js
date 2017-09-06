@@ -9,6 +9,7 @@ const propTypes = {
 	children: RNSwipeable.propTypes.children,
 	backgroundColor: PropTypes.string,
 	label: PropTypes.string,
+	autoCloseOnPress: PropTypes.bool,
 	onPress: PropTypes.func,
 };
 
@@ -16,16 +17,23 @@ const defaultProps = {
 	children: null,
 	backgroundColor: styleVars.theme.dangerBackgroundColor,
 	label: '',
+	autoCloseOnPress: false,
 	onDelete: null,
 };
 
 class Swipeable extends Component {
+	swipeableNode = null;
+
 	/**
 	 * Called when the button is pressed
 	 */
 	onPress() {
 		if (this.props.onPress) {
 			this.props.onPress();
+		}
+
+		if (this.props.autoCloseOnPress && this.swipeableNode) {
+			this.swipeableNode.recenter();
 		}
 	}
 
@@ -56,6 +64,7 @@ class Swipeable extends Component {
 	render() {
 		return (
 			<RNSwipeable
+				ref={(n) => { this.swipeableNode = n; }}
 				rightButtons={this.getRightButton()}
 				rightButtonWidth={buttonWidth + leftPadding}
 			>

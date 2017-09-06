@@ -133,6 +133,7 @@ class ItemRow extends Component {
 		const props = {
 			label: this.t(`order.actions.${type === 'refund' ? 'refund' : 'remove'}`),
 			onPress: type === 'refund' ? () => { this.onRefund(); } : () => { this.onRemove(); },
+			autoCloseOnPress: type === 'refund',
 		};
 
 		if (type === 'refund') {
