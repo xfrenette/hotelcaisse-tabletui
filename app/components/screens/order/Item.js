@@ -257,7 +257,7 @@ class ItemRow extends Component {
 	 */
 	renderPrice() {
 		const item = this.props.item;
-		const price = this.props.localizer.formatCurrency(item.total.toNumber());
+		const price = this.props.localizer.formatCurrency(item.total.toNumber(), { style: 'accounting' });
 		const refundStyle = item.quantity < 0 ? textStyles.refunded : null;
 
 		return (
