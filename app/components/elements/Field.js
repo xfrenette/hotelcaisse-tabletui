@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Field as FieldObject } from 'hotelcaisse-app/dist/fields';
-import { TextInput, Dropdown, NumberInput } from './index';
+import { TextInput, Dropdown, NumberInput, Text } from './index';
+import YesNoField from './fields/YesNoField';
 
 /**
  * Renders an input field based on a Field object
@@ -124,20 +125,15 @@ class Field extends Component {
 		);
 	}
 
+	renderYesNoField() {
+		return <YesNoField {...this.props} />;
+	}
+
 	renderField() {
-		switch (this.field.type) {
-			case 'SelectField':
-				return this.renderSelectField();
-			case 'NameField':
-				return this.renderNameField();
-			case 'EmailField':
-				return this.renderEmailField();
-			case 'PhoneField':
-				return this.renderPhoneField();
-			case 'NumberField':
-				return this.renderNumberField();
-			default:
-				return this.renderTextField();
+		if (typeof this[`render${this.field.type}`] === 'function') {
+			return this[`render${this.field.type}`].call(this);
+		} else {
+			return this.renderTextField();
 		}
 	}
 

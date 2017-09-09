@@ -10,7 +10,8 @@ import {
 	NumberField,
 	PhoneField,
 	SelectField,
-	TextField
+	TextField,
+	YesNoField,
 } from 'hotelcaisse-app/dist/fields';
 import products from './products';
 
@@ -60,6 +61,10 @@ emailField.role = 'customer.email';
 const phoneField = new PhoneField();
 phoneField.label = 'Téléphone';
 phoneField.id = 314;
+const firstTimeField = new YesNoField();
+firstTimeField.id = 318;
+firstTimeField.label = 'Premier séjour dans cette auberge ?';
+firstTimeField.defaultValue = 1;
 const memberIdField = new TextField();
 memberIdField.id = 315;
 memberIdField.label = '# de membre H.I.';
@@ -93,7 +98,7 @@ nbChildrenField.label = 'Enfants 0-6 ans';
 nbChildrenField.defaultValue = 0;
 nbChildrenField.constraints = numberFieldConstraints;
 
-business.customerFields = [nameField, emailField, countrySelect, phoneField, memberIdField];
+business.customerFields = [nameField, emailField, firstTimeField, countrySelect, phoneField, memberIdField];
 business.roomSelectionFields = [nbAdultsField, nbTeensField, nbChildrenField];
 
 for (let i = 1; i <= 6; i += 1) {
