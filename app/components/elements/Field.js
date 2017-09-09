@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import omit from 'lodash.omit';
 import { Field as FieldObject } from 'hotelcaisse-app/dist/fields';
 import { TextInput, Dropdown, NumberInput, Text } from './index';
 import YesNoField from './fields/YesNoField';
@@ -43,8 +44,7 @@ class Field extends Component {
 	 * @return {Object}
 	 */
 	get otherProps() {
-		const { field, onChangeValue, error, ...other } = this.props;
-		return other;
+		return omit(this.props, ['field', 'onChangeValue', 'error']);
 	}
 
 	/**
@@ -94,14 +94,20 @@ class Field extends Component {
 	}
 
 	renderNumberField() {
+		const value = typeof this.props.value === 'string'
+			? parseFloat(this.props.value)
+			: this.props.value;
+
+		const props = omit(this.otherProps, ['value']);
+
 		return (
 			<NumberInput
 				ref={(node) => { this.inputNode = node; }}
 				onChangeValue={this.props.onChangeValue}
 				error={this.props.error}
-				defaultValue={this.field.defaultValue}
+				defaultValue={value}
 				showIncrementors
-				{...this.otherProps}
+				{...props}
 			/>
 		);
 	}

@@ -37,12 +37,12 @@ class RoomSelectionRow extends Component {
 	@observable
 	fieldErrors = new Map();
 
-	@computed
 	/**
 	 * Returns the id of the currently selected room. Returns null if no room selected.
 	 *
 	 * @return {String}
 	 */
+	@computed
 	get roomID() {
 		if (!this.props.roomSelection.room) {
 			return null;
@@ -98,7 +98,8 @@ class RoomSelectionRow extends Component {
 	 */
 	onFieldChange(field, value) {
 		if (this.props.onFieldChange) {
-			this.props.onFieldChange(field, value);
+			const strValue = String(value);
+			this.props.onFieldChange(field, strValue);
 		}
 	}
 

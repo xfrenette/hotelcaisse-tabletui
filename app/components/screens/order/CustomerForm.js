@@ -136,7 +136,8 @@ class CustomerForm extends Component {
 	 * @param {mixed} value
 	 */
 	onFieldChange(field, value) {
-		this.fieldValues.set(field.id, value);
+		const strValue = String(value);
+		this.fieldValues.set(field.id, strValue);
 	}
 
 	/**

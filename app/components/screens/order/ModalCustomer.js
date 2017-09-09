@@ -12,7 +12,6 @@ import { Container } from '../../layout';
 import CustomerForm from './CustomerForm';
 import layoutStyles from '../../../styles/layout';
 
-
 const propTypes = {
 	RoomSelectionsForm: PropTypes.func,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
