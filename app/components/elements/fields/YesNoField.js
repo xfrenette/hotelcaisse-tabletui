@@ -23,11 +23,24 @@ const defaultProps = {
 };
 
 class YesNoField extends Component {
-	get value() {
-		console.log(typeof this.props.value, this.props.field.defaultValue);
-		return typeof this.props.value === 'number'
-			? this.props.value
-			: (this.props.field.defaultValue || 0);
+	/**
+	 * First checks it the `field` prop is set (returns true if 1 or '1', else returns
+	 * false). If not set, checks if the field's defaultValue is set (returns true if 1 or '1',
+	 * else returns false). If none set, returns false;
+	 *
+	 * @return {boolean}
+	 */
+	get booleanValue() {
+		const value = this.props.value;
+		if (typeof value === 'number') {
+			return value === 1;
+		}
+
+		if (typeof value === 'string') {
+			return value === '1';
+		}
+
+		return false;
 	}
 
 	onChange(value) {
@@ -46,9 +59,6 @@ class YesNoField extends Component {
 	}
 
 	render() {
-		console.log(this.value);
-		const valueBool = !!this.value;
-
 		return (
 			<View style={{ flexDirection: 'row' }}>
 				<TouchableOpacity onPress={() => { this.onFalsePress(); }}>
@@ -57,7 +67,7 @@ class YesNoField extends Component {
 					</View>
 				</TouchableOpacity>
 				<Switch
-					value={valueBool}
+					value={this.booleanValue}
 					onValueChange={(v) => { this.onChange(v); }}
 					thumbTintColor={styleVars.theme.mainColor}
 					onTintColor={styleVars.colors.grey1}

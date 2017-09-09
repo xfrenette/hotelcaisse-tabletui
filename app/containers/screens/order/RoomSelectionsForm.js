@@ -108,6 +108,7 @@ class RoomSelectionsForm extends Component {
 	componentWillMount() {
 		this.disposers.push(autorun(() => { this.restrictOutDate(); }));
 		this.setRoomSelectionsFields(this.props.roomSelections);
+		this.initRoomSelectionsFieldsValues(this.props.roomSelections);
 	}
 
 	/**
@@ -120,6 +121,28 @@ class RoomSelectionsForm extends Component {
 	setRoomSelectionsFields(roomSelections) {
 		const fields = this.props.business.roomSelectionFields;
 		roomSelections.forEach((roomSelection) => { roomSelection.fields = fields; });
+	}
+
+	/**
+	 * For each roomSelection, if it doesn't have a value for a field, and this field has a
+	 * defaultValue, set the value to the defaultValue.
+	 *
+	 * @param {array} roomSelections
+	 */
+	initRoomSelectionsFieldsValues(roomSelections) {
+		const fields = this.props.business.roomSelectionFields;
+
+		roomSelections.forEach((roomSelection) => {
+			fields.forEach((field) => {
+				if (roomSelection.fieldValues.has(field.id)) {
+					return;
+				}
+
+				if (typeof field.defaultValue === 'string' || typeof field.defaultValue === 'number') {
+					roomSelection.setFieldValue(field, field.defaultValue);
+				}
+			});
+		});
 	}
 
 	/**
@@ -145,6 +168,7 @@ class RoomSelectionsForm extends Component {
 
 		// Set the fields attribute
 		this.setRoomSelectionsFields([roomSelection]);
+		this.initRoomSelectionsFieldsValues([roomSelection]);
 
 		// Pre-select the first room
 		roomSelection.room = this.props.business.rooms[0];

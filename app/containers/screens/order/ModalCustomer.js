@@ -22,9 +22,29 @@ class ModalCustomer extends Component {
 	roomSelections = [];
 
 	show() {
-		this.customerFieldValues.replace(this.props.order.customer.fieldValues);
+		this.setCustomerFieldValues(this.props.order.customer.fieldValues);
 		this.roomSelections.replace(this.props.order.roomSelections.map(rs => rs.clone()));
 		this.modal.show();
+	}
+
+	/**
+	 * Updates the customerFieldValues with values from currentValues. For fields that do not
+	 * have a value in currentValues but have a defaultValue, we use it.
+	 *
+	 * @param currentValues
+	 */
+	setCustomerFieldValues(currentValues) {
+		this.customerFieldValues.replace(currentValues);
+
+		this.props.business.customerFields.forEach((field) => {
+			if (this.customerFieldValues.has(field.id)) {
+				return;
+			}
+
+			if (typeof field.defaultValue === 'string' || typeof field.defaultValue === 'number') {
+				this.customerFieldValues.set(field.id, field.defaultValue);
+			}
+		});
 	}
 
 	onSave() {
