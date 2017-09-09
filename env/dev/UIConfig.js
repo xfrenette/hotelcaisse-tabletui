@@ -45,7 +45,8 @@ businessStorage.delay = 3000;
 
 */
 
-const useReal = true;
+const useReal = false;
+const useLocalStorage = false;
 let server;
 let auth;
 const localStorages = {};
@@ -57,7 +58,7 @@ const logger = new UILogger();
 if (useReal) {
 	serverStorage = new LocalStorage('hotelcaisse-app@server');
 	// Do not forget to set application later
-	server = new ApiServer('http://192.168.1.116:8000/api/1.0/dev');
+	server = new ApiServer('http://172.16.46.124:8000/api/1.0/dev');
 	server.writer = serverStorage;
 	server.setLogger(logger);
 	auth = new ApiAuth(server);
@@ -85,29 +86,27 @@ localStorages['Business'] = localBusinessStorage;
 
 // 'First' reader for the Business: takes different readers and returns the data of the first that
 // resolves and doesn't return null
-const businessStorage = new FirstReader([
-	localBusinessStorage,
+let storages = [
 	new BusinessServerReader(server),
-]);
+];
+if (useLocalStorage) {
+	storages.push(localBusinessStorage);
+}
+const businessStorage = new FirstReader(storages);
 
 // 'First' reader for the Register: takes different readers and returns the data of the first that
 // resolves and doesn't return null
-const registerStorage = new FirstReader([
-	localRegisterStorage,
+storages = [
 	new RegisterServerReader(server),
-]);
+];
+if (useLocalStorage) {
+	storages.push(localRegisterStorage);
+}
+const registerStorage = new FirstReader(storages);
 
 const appConfig = {
 	logger,
 	plugins: [
-		// Autosave plugins to local local writers must be before autoloads, since the latter will
-		// load objects that must be saved once loaded
-
-		// Auto save Business to local
-		new BusinessSaveWriter(localBusinessStorage),
-		// Auto save Register to local
-		new RegisterSaveWriter(localRegisterStorage),
-
 		// Autoload the business
 		new BusinessAutoload(businessStorage),
 		// Autoload the business
@@ -119,6 +118,15 @@ const appConfig = {
 	],
 };
 
+if (useLocalStorage) {
+	// Autosave plugins to local local writers must be before autoloads, since the latter will
+	// load objects that must be saved once loaded
+
+	// Auto save Business to local
+	appConfig.plugins.unshift(new BusinessSaveWriter(localBusinessStorage));
+	appConfig.plugins.unshift(new RegisterSaveWriter(localRegisterStorage));
+}
+
 if (useReal) {
 	appConfig.plugins.unshift(new ServerAutoload(serverStorage, server)); // must be first
 	appConfig.plugins.unshift(new ApiServerUpdatesListener(server));
@@ -128,7 +136,7 @@ const app = new Application(appConfig);
 const orderPath = {
 	pathname: '/order',
 	state: {
-		order: dummyOrder(storedBusiness, null, dummyLocalizer),
+		order: new Order(),//dummyOrder(storedBusiness, null, dummyLocalizer),
 		new: true,
 	},
 };
