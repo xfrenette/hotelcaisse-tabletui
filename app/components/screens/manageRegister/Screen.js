@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ScrollView, View } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer, PropTypes as PropTypesMobx } from 'mobx-react/native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import {
@@ -30,7 +30,7 @@ const propTypes = {
 	onAdd: PropTypes.func,
 	onDelete: PropTypes.func,
 	validate: PropTypes.func,
-	cashMovements: PropTypes.arrayOf(PropTypes.instanceOf(CashMovement)),
+	cashMovements: PropTypesMobx.observableArrayOf(PropTypes.instanceOf(CashMovement)),
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 };
 
@@ -101,7 +101,7 @@ class ManageRegisterScreen extends Component {
 				cashMovement={cashMovement}
 				localizer={this.props.localizer}
 				cellStyles={cellStyles}
-				onDelete={() => { this.props.onDelete(cashMovement); }}
+				onDelete={() => { this.onDelete(cashMovement); }}
 			/>
 		));
 	}

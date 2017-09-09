@@ -4,7 +4,6 @@ import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import Screen from '../../components/screens/manageRegister/Screen';
 
 @inject('router', 'register', 'localizer', 'uuidGenerator')
-@observer
 class ManageRegister extends Component {
 
 	/**
@@ -69,7 +68,7 @@ class ManageRegister extends Component {
 	}
 
 	render() {
-		const cashMovements = this.props.register.cashMovements.slice();
+		const cashMovements = this.props.register.cashMovements;
 
 		return (
 			<Screen
