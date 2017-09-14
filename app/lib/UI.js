@@ -281,7 +281,7 @@ class UI {
 				return true;
 			}
 
-			this.router.goBack();
+			this.goBackOrGoHome();
 			return true;
 		});
 	}
@@ -303,7 +303,7 @@ class UI {
 	 * else goes to home.
 	 */
 	goBackOrGoHome() {
-		if (this.history.length > 1) {
+		if (this.history.canGo(-1)) {
 			this.router.goBack();
 		} else {
 			this.router.replace('/');
