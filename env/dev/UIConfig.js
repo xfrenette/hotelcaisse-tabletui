@@ -8,7 +8,8 @@ import Register from 'hotelcaisse-app/dist/business/Register';
 import BusinessAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Business';
 import RegisterAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Register';
 import ServerAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Server';
-import ApiServerUpdatesListener from 'hotelcaisse-app/dist/plugins/ApiServerUpdatesListener';
+import ApiServerUpdatesListener from 'hotelcaisse-app/dist/plugins/apiServer/UpdatesListener';
+import ApiServerPing from 'hotelcaisse-app/dist/plugins/apiServer/Ping';
 import FirstReader from 'hotelcaisse-app/dist/io/readers/First';
 import BusinessServerReader from 'hotelcaisse-app/dist/io/readers/business/Server';
 import RegisterServerReader from 'hotelcaisse-app/dist/io/readers/register/Server';
@@ -58,7 +59,7 @@ const logger = new UILogger();
 if (useReal) {
 	serverStorage = new LocalStorage('hotelcaisse-app@server');
 	// Do not forget to set application later
-	server = new ApiServer('http://172.16.46.124:8000/api/1.0/dev');
+	server = new ApiServer('http://192.168.137.1:8000/api/1.0/hirdl');
 	server.writer = serverStorage;
 	server.setLogger(logger);
 	auth = new ApiAuth(server);
@@ -130,14 +131,15 @@ if (useLocalStorage) {
 if (useReal) {
 	appConfig.plugins.unshift(new ServerAutoload(serverStorage, server)); // must be first
 	appConfig.plugins.unshift(new ApiServerUpdatesListener(server));
+	// appConfig.plugins.push(new ApiServerPing(server));
 }
 
 const app = new Application(appConfig);
 const orderPath = {
 	pathname: '/order',
 	state: {
-		order: new Order(),//dummyOrder(storedBusiness, null, dummyLocalizer),
-		new: true,
+		order: dummyOrder(storedBusiness, null, dummyLocalizer),
+		new: false,
 	},
 };
 const loadingPath = {
