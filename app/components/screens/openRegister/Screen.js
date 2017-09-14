@@ -59,6 +59,11 @@ class OpenRegister extends Component {
 	@observable
 	denominationsQuantity = {};
 	/**
+	 * Values for the DenominationsInput
+	 * @type {array}
+	 */
+	denominationsInputValues = [];
+	/**
 	 * Error message for each of the inputs. Set a value to null if no error, else set it to the
 	 * error message. Note: since this is an observable object, all its keys must be defined at
 	 * initialisation, we cannot add or remove keys later.
@@ -91,6 +96,10 @@ class OpenRegister extends Component {
 
 		// We do it this way so Mobx can detect new keys
 		this.denominationsQuantity = newDenominationsQuantity;
+
+		this.denominationsInputValues = Object.entries(this.denominationsQuantity).map(
+			([label, value]) => ({ label, value })
+		);
 	}
 
 	/**
@@ -154,19 +163,6 @@ class OpenRegister extends Component {
 	 */
 	focusCashAmount() {
 		this.nodeRefs.cashAmount.focus();
-	}
-
-	/**
-	 * Returns an object to be passed to DenominationsInput containing all the denominations and their
-	 * quantity.
-	 *
-	 * @return {Object}
-	 */
-	@computed
-	get denominationsInputValues() {
-		return Object.entries(this.denominationsQuantity).map(
-			([label, value]) => ({ label, value })
-		);
 	}
 
 	/**

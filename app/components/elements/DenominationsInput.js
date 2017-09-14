@@ -1,8 +1,11 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react/native';
 import { View } from 'react-native';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
+import validate from 'hotelcaisse-app/dist/Validator';
 import { Text, NumberInput } from './index';
 import styleVars from '../../styles/variables';
 
@@ -34,6 +37,39 @@ const defaultProps = {
 	onSubmitEditing: null,
 };
 
+/**
+ * Validates a value for on number input
+ *
+ * @param {number} value
+ * @return {boolean}
+ */
+function validateValue(value) {
+	const constraints = { value: {
+		numericality: {
+			onlyInteger: true,
+			greaterThanOrEqualTo: 0,
+		},
+	}};
+	const res = validate({ value }, constraints);
+	return res === undefined;
+}
+
+/**
+ * Returns a key representing the specified field
+ * @param {object}field
+ * @return {string}
+ */
+function getFieldKey(field) {
+	return field.label;
+}
+
+/**
+ * Since it uses NumberInput and that NumberInput's value cannot be controlled with prop
+ * updates, the same thing applies for this component: the values (only the NumberInput
+ * values) cannot be controller by prop update. This component comes with automatic validation
+ * of values before calling `props.onChangeValue()`.
+ */
+@observer
 class DenominationsInput extends Component {
 	/**
 	 * Cache of the fields component
@@ -60,9 +96,23 @@ class DenominationsInput extends Component {
 	 * @type {Object}
 	 */
 	nodeRefs = {};
+	/**
+	 * Errors of the fields
+	 * @type {Map}
+	 */
+	@observable
+	errors = new Map();
 
 	componentWillMount() {
 		this.updateFieldsNext();
+	}
+
+	/**
+	 * Simple alias
+	 * @param {string} path
+	 */
+	t(path) {
+		return this.props.localizer.t(path);
 	}
 
 	/**
@@ -70,7 +120,7 @@ class DenominationsInput extends Component {
 	 */
 	updateFieldsNext() {
 		this.props.values.forEach((field, index) => {
-			const fieldKey = field.label;
+			const fieldKey = getFieldKey(field);
 			const nextIndex = index === this.props.values.length - 1 ? null : index + 1;
 			const nextField = nextIndex ? this.props.values[nextIndex] : null;
 
@@ -85,8 +135,7 @@ class DenominationsInput extends Component {
 	 * @return {Object}
 	 */
 	getNextField(field) {
-		const fieldKey = field.label;
-		return this.fieldsNext[fieldKey];
+		return this.fieldsNext[getFieldKey(field)];
 	}
 
 	/**
@@ -103,61 +152,19 @@ class DenominationsInput extends Component {
 	 * Called when a number input value changed
 	 *
 	 * @param {Object} field
-	 * @param {Number} newValue
+	 * @param {Number} rawValue
 	 */
-	fieldValueChanged(field, newValue) {
-		if (this.props.onChangeValue) {
-			this.props.onChangeValue(field, newValue);
-		}
-	}
+	fieldValueChanged(field, rawValue) {
+		const newValue = rawValue === null ? 0 : rawValue;
 
-	/**
-	 * Returns a boolean indicating if a field component should regenerate based on its old a new
-	 * value.
-	 *
-	 * @param {Object} field
-	 * @return {Boolean}
-	 */
-	shouldRegenerateFieldComponent(field) {
-		const fieldKey = field.label;
-
-		// First, if the field is not alreay generated, return true
-		if (!this.fieldComponents[fieldKey]) {
-			return true;
-		}
-
-		// Return false if the value didn't change
-		if (typeof this.fieldCurrentValues[fieldKey] === 'number') {
-			if (this.fieldCurrentValues[fieldKey] === field.value) {
-				return false;
+		if (!validateValue(newValue)) {
+			this.errors.set(getFieldKey(field), this.t('errors.fieldInvalidValueShort'));
+		} else {
+			this.errors.delete(getFieldKey(field));
+			if (this.props.onChangeValue) {
+				this.props.onChangeValue(field, newValue);
 			}
 		}
-
-		return true;
-	}
-
-	/**
-	 * Returns the cached field component
-	 *
-	 * @param {Object} field
-	 * @return {Component}
-	 */
-	getCachedFieldComponent(field) {
-		const fieldKey = field.label;
-		return this.fieldComponents[fieldKey];
-	}
-
-	/**
-	 * Caches the component for a field
-	 *
-	 * @param {Object} field
-	 * @param {Component} component
-	 */
-	cacheFieldComponent(field, component) {
-		const fieldKey = field.label;
-
-		this.fieldComponents[fieldKey] = component;
-		this.fieldCurrentValues[fieldKey] = field.value;
 	}
 
 	/**
@@ -174,8 +181,7 @@ class DenominationsInput extends Component {
 	 * @param {Object} field
 	 */
 	focusField(field) {
-		const key = field.label;
-		this.nodeRefs[key].focus();
+		this.nodeRefs[getFieldKey(field)].focus();
 	}
 
 	/**
@@ -208,11 +214,12 @@ class DenominationsInput extends Component {
 		const returnKeyType = hasNext ? 'next' : this.props.returnKeyType;
 
 		return (
-			<View style={styles.field} key={field.label}>
+			<View style={styles.field} key={getFieldKey(field)}>
 				<Text style={styles.fieldLabel}>{ field.label }</Text>
 				<View style={styles.numberInputContainer}>
 					<NumberInput
-						ref={(node) => { this.nodeRefs[field.label] = node; }}
+						ref={(node) => { this.nodeRefs[getFieldKey(field)] = node; }}
+						error={this.errors.get(getFieldKey(field))}
 						defaultValue={field.value}
 						localizer={this.props.localizer}
 						onChangeValue={(val) => { this.fieldValueChanged(field, val); }}
@@ -261,15 +268,7 @@ class DenominationsInput extends Component {
 		const error = this.renderError();
 
 		this.props.values.forEach((field, index) => {
-			let renderedField;
-
-			if (this.shouldRegenerateFieldComponent(field)) {
-				renderedField = this.renderField(field);
-				this.cacheFieldComponent(field, renderedField);
-			} else {
-				renderedField = this.getCachedFieldComponent(field);
-			}
-
+			const renderedField = this.renderField(field);
 			const rowIndex = Math.floor(index / this.props.cols);
 
 			if (!fieldsInRows[rowIndex]) {

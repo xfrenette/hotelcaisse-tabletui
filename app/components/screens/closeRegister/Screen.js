@@ -60,6 +60,11 @@ class CloseRegisterScreen extends Component {
 	 */
 	denominationsValue = {};
 	/**
+	 * Values for the DenominationsInput
+	 * @type {array}
+	 */
+	denominationsInputValues = [];
+	/**
 	 * Object associating denominations to their quantity value.
 	 *
 	 * @type {Object}
@@ -100,6 +105,10 @@ class CloseRegisterScreen extends Component {
 
 		// We do it this way so Mobx can detect new keys
 		this.denominationsQuantity = newDenominationsQuantity;
+
+		this.denominationsInputValues = Object.entries(newDenominationsQuantity).map(
+			([label, value]) => ({ label, value })
+		);
 	}
 
 	/**
@@ -182,19 +191,6 @@ class CloseRegisterScreen extends Component {
 		if (field === 'POSTAmount') {
 			this.nodeRefs.cashAmount.focus();
 		}
-	}
-
-	/**
-	 * Returns an object to be passed to DenominationsInput containing all the denominations and
-	 * their quantity.
-	 *
-	 * @return {Object}
-	 */
-	@computed
-	get denominationsInputValues() {
-		return Object.entries(this.denominationsQuantity).map(
-			([label, value]) => ({ label, value })
-		);
 	}
 
 	/**
