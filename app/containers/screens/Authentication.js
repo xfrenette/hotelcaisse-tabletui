@@ -21,6 +21,15 @@ class Authentication extends Component {
 	status = null;
 
 	/**
+	 * Alias
+	 * @param {string} path
+	 * @return {string}
+	 */
+	t(path) {
+		return this.props.localizer.t(path);
+	}
+
+	/**
 	 * When the user tries to authenticate with a code, we try it and set the [status] property
 	 * accordingly.
 	 *
@@ -33,6 +42,8 @@ class Authentication extends Component {
 		this.props.auth.authenticate(code, uuid)
 			.then(() => {
 				this.status = 'success';
+				// Automatically finish when authenticated
+				this.finish();
 			})
 			.catch((error) => {
 				if (error === AUTH_ERRORS.AUTHENTICATION_FAILED) {
@@ -41,6 +52,14 @@ class Authentication extends Component {
 					this.status = 'error';
 				}
 			});
+	}
+
+	/**
+	 * Calls onFinish and shows a Toast
+	 */
+	finish() {
+		this.onFinish();
+		this.props.ui.showToast(this.t('auth.messages.success'));
 	}
 
 	/**

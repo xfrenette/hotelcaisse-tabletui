@@ -25,12 +25,12 @@ const Message = (props) => {
 		case 'warning':
 			textStyle.color = colors.warning;
 			viewStyle.push({ borderLeftColor: colors.warning });
-			icon = <Icon name="info-circle" style={textStyle} />;
+			icon = <Icon name="info-circle" style={[textStyle, styles.icon]} />;
 			break;
 		case 'error':
 			textStyle.color = colors.error;
 			viewStyle.push({ borderLeftColor: colors.error });
-			icon = <Icon name="info-circle" style={textStyle} />;
+			icon = <Icon name="exclamation-circle" style={[textStyle, styles.icon]} />;
 			break;
 		case 'info':
 		default:
@@ -56,7 +56,7 @@ Message.defaultProps = defaultProps;
 const colors = {
 	info: styleVars.colors.blue1,
 	warning: styleVars.colors.blue1,
-	error: styleVars.colors.blue1,
+	error: styleVars.colors.red1,
 };
 
 const styles = StyleSheet.create({

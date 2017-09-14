@@ -10,7 +10,8 @@ class TestAuth extends Auth {
 	}
 
 	// eslint-disable-next-line no-unused-vars
-	authenticate(code, deviceUUID) {
+	authenticate(code) {
+		console.log(code);
 		const codeIsValid = this.validCode === null || code === this.validCode;
 		let success = false;
 		let error = ERRORS.AUTHENTICATION_FAILED;

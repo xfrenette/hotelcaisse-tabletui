@@ -72,11 +72,10 @@ if (useReal) {
 	server.register = storedRegister;
 	server.maxOrderLoads = 2;
 
-	auth = new TestAuth();
-	auth.authenticated = true;
-	// auth.authenticated = false;
-	// auth.validCode = '1234';
-	// auth.delay = 500;
+	auth = new TestAuth(true);
+	auth.authenticated = false;
+	auth.validCode = '1234';
+	auth.delay = 4000;
 }
 
 const localBusinessStorage = new LocalStorage('hotelcaisse-app@business', Business);

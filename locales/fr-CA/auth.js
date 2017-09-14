@@ -1,13 +1,15 @@
 export default {
-	placeholder: 'Entrez le code',
+	placeholder: 'Code d\'autorisation',
+	intro: 'Votre appareil n\'est plus connecté au service. Veuillez vous reconnecter' +
+		' en saisissant un code d\'autorisation ci-dessous. Vous pouvez obtenir ce code depuis' +
+		' l\'écran de gestion des appareils de l\'interface d\'administration.',
 	messages: {
-		waiting: 'Veuillez saisir le code d\'authentification',
 		fail: 'Ce code d\'authentification est invalide. Veuillez recommencer.',
 		error: 'Une erreur s\'est produite, veuillez réessayer plus tard',
-		success: 'Connexion réussie',
-		authenticating: 'Connexion en cours, veuillez patienter...',
+		success: 'Autorisation réussie',
 	},
 	actions: {
-		finish: 'Aller à l\'écran d\'accueil',
+		authenticate: 'Autoriser',
+		authenticating: 'Autorisation en cours...',
 	},
 };

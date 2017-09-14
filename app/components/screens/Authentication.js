@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
-import { Keypad, Text, Button } from '../elements';
+import { Text, Button, TextInput, Title, Message } from '../elements';
 import { Container } from '../layout';
+import styleVars from '../../styles/variables';
+import layoutStyles from '../../styles/layout';
+import buttonStyles from '../../styles/buttons';
 
 const propTypes = {
 	status: PropTypes.string,
@@ -75,21 +78,7 @@ class Authentication extends Component {
 		}
 	}
 
-	/**
-	 * When authentication is successful and we are finished with the login screen.
-	 */
-	onFinish() {
-		if (this.props.onFinish) {
-			this.props.onFinish();
-		}
-	}
-
-	/**
-	 * Renders the keypad to enter the code and its messages.
-	 *
-	 * @return {Node}
-	 */
-	renderKeypad() {
+	get authMessage() {
 		let message;
 
 		switch (this.props.status) {
@@ -99,58 +88,66 @@ class Authentication extends Component {
 			case 'error':
 				message = this.t('auth.messages.error');
 				break;
-			case 'authenticating':
-				message = this.t('auth.messages.authenticating');
-				break;
 			default:
-				message = this.t('auth.messages.waiting');
+				message = null;
 				break;
+		}
+
+		return message;
+	}
+
+	renderForm() {
+		const isAuthenticating = this.props.status === 'authenticating';
+		const buttonText = this.t(`auth.actions.${isAuthenticating ? 'authenticating' : 'authenticate'}`);
+		const buttonLayout = isAuthenticating ? buttonStyles.disabled : buttonStyles.primary;
+		const message = this.authMessage;
+		let messageNode = null;
+
+		if (message) {
+			messageNode = (
+				<Message type="error">{ message }</Message>
+			);
 		}
 
 		return (
 			<View>
-				<Text>{ message }</Text>
-				<Keypad
-					placeholder={this.t('auth.placeholder')}
-					submitLabel={this.t('actions.ok')}
-					value={this.code}
-					onChange={(val) => { this.code = val; }}
-					onSubmit={() => { this.tryAuthenticate(); }}
-				/>
-			</View>
-		);
-	}
-
-	/**
-	 * Renders the content when authentication was successful
-	 *
-	 * @return {Node}
-	 */
-	renderSuccess() {
-		return (
-			<View>
-				<Text>{ this.t('auth.messages.success') }</Text>
-				<Button
-					title={ this.t('auth.actions.finish') }
-					onPress={() => { this.onFinish(); }}
-				/>
+				<Title style={layoutStyles.title}>Autorisation</Title>
+				<View style={layoutStyles.block}>
+					<Text>{ this.t('auth.intro') }</Text>
+				</View>
+				<View style={layoutStyles.block}>
+					<View style={viewStyles.inputContainer}>
+						<View style={viewStyles.input}>
+							<TextInput
+								style={textStyles.input}
+								placeholder={this.t('auth.placeholder')}
+								placeholderTextColor={styleVars.colors.grey1}
+								keyboardType="numeric"
+								value={this.code}
+								onChangeText={(t) => { this.code = t; }}
+								onSubmitEditing={() => { this.tryAuthenticate(); }}
+								selectTextOnFocus
+							/>
+						</View>
+					</View>
+					{ messageNode }
+				</View>
+				<View style={viewStyles.actions}>
+					<Button
+						title={buttonText}
+						layout={buttonLayout}
+						onPress={() => { this.tryAuthenticate(); }}
+					/>
+				</View>
 			</View>
 		);
 	}
 
 	render() {
-		let content;
-
-		if (this.props.status === 'success') {
-			content = this.renderSuccess();
-		} else {
-			content = this.renderKeypad();
-		}
-
 		return (
-			<View style={styles.authentication}>
+			<View style={viewStyles.authentication}>
 				<Container layout="oneColCentered">
-					{ content }
+					{ this.renderForm() }
 				</Container>
 			</View>
 		);
@@ -160,10 +157,26 @@ class Authentication extends Component {
 Authentication.propTypes = propTypes;
 Authentication.defaultProps = defaultProps;
 
-const styles = {
+const viewStyles = {
 	authentication: {
 		flex: 1,
 		justifyContent: 'center',
+	},
+	input: {
+		width: 200,
+	},
+	inputContainer: {
+		alignItems: 'center',
+	},
+	actions: {
+		alignItems: 'flex-end',
+	},
+};
+
+const textStyles = {
+	input: {
+		textAlign: 'center',
+		fontSize: styleVars.bigFontSize,
 	},
 };
 
