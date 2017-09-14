@@ -8,3 +8,8 @@ Solution: The problem is caused by `cldrjs`, used in `globalize`, used in `js-ap
 When developping, do not make a symbolic link to `js-app` if it has its own `node_modules/` 
 folder, since you might run into problems when `js-app` wants to make sure an instance of (for 
 example) a `Decimal` is passed from `tablet-ui`, but they each have their own `decimal.js` library. 
+
+Error: setTimeout seems to execute immediately or before it should.
+Reason: it happens when enabling debug with chrome and is caused by the device and the computer 
+not having the same time.
+Solution: no solution. Disable remote debugging.
