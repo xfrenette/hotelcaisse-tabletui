@@ -1,9 +1,9 @@
 export default {
 	actions: {
 		newOrder: 'Nouvelle inscription',
-		findOrder: 'Retrouver une fiche',
+		findOrder: 'Voir les fiches',
 		openRegister: 'Ouvrir la caisse',
 		closeRegister: 'Fermer la caisse',
-		manageRegister: 'Gérer la caisse',
+		manageRegister: 'Entrée/sortie d\'argent',
 	},
 };
