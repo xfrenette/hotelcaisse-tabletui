@@ -294,7 +294,7 @@ class UI {
 	 */
 	isInitialScreen() {
 		const currentPath = this.history.location.pathname;
-		const baseScreenPaths = ['/'];
+		const baseScreenPaths = ['/', '/loading', '/authenticate'];
 		return baseScreenPaths.indexOf(currentPath) !== -1;
 	}
 
