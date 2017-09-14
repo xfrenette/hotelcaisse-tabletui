@@ -91,7 +91,7 @@ let storages = [
 	new BusinessServerReader(server),
 ];
 if (useLocalStorage) {
-	storages.push(localBusinessStorage);
+	storages.unshift(localBusinessStorage);
 }
 const businessStorage = new FirstReader(storages);
 
@@ -101,7 +101,7 @@ storages = [
 	new RegisterServerReader(server),
 ];
 if (useLocalStorage) {
-	storages.push(localRegisterStorage);
+	storages.unshift(localRegisterStorage);
 }
 const registerStorage = new FirstReader(storages);
 
