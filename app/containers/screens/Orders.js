@@ -134,6 +134,7 @@ class Orders extends Component {
 				onOrderPress={(order) => { this.onOrderPress(order); }}
 				onRefresh={() => { this.onRefresh(); }}
 				onDone={() => { this.onDone(); }}
+				onPressHome={() => { this.onDone(); }}
 				onLoadNextOrders={() => this.onLoadNextOrders()}
 			/>
 		);
