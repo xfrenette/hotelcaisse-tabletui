@@ -1,10 +1,13 @@
 import Decimal from 'decimal.js';
 import CashMovement from 'hotelcaisse-app/dist/business/CashMovement';
 import Register from 'hotelcaisse-app/dist/business/Register';
+import Device from 'hotelcaisse-app/dist/business/Device';
 
 /**
- * Returns a Register instance that is the "locally saved" Register instance when the app starts.
+ * Returns a Device instance that is the "locally saved" Device instance when the app starts.
  */
+
+const device = new Device();
 
 const register = new Register();
 register.uuid = 'register-uuid';
@@ -21,4 +24,6 @@ register.open('Xavier Frenette', new Decimal(100));
 register.addCashMovement(cashMovement1);
 register.addCashMovement(cashMovement2);
 
-export default register;
+device.currentRegister = register;
+
+export default device;

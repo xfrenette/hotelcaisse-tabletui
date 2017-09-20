@@ -4,7 +4,7 @@ import dummyOrder from './dummyOrder';
 class TestServer extends Server {
 	delay = 0;
 	business = null;
-	register = null;
+	device = null;
 	ordersLoadingCount = 0;
 	// After this amount of loading, we return an empty array. Set to null to disable
 	maxOrderLoads = null;
@@ -49,8 +49,8 @@ class TestServer extends Server {
 		return this.resolveInDelay(this.business);
 	}
 
-	getRegister() {
-		return this.resolveInDelay(this.register);
+	getDevice() {
+		return this.resolveInDelay(this.device);
 	}
 
 	resolveInDelay(data) {

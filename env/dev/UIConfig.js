@@ -3,23 +3,23 @@ import ApiServer from 'hotelcaisse-app/dist/servers/Api';
 import ApiAuth from 'hotelcaisse-app/dist/auth/ApiServer';
 import Business from 'hotelcaisse-app/dist/business/Business';
 import Order from 'hotelcaisse-app/dist/business/Order';
+import Device from 'hotelcaisse-app/dist/business/Device';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
-import Register from 'hotelcaisse-app/dist/business/Register';
 import BusinessAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Business';
-import RegisterAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Register';
+import DeviceAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Device';
 import ServerAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Server';
 import ApiServerUpdatesListener from 'hotelcaisse-app/dist/plugins/apiServer/UpdatesListener';
 import ApiServerPing from 'hotelcaisse-app/dist/plugins/apiServer/Ping';
 import FirstReader from 'hotelcaisse-app/dist/io/readers/First';
 import BusinessServerReader from 'hotelcaisse-app/dist/io/readers/business/Server';
-import RegisterServerReader from 'hotelcaisse-app/dist/io/readers/register/Server';
+import DeviceServerReader from 'hotelcaisse-app/dist/io/readers/device/Server';
 import BusinessSaveServer from 'hotelcaisse-app/dist/plugins/autosave/business/ToServer';
-import RegisterSaveServer from 'hotelcaisse-app/dist/plugins/autosave/register/ToServer';
+import DeviceSaveServer from 'hotelcaisse-app/dist/plugins/autosave/device/ToServer';
 import BusinessSaveWriter from 'hotelcaisse-app/dist/plugins/autosave/business/ToWriter';
-import RegisterSaveWriter from 'hotelcaisse-app/dist/plugins/autosave/register/ToWriter';
+import DeviceSaveWriter from 'hotelcaisse-app/dist/plugins/autosave/device/ToWriter';
 import LocalStorage from '../../app/io/dual/Local';
 import storedBusiness from './storedBusiness';
-import storedRegister from './storedRegister';
+import storedDevice from './storedDevice';
 import UILogger from '../../app/lib/UILogger';
 import TestAuth from '../../tests/mock/TestAuth';
 import TestServer from '../../tests/mock/TestServer';
@@ -46,7 +46,7 @@ businessStorage.delay = 3000;
 
 */
 
-const useReal = false;
+const useReal = true;
 const useLocalStorage = false;
 let server;
 let auth;
@@ -69,19 +69,19 @@ if (useReal) {
 	server.localizer = dummyLocalizer;
 	//server.delay = 2000;
 	server.business = storedBusiness;
-	server.register = storedRegister;
+	server.device = storedDevice;
 	server.maxOrderLoads = 2;
 
-	auth = new TestAuth(true);
+	auth = new TestAuth();
 	auth.authenticated = false;
 	auth.validCode = '1234';
 	auth.delay = 4000;
 }
 
 const localBusinessStorage = new LocalStorage('hotelcaisse-app@business', Business);
-const localRegisterStorage = new LocalStorage('hotelcaisse-app@register', Register);
+const localDeviceStorage = new LocalStorage('hotelcaisse-app@device', Device);
 
-localStorages['Register'] = localRegisterStorage;
+localStorages['Device'] = localDeviceStorage;
 localStorages['Business'] = localBusinessStorage;
 
 // 'First' reader for the Business: takes different readers and returns the data of the first that
@@ -94,15 +94,15 @@ if (useLocalStorage) {
 }
 const businessStorage = new FirstReader(storages);
 
-// 'First' reader for the Register: takes different readers and returns the data of the first that
+// 'First' reader for the Device: takes different readers and returns the data of the first that
 // resolves and doesn't return null
 storages = [
-	new RegisterServerReader(server),
+	new DeviceServerReader(server),
 ];
 if (useLocalStorage) {
-	storages.unshift(localRegisterStorage);
+	storages.unshift(localDeviceStorage);
 }
-const registerStorage = new FirstReader(storages);
+const deviceStorage = new FirstReader(storages);
 
 const appConfig = {
 	logger,
@@ -110,11 +110,11 @@ const appConfig = {
 		// Autoload the business
 		new BusinessAutoload(businessStorage),
 		// Autoload the business
-		new RegisterAutoload(registerStorage),
+		new DeviceAutoload(deviceStorage),
 		// Auto save Business to server
 		new BusinessSaveServer(server),
-		// Auto save Register to server
-		new RegisterSaveServer(server),
+		// Auto save Device to server
+		new DeviceSaveServer(server),
 	],
 };
 
@@ -124,7 +124,7 @@ if (useLocalStorage) {
 
 	// Auto save Business to local
 	appConfig.plugins.unshift(new BusinessSaveWriter(localBusinessStorage));
-	appConfig.plugins.unshift(new RegisterSaveWriter(localRegisterStorage));
+	appConfig.plugins.unshift(new DeviceSaveWriter(localDeviceStorage));
 }
 
 if (useReal) {
@@ -156,7 +156,7 @@ module.exports = {
 	// initialRoutes: [loadingPath],
 	// initialRoutes: ['/', orderPath],
 	// initialRoutes: ['/', '/orders'],
-	// initialRoutes: ['/', '/register/manage'],
+	// initialRoutes: ['/register/manage'],
 	uuidGenerator: new UUIDGenerator(),
 	auth,
 	locale: 'fr-CA',
