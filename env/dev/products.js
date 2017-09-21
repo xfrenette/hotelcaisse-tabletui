@@ -87,7 +87,7 @@ productsData.forEach((productData) => {
 		});
 	}
 
-	if (productData.price) {
+	if (productData.price !== undefined) {
 		setProductPrice(product, productData.price);
 	}
 });

@@ -38,6 +38,8 @@ function dummyCustomer(fields) {
 			customer.setFieldValue(field, faker.internet.email());
 		} else if (field.type === 'PhoneField') {
 			customer.setFieldValue(field, faker.phone.phoneNumber());
+		} else if (field.type === 'YesNoField') {
+			customer.setFieldValue(field, faker.random.arrayElement(['1', '0']));
 		}
 	});
 
