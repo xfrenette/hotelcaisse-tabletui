@@ -164,7 +164,6 @@ const cellStyles = {
 		flex: 1,
 	},
 	subtotal: {
-		width: 100,
 		alignItems: 'flex-end',
 	},
 	date: {

@@ -373,7 +373,6 @@ const cellStyles = {
 		flex: 1,
 	},
 	totalPrice: {
-		width: 85,
 		alignItems: 'flex-end',
 	},
 	quantity: {
