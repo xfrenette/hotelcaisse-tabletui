@@ -209,6 +209,7 @@ class UI {
 			logger: this.logger,
 			business: this.app ? this.app.business : null,
 			register: this.app ? this.app.register : null,
+			device: this.app ? this.app.device : null,
 			ordersServer: this.ordersServer,
 		};
 	}

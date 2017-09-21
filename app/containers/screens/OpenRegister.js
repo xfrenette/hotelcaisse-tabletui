@@ -3,7 +3,7 @@ import { inject } from 'mobx-react/native';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import OpenRegisterScreen from '../../components/screens/openRegister/Screen';
 
-@inject('router', 'register', 'localizer', 'ui', 'uuidGenerator')
+@inject('router', 'register', 'device', 'localizer', 'ui', 'uuidGenerator')
 class OpenRegister extends Component {
 	componentWillMount() {
 		this.opening = false;
@@ -21,8 +21,11 @@ class OpenRegister extends Component {
 	 */
 	onOpen(employee, amount) {
 		const uuid = this.props.uuidGenerator.generate();
+		const number = this.props.device.bumpRegisterNumber();
+
 		const newRegister = new Register();
 		newRegister.uuid = uuid;
+		newRegister.number = number;
 		this.props.register.update(newRegister);
 		this.props.register.open(employee, amount);
 

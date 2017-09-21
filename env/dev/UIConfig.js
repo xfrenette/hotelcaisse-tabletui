@@ -46,8 +46,8 @@ businessStorage.delay = 3000;
 
 */
 
-const useReal = true;
-const useLocalStorage = false;
+const useReal = false;
+const useLocalStorage = true;
 let server;
 let auth;
 const localStorages = {};
@@ -73,9 +73,9 @@ if (useReal) {
 	server.maxOrderLoads = 2;
 
 	auth = new TestAuth();
-	auth.authenticated = false;
-	auth.validCode = '1234';
-	auth.delay = 4000;
+	auth.authenticated = true;
+	// auth.validCode = '1234';
+	// auth.delay = 4000;
 }
 
 const localBusinessStorage = new LocalStorage('hotelcaisse-app@business', Business);
