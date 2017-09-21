@@ -216,19 +216,24 @@ export default {
 	},
 	quitNotSaved: {
 		new: {
-			title: 'Définir comme brouillon ?',
-			message: 'Cette inscription n\'a pas été enregistrée. Souhaitez-vous la définir comme' +
-			' brouillon pour la continuer plus tard ?',
+			title: 'Enregistrer le brouillon ?',
+			message: 'Cette inscription n\'a pas été enregistrée. Souhaitez-vous l\'enregistrer' +
+			' comme brouillon pour la continuer plus tard ?',
+			actions: {
+				saveDraft: 'Enr. brou.'
+			},
 		},
 		old: {
-			title: 'Quitter sans enregistrer',
-			message: 'Si vous quittez, les modifications seront perdues. Souhaitez-vous quitter ?',
+			title: 'Les modifications seront perdues',
+			message: 'Si vous quittez, les modifications seront perdues. Souhaitez-vous' +
+			' quitter ?',
 		},
 	},
 	notValid: {
 		title: 'Inscription non complète',
-		message: 'Cette inscription n\'est pas bien complétée. Assurez-vous d\'avoir bien saisi' +
-		' les informations du client et que les items, transactions et crédits sont tous valides.',
+		message: 'Vous ne pouvez pas enregistrer cette inscription avant de l\'avoir complétée.' +
+		' Assurez-vous d\'avoir bien saisi les informations du client et que les items,' +
+		' transactions et crédits sont tous valides.',
 	},
 	list: {
 		empty: 'Aucune fiche n\'a encore été créée.',

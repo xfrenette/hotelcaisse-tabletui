@@ -96,8 +96,8 @@ class OrderScreen extends Component {
 				this.t('order.quitNotSaved.new.message'),
 				[
 					{ text: this.t('actions.cancel') },
-					{ text: this.t('actions.no'), onPress: () => { callback.call(); } },
-					{ text: this.t('actions.yes'), onPress: () => { this.saveDraft(); callback.call(); } },
+					{ text: this.t('order.quitNotSaved.new.actions.saveDraft'), onPress: () => { this.saveDraft(); callback.call(); } },
+					{ text: this.t('actions.leave'), onPress: () => { callback.call(); } },
 				],
 			)
 		} else {
@@ -105,8 +105,8 @@ class OrderScreen extends Component {
 				this.t('order.quitNotSaved.old.title'),
 				this.t('order.quitNotSaved.old.message'),
 				[
-					{ text: this.t('actions.no') },
-					{ text: this.t('actions.yes'), onPress: () => { callback.call(); } },
+					{ text: this.t('actions.cancel') },
+					{ text: this.t('actions.leave'), onPress: () => { callback.call(); } },
 				],
 			)
 		}
@@ -134,7 +134,8 @@ class OrderScreen extends Component {
 		} else {
 			this.props.ui.showErrorAlert(
 				this.t('order.notValid.title'),
-				this.t('order.notValid.message')
+				this.t('order.notValid.message'),
+				this.t('actions.ok'),
 			);
 		}
 	}

@@ -240,11 +240,11 @@ class UI {
 	 * @param {String} title
 	 * @param {String} message
 	 */
-	showErrorAlert(title, message) {
+	showErrorAlert(title, message, actionText = null) {
 		Alert.alert(
 			title,
 			message,
-			[{ text: this.localizer.t('actions.retry') }],
+			[{ text: actionText || this.localizer.t('actions.retry') }],
 			{ cancelable: false }
 		);
 	}
