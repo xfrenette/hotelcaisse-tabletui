@@ -1,9 +1,11 @@
+import Decimal from 'decimal.js';
 import Application from 'hotelcaisse-app/dist/Application';
 import ApiServer from 'hotelcaisse-app/dist/servers/Api';
 import ApiAuth from 'hotelcaisse-app/dist/auth/ApiServer';
 import Business from 'hotelcaisse-app/dist/business/Business';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Device from 'hotelcaisse-app/dist/business/Device';
+import Register from 'hotelcaisse-app/dist/business/Register';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import BusinessAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Business';
 import DeviceAutoload from 'hotelcaisse-app/dist/plugins/loadOnInit/Device';
@@ -147,6 +149,17 @@ const loadingPath = {
 		redirectWhenLoaded: false,
 	},
 };
+const falseRegister = new Register();
+falseRegister.number = 1234;
+falseRegister.open('Xavier Test', new Decimal(100));
+falseRegister.close(new Decimal(265.36), '8542', new Decimal(968.41));
+
+const registerClosedPath = {
+	pathname: '/register/closed',
+	state: {
+		register: falseRegister,
+	},
+};
 
 // module.exports instead of export because it is an optional require in index.
 module.exports = {
@@ -156,7 +169,7 @@ module.exports = {
 	// initialRoutes: [loadingPath],
 	// initialRoutes: ['/', orderPath],
 	// initialRoutes: ['/', '/orders'],
-	// initialRoutes: ['/register/manage'],
+	// initialRoutes: [registerClosedPath],
 	uuidGenerator: new UUIDGenerator(),
 	auth,
 	locale: 'fr-CA',

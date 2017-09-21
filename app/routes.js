@@ -4,6 +4,7 @@ import LocalStorages from './containers/screens/dev/LocalStorages';
 import Authentication from './containers/screens/Authentication';
 import OpenRegister from './containers/screens/OpenRegister';
 import CloseRegister from './containers/screens/CloseRegister';
+import RegisterClosed from './containers/screens/RegisterClosed';
 import ManageRegister from './containers/screens/ManageRegister';
 import OrderItems from './containers/screens/OrderItems';
 import CustomerRoomSelections from './containers/screens/CustomerRoomSelections';
@@ -47,6 +48,7 @@ export default ui => ({
 							guards: [new RegisterNotOpenedGuard(ui.app.register)],
 							routes: [
 								{ path: '/register/open', component: OpenRegister },
+								{ path: '/register/closed', component: RegisterClosed },
 							],
 						},
 					],

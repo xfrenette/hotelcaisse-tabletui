@@ -14,7 +14,4 @@ export default {
 	actions: {
 		close: 'Fermer la caisse',
 	},
-	messages: {
-		closed: 'Caisse fermée',
-	},
 };

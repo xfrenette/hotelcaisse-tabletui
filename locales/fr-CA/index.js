@@ -4,6 +4,7 @@ import errors from './errors';
 import home from './home';
 import openRegister from './openRegister';
 import closeRegister from './closeRegister';
+import registerClosed from './registerClosed';
 import manageRegister from './manageRegister';
 import order from './order';
 import customer from './customer';
@@ -20,6 +21,7 @@ export default {
 	home,
 	openRegister,
 	closeRegister,
+	registerClosed,
 	manageRegister,
 	order,
 	customer,

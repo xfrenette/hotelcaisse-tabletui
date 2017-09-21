@@ -8,6 +8,7 @@ import Device from 'hotelcaisse-app/dist/business/Device';
  */
 
 const device = new Device();
+device.nextRegisterNumber = 1234;
 
 const register = new Register();
 register.uuid = 'register-uuid';

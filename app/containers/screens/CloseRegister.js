@@ -17,15 +17,18 @@ class CloseRegister extends Component {
 		const register = this.props.register;
 		register.close(amount, POSTRef, POSTAmount);
 
-		this.props.ui.showToast(this.t('closeRegister.messages.closed'));
-		this.props.router.replace('/');
+		const path = {
+			pathname: '/register/closed',
+			state: {
+				register: register,
+			},
+		};
+
+		this.props.router.replace(path);
 	}
 
 	/**
-	 * Cancels the opening, redirects to the home page and shows the message (as a Toast) if
-	 * supplied.
-	 *
-	 * @param {String} message
+	 * Cancels the opening and redirects to the home page.
 	 */
 	onCancel() {
 		this.props.router.replace('/');

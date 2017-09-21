@@ -28,6 +28,9 @@ export default {
 		close: {
 			title: 'Fermeture de caisse',
 		},
+		closed: {
+			title: 'Caisse fermée',
+		},
 		manage: {
 			title: 'Gestion de caisse',
 		},
