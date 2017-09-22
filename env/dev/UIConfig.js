@@ -1,4 +1,5 @@
 import Decimal from 'decimal.js';
+import BackgroundTimer from 'react-native-background-timer';
 import Application from 'hotelcaisse-app/dist/Application';
 import ApiServer from 'hotelcaisse-app/dist/servers/Api';
 import ApiAuth from 'hotelcaisse-app/dist/auth/ApiServer';
@@ -48,8 +49,8 @@ businessStorage.delay = 3000;
 
 */
 
-const useReal = false;
-const useLocalStorage = true;
+const useReal = true;
+const useLocalStorage = false;
 let server;
 let auth;
 const localStorages = {};
@@ -64,6 +65,7 @@ if (useReal) {
 	server = new ApiServer('http://192.168.137.1:8000/api/1.0/hirdl');
 	server.writer = serverStorage;
 	server.setLogger(logger);
+	server.setTimeout = (cb, delay) => BackgroundTimer.setTimeout(cb, delay);
 	auth = new ApiAuth(server);
 	localStorages['ApiServer'] = serverStorage;
 } else {
@@ -106,6 +108,10 @@ if (useLocalStorage) {
 }
 const deviceStorage = new FirstReader(storages);
 
+const apiServerPingPlugin = new ApiServerPing(server);
+// Must be inside a function
+apiServerPingPlugin.setInterval = (cb, delay) => BackgroundTimer.setInterval(cb, delay);
+
 const appConfig = {
 	logger,
 	plugins: [
@@ -117,6 +123,7 @@ const appConfig = {
 		new BusinessSaveServer(server),
 		// Auto save Device to server
 		new DeviceSaveServer(server),
+		apiServerPingPlugin,
 	],
 };
 
@@ -132,7 +139,6 @@ if (useLocalStorage) {
 if (useReal) {
 	appConfig.plugins.unshift(new ServerAutoload(serverStorage, server)); // must be first
 	appConfig.plugins.unshift(new ApiServerUpdatesListener(server));
-	// appConfig.plugins.push(new ApiServerPing(server));
 }
 
 const app = new Application(appConfig);

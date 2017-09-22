@@ -53,6 +53,11 @@ class TestServer extends Server {
 		return this.resolveInDelay(this.device);
 	}
 
+	ping() {
+		console.log('testserver ping');
+		return this.resolveInDelay(null);
+	}
+
 	resolveInDelay(data) {
 		return new Promise((resolve) => {
 			if (this.delay === 0) {
