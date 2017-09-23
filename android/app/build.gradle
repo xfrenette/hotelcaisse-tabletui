@@ -100,7 +100,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.hotelcaisse"
+        applicationId "com.xavierfrenette.hirdlpos"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

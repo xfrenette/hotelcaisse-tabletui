@@ -1,4 +1,4 @@
-package com.hotelcaisse;
+package com.xavierfrenette.hirdlpos;
 
 import android.app.Application;
 

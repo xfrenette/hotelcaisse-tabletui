@@ -9,7 +9,7 @@ if (__DEV__) {
 	UIConfig = require('./env/dev/UIConfig');
 }
 
-export default class HotelCaisse extends Component {
+export default class HIRDLPOS extends Component {
 	constructor(props) {
 		super(props);
 
@@ -28,4 +28,4 @@ export default class HotelCaisse extends Component {
 	}
 }
 
-AppRegistry.registerComponent('HotelCaisse', () => HotelCaisse);
+AppRegistry.registerComponent('HIRDLPOS', () => HIRDLPOS);
