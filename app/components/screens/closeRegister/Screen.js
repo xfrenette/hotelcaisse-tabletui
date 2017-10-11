@@ -29,6 +29,7 @@ const propTypes = {
 	onCancel: PropTypes.func,
 	onClose: PropTypes.func,
 	validate: PropTypes.func,
+	cashFloat: PropTypes.number,
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 };
 
@@ -36,6 +37,7 @@ const defaultProps = {
 	onCancel: null,
 	onClose: null,
 	validate: null,
+	cashFloat: 0,
 };
 
 @observer

@@ -22,7 +22,7 @@ import styleVars from '../../../styles/variables';
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
-	cashToLeave: PropTypes.number.isRequired,
+	cashFloat: PropTypes.number.isRequired,
 	register: PropTypes.instanceOf(Register).isRequired,
 	onHome: PropTypes.func,
 };
@@ -46,8 +46,8 @@ class RegisterClosedScreen extends Component {
 	render() {
 		const register = this.props.register;
 
-		const cashToLeaveText = this.props.localizer.formatCurrency(this.props.cashToLeave);
-		const totalCash = register.closingCash.sub(this.props.cashToLeave);
+		const cashFloatText = this.props.localizer.formatCurrency(this.props.cashFloat);
+		const totalCash = register.closingCash;
 		const totalCashText = this.props.localizer.formatCurrency(totalCash.toNumber());
 		const postAmountText = this.props.localizer.formatCurrency(register.POSTAmount.toNumber());
 		const total = totalCash.add(register.POSTAmount);
@@ -64,7 +64,7 @@ class RegisterClosedScreen extends Component {
 					<Container layout="oneColCentered">
 						<View style={layoutStyles.block}>
 							<Title style={layoutStyles.title}>{ this.t('registerClosed.instructions.title') }</Title>
-							<Text>{ this.t('registerClosed.instructions.message', { cashLeft: cashToLeaveText}) }</Text>
+							<Text>{ this.t('registerClosed.instructions.message', { cashLeft: cashFloatText}) }</Text>
 						</View>
 						<View style={viewStyles.graphic}>
 							<View style={viewStyles.bill}>

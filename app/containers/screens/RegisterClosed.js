@@ -3,7 +3,7 @@ import { inject } from 'mobx-react/native';
 import get from 'lodash.get';
 import RegisterClosedScreen from '../../components/screens/registerClosed/Screen';
 
-@inject('router', 'localizer')
+@inject('router', 'localizer', 'device')
 class RegisterClosed extends Component {
 	register = null;
 
@@ -24,7 +24,7 @@ class RegisterClosed extends Component {
 			<RegisterClosedScreen
 				localizer={this.props.localizer}
 				register={this.register}
-				cashToLeave={100}
+				cashFloat={this.props.device.settings.registers.cashFloat}
 				onHome={() => { this.onHome(); }}
 				onDone={() => { this.onDone(); }}
 			/>

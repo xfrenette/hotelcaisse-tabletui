@@ -3,17 +3,19 @@ import { inject } from 'mobx-react/native';
 import Register from 'hotelcaisse-app/dist/business/Register';
 import CloseRegisterScreen from '../../components/screens/closeRegister/Screen';
 
-@inject('router', 'business', 'register', 'localizer', 'ui')
+@inject('router', 'business', 'register', 'localizer', 'ui', 'device')
 class CloseRegister extends Component {
 	/**
 	 * Closes the register. It is the responsibility of the component to ensure the data is valid
 	 * calling this method (see the validate method).
 	 *
-	 * @param {Decimal} amount
+	 * @param {Decimal} rawAmount
 	 * @param {String} POSTRef
 	 * @param {Decimal} POSTAmount
 	 */
-	onClose(amount, POSTRef, POSTAmount) {
+	onClose(rawAmount, POSTRef, POSTAmount) {
+		const cashFloat = this.props.device.settings.registers.cashFloat;
+		const amount = rawAmount.sub(cashFloat);
 		const register = this.props.register;
 		register.close(amount, POSTRef, POSTAmount);
 
@@ -60,6 +62,7 @@ class CloseRegister extends Component {
 				onCancel={(msg) => { this.onCancel(msg); }}
 				onClose={(amount, POSTRef, POSTAmount) => { this.onClose(amount, POSTRef, POSTAmount); }}
 				localizer={this.props.localizer}
+				cashFloat={this.props.device.settings.registers.cashFloat}
 				moneyDenominations={this.props.ui.settings.moneyDenominations}
 				validate={values => this.validate(values)}
 			/>
