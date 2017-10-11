@@ -2,6 +2,7 @@ import { Alert, BackHandler, Platform, ToastAndroid } from 'react-native';
 import { observable } from 'mobx';
 import { createMemoryHistory } from 'history';
 import DefaultAuth from 'hotelcaisse-app/dist/auth/Auth';
+import Logger from 'hotelcaisse-app/dist/loggers/Logger';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
 import { RouterStore, syncHistoryWithStore } from './mobx-react-router';
 import routesDef from '../routes';
@@ -66,6 +67,12 @@ class UI {
 	 * @type {HotelCaisse-app}
 	 */
 	app = null;
+	/**
+	 * Logger class the app will use. Defaults to a Logger that does nothing.
+	 *
+	 * @type Logger
+	 */
+	logger = new Logger();
 	/**
 	 * Promise of the application loading. When the UI starts, it shows a loading that will stay
 	 * until this Promise resolves. By default, resolves immediately. See start().
