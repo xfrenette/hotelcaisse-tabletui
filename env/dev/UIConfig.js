@@ -50,7 +50,7 @@ businessStorage.delay = 3000;
 */
 
 const useReal = true;
-const useLocalStorage = false;
+const useLocalStorage = true;
 let server;
 let auth;
 const localStorages = {};
@@ -60,10 +60,13 @@ const dummyLocalizer = new Localizer('fr-CA', 'CAD');
 const logger = new UILogger();
 
 if (useReal) {
-	serverStorage = new LocalStorage('hotelcaisse-app@server');
+	serverStorage = new LocalStorage('com.xavierfrenette.hirdlpos@server');
 	// Do not forget to set application later
 	server = new ApiServer('http://192.168.137.1:8000/api/1.0/hirdl');
-	server.writer = serverStorage;
+	// server = new ApiServer('https://venteshirdl.com/api/1.0/hirdl');
+	if (useLocalStorage) {
+		server.writer = serverStorage;
+	}
 	server.setLogger(logger);
 	server.setTimeout = (cb, delay) => BackgroundTimer.setTimeout(cb, delay);
 	auth = new ApiAuth(server);
@@ -82,8 +85,8 @@ if (useReal) {
 	// auth.delay = 4000;
 }
 
-const localBusinessStorage = new LocalStorage('hotelcaisse-app@business', Business);
-const localDeviceStorage = new LocalStorage('hotelcaisse-app@device', Device);
+const localBusinessStorage = new LocalStorage('com.xavierfrenette.hirdlpos@business', Business);
+const localDeviceStorage = new LocalStorage('com.xavierfrenette.hirdlpos@device', Device);
 
 localStorages['Device'] = localDeviceStorage;
 localStorages['Business'] = localBusinessStorage;

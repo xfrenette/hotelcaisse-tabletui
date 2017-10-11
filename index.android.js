@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
 import UI from './app/containers/UI';
 import UIApp from './app/lib/UI';
+import DEVConfig from './env/dev/UIConfig';
+import PRODConfig from './env/prod/UIConfig';
 
-let UIConfig = {};
-
-if (__DEV__) {
-	UIConfig = require('./env/dev/UIConfig');
-}
+const UIConfig = __DEV__ ? DEVConfig : PRODConfig;
 
 export default class HIRDLPOS extends Component {
 	constructor(props) {
