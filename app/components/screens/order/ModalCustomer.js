@@ -90,6 +90,7 @@ class ModalCustomer extends Component {
 				actions={actions}
 				title={this.t('order.customer.modal.title')}
 				animationType="slide"
+				onRequestClose={() => {/* do nothing */}}
 				fullScreen
 			>
 				<Container layout="oneColCentered">
