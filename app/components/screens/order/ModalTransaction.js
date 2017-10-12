@@ -8,11 +8,12 @@ import TransactionMode from 'hotelcaisse-app/dist/business/TransactionMode';
 import { Dropdown, Modal, NumberInput } from '../../elements';
 import { Field, Group, Label } from '../../elements/form';
 
+const EMPTY_TRANSACTION_MODE = '__empty__';
 
 const propTypes = {
 	localizer: PropTypes.instanceOf(Localizer).isRequired,
 	transactionModes: PropTypes.arrayOf(PropTypes.instanceOf(TransactionMode)).isRequired,
-	transactionMode: PropTypes.instanceOf(TransactionMode).isRequired,
+	transactionMode: PropTypes.instanceOf(TransactionMode),
 	amount: PropTypes.number.isRequired,
 	isNew: PropTypes.bool,
 	onSave: PropTypes.func,
@@ -66,6 +67,7 @@ class ModalTransaction extends Component {
 
 	onSave() {
 		const values = {
+			transactionMode: this.mode,
 			amount: this.amountAsDecimal,
 		};
 
@@ -131,6 +133,9 @@ class ModalTransaction extends Component {
 		const Option = Dropdown.Option;
 		const modeOptions = this.props.transactionModes.map(
 			tm => <Option key={tm.id} value={tm} label={tm.name} />
+		);
+		modeOptions.unshift(
+			<Option key="__empty__" value={EMPTY_TRANSACTION_MODE} label={this.t('order.transaction.modal.emptyTransactionMode')} />
 		);
 
 		return (

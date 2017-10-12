@@ -74,6 +74,7 @@ export default {
 			errors: {
 				amount: 'Doit être positif',
 			},
+			emptyTransactionMode: '-- Sélectionner --',
 		}
 	},
 	credits: {

@@ -4,6 +4,7 @@ import { computed, observable } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import Order from 'hotelcaisse-app/dist/business/Order';
 import Transaction from 'hotelcaisse-app/dist/business/Transaction';
+import TransactionMode from 'hotelcaisse-app/dist/business/TransactionMode';
 import ComponentElement from '../../../components/screens/order/ModalTransaction';
 
 const propTypes = {
@@ -39,7 +40,17 @@ class ModalTransaction extends Component {
 	get mode() {
 		return this.editingTransaction
 			? this.editingTransaction.transactionMode
-			: this.modes[0];
+			: null;
+	}
+
+	validate(fields) {
+		if (!(fields.transactionMode instanceof TransactionMode)) {
+			return {
+				transactionMode: 'Cannot be empty',
+			};
+		}
+
+		return Transaction.validate(fields);
 	}
 
 	onSave(mode, amount) {
@@ -61,7 +72,7 @@ class ModalTransaction extends Component {
 			<ComponentElement
 				ref={(node) => { this.modal = node; }}
 				localizer={this.props.localizer}
-				validate={ Transaction.validate }
+				validate={this.validate}
 				onSave={(m, a) => { this.onSave(m, a); }}
 				transactionModes={this.modes}
 				transactionMode={this.mode}
