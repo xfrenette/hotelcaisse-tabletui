@@ -5,6 +5,7 @@ import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import { Text, Button, TextInput, Title, Message } from '../elements';
 import { Container } from '../layout';
+import AppMenu from '../../containers/layout/AppMenu';
 import styleVars from '../../styles/variables';
 import layoutStyles from '../../styles/layout';
 import buttonStyles from '../../styles/buttons';
@@ -145,11 +146,13 @@ class Authentication extends Component {
 
 	render() {
 		return (
-			<View style={viewStyles.authentication}>
-				<Container layout="oneColCentered">
-					{ this.renderForm() }
-				</Container>
-			</View>
+			<AppMenu>
+				<View style={viewStyles.authentication}>
+					<Container layout="oneColCentered">
+						{ this.renderForm() }
+					</Container>
+				</View>
+			</AppMenu>
 		);
 	}
 }
