@@ -23,7 +23,7 @@ import DeviceSaveWriter from 'hotelcaisse-app/dist/plugins/autosave/device/ToWri
 import LocalStorage from '../../app/io/dual/Local';
 import storedBusiness from './storedBusiness';
 import storedDevice from './storedDevice';
-import UILogger from '../../app/lib/UILogger';
+import MemoryLogger from '../../app/lib/MemoryLogger';
 import TestAuth from '../../tests/mock/TestAuth';
 import TestServer from '../../tests/mock/TestServer';
 import dummyOrder from '../../tests/mock/dummyOrder';
@@ -49,15 +49,15 @@ businessStorage.delay = 3000;
 
 */
 
-const useReal = true;
-const useLocalStorage = true;
+const useReal = false;
+const useLocalStorage = false;
 let server;
 let auth;
 const localStorages = {};
 let serverStorage;
 const dummyLocalizer = new Localizer('fr-CA', 'CAD');
 
-const logger = new UILogger();
+const logger = new MemoryLogger(50);
 
 if (useReal) {
 	serverStorage = new LocalStorage('com.xavierfrenette.hirdlpos@server');
@@ -70,6 +70,7 @@ if (useReal) {
 	server.setLogger(logger);
 	server.setTimeout = (cb, delay) => BackgroundTimer.setTimeout(cb, delay);
 	auth = new ApiAuth(server);
+	auth.authenticated = true;
 	localStorages['ApiServer'] = serverStorage;
 } else {
 	server = new TestServer();
@@ -177,7 +178,7 @@ module.exports = {
 	ordersServer: server,
 	// initialRoutes: [loadingPath],
 	// initialRoutes: ['/', orderPath],
-	// initialRoutes: ['/', '/orders'],
+	// initialRoutes: ['/dev/log'],
 	// initialRoutes: [registerClosedPath],
 	uuidGenerator: new UUIDGenerator(),
 	auth,
