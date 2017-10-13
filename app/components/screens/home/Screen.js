@@ -4,7 +4,6 @@ import {
 	View,
 	Image,
 	TouchableNativeFeedback,
-	TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
@@ -128,13 +127,6 @@ class Home extends Component {
 	}
 
 	/**
-	 * When the user presses the app menu trigger button; opens the menu.
-	 */
-	onAppMenuPress() {
-		this.appMenu.open();
-	}
-
-	/**
 	 * Renders the main logo
 	 *
 	 * @return {Node}
@@ -227,23 +219,9 @@ class Home extends Component {
 		return buttons;
 	}
 
-	/**
-	 * Renders the AppMenu trigger button.
-	 *
-	 * @return {Node}
-	 */
-	renderAppMenuTrigger() {
-		return (
-			<TouchableOpacity style={styles.menuTrigger} onPress={() => { this.onAppMenuPress() }}>
-				<Icon name="bars" style={styles.menuTriggerButton} />
-			</TouchableOpacity>
-		);
-	}
-
 	render() {
 		return (
 			<AppMenu ref={(node) => { this.appMenu = node ? node.wrappedInstance : node }}>
-				{ this.renderAppMenuTrigger() }
 				<View style={styles.screenMain}>
 					{ this.renderLogo() }
 					<View style={styles.buttons}>
@@ -294,15 +272,6 @@ const styles = {
 		marginTop: styleVars.verticalRhythm,
 		flexDirection: 'row',
 		justifyContent: 'center',
-	},
-	menuTrigger: {
-		alignItems: 'flex-end',
-		paddingHorizontal: styleVars.verticalRhythm,
-		paddingVertical: styleVars.horizontalRhythm,
-	},
-	menuTriggerButton: {
-		fontSize: styleVars.verticalRhythm,
-		lineHeight: styleVars.verticalRhythm,
 	},
 };
 
