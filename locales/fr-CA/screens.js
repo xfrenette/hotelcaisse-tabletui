@@ -42,5 +42,8 @@ export default {
 		localStorages: {
 			title: 'Entreposages locaux',
 		},
+		log: {
+			title: 'Log',
+		},
 	},
 };
