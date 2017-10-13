@@ -19,9 +19,9 @@ import DeviceSaveWriter from 'hotelcaisse-app/dist/plugins/autosave/device/ToWri
 import LocalStorage from '../../app/io/dual/Local';
 import UUIDGenerator from '../../app/lib/UUIDGenerator';
 import strings from '../../locales/fr-CA';
-import UILogger from '../../app/lib/UILogger';
+import MemoryLogger from '../../app/lib/MemoryLogger';
 
-const logger = new UILogger();
+const logger = new MemoryLogger(50);
 
 /*
  * Local storages
