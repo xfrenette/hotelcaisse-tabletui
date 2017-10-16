@@ -3,7 +3,7 @@ import { observable, computed } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import OrdersScreen from '../../components/screens/orders/Screen';
 
-const NB_ORDERS_TO_LOAD = 10;
+const NB_ORDERS_TO_LOAD = 20;
 
 @inject('ui', 'business', 'router', 'localizer', 'ordersServer')
 @observer
