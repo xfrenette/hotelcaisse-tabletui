@@ -107,6 +107,13 @@ class RoomSelectionsForm extends Component {
 	 */
 	componentWillMount() {
 		this.disposers.push(autorun(() => { this.restrictOutDate(); }));
+
+		// If it is a new form (not yet filled) and we don't have any room selection, we insert
+		// a first one
+		if (this.props.roomSelections.length === 0) {
+			this.props.roomSelections.push(this.createRoomSelection());
+		}
+
 		this.setRoomSelectionsFields(this.props.roomSelections);
 		this.initRoomSelectionsFieldsValues(this.props.roomSelections);
 	}
@@ -155,10 +162,7 @@ class RoomSelectionsForm extends Component {
 		}
 	}
 
-	/**
-	 * When the user wants to add a new RoomSelection
-	 */
-	onAdd() {
+	createRoomSelection() {
 		const roomSelection = new RoomSelection();
 		roomSelection.uuid = this.props.uuidGenerator.generate();
 
@@ -173,6 +177,14 @@ class RoomSelectionsForm extends Component {
 		// Pre-select the first room
 		roomSelection.room = this.props.business.rooms[0];
 
+		return roomSelection;
+	}
+
+	/**
+	 * When the user wants to add a new RoomSelection
+	 */
+	onAdd() {
+		const roomSelection = this.createRoomSelection();
 		this.props.roomSelections.push(roomSelection);
 	}
 

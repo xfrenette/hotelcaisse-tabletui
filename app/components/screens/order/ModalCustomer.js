@@ -95,16 +95,16 @@ class ModalCustomer extends Component {
 			>
 				<Container layout="oneColCentered">
 					<View style={layoutStyles.block}>
+						<Title style={layoutStyles.title}>{ this.t('order.customer.roomSelectionsInfo') }</Title>
+						<RoomSelectionsForm/>
+					</View>
+					<View style={layoutStyles.block}>
 						<Title style={layoutStyles.title}>{ this.t('order.customer.customerInfo') }</Title>
 						<CustomerForm
 							localizer={this.props.localizer}
 							fields={this.props.customerFields}
 							customerFieldValues={this.props.customerFieldValues}
 						/>
-					</View>
-					<View style={layoutStyles.block}>
-						<Title style={layoutStyles.title}>{ this.t('order.customer.roomSelectionsInfo') }</Title>
-						<RoomSelectionsForm/>
 					</View>
 				</Container>
 			</Modal>
