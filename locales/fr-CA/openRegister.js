@@ -1,7 +1,7 @@
 export default {
 	fields: {
 		employee: 'Nom de l\'employé(e)',
-		cashAmount: 'Billets et monnaies dans la caisse à l\'ouverture',
+		cashAmount: 'Argent dans la caisse',
 		total: 'Total',
 	},
 	inputErrors: {

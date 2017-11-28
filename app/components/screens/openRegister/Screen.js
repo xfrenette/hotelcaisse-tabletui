@@ -8,8 +8,8 @@ import Decimal from 'decimal.js';
 import {
 	Button,
 	TextInput,
-	DenominationsInput,
 	BottomBarBackButton,
+	NumberInput,
 } from '../../elements';
 import { Label } from '../../elements/form';
 import {
@@ -46,23 +46,9 @@ class OpenRegister extends Component {
 	@observable
 	employee = '';
 	/**
-	 * Object associating denominations to their amount value.
-	 *
-	 * @type {Object}
+	 * @type {number}
 	 */
-	denominationsValue = {};
-	/**
-	 * Object associating denominations to their quantity value.
-	 *
-	 * @type {Object}
-	 */
-	@observable
-	denominationsQuantity = {};
-	/**
-	 * Values for the DenominationsInput
-	 * @type {array}
-	 */
-	denominationsInputValues = [];
+	cashAmount = 100;
 	/**
 	 * Error message for each of the inputs. Set a value to null if no error, else set it to the
 	 * error message. Note: since this is an observable object, all its keys must be defined at
@@ -83,26 +69,6 @@ class OpenRegister extends Component {
 	nodeRefs = {};
 
 	/**
-	 * When mounting, build the denominationsValue and denominationsQuantity objects.
-	 */
-	componentWillMount() {
-		const newDenominationsQuantity = {};
-
-		this.props.moneyDenominations.forEach((denomination) => {
-			const formattedAmount = this.props.localizer.formatCurrency(denomination);
-			this.denominationsValue[formattedAmount] = new Decimal(denomination);
-			newDenominationsQuantity[formattedAmount] = 0;
-		});
-
-		// We do it this way so Mobx can detect new keys
-		this.denominationsQuantity = newDenominationsQuantity;
-
-		this.denominationsInputValues = Object.entries(this.denominationsQuantity).map(
-			([label, value]) => ({ label, value })
-		);
-	}
-
-	/**
 	 * When unmounting, clear the cache of nodes
 	 */
 	componentWillUnmount() {
@@ -110,13 +76,12 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Called when one of the denomination in DenominationsInput changed value.
+	 * Called when one of the cash amount changes
 	 *
-	 * @param {Object} denomination Denomination object
 	 * @param {Number} value
 	 */
-	onChangeValue(denomination, value) {
-		this.denominationsQuantity[denomination.label] = value;
+	onChangeValue(value) {
+		this.cashAmount = value;
 	}
 
 	/**
@@ -138,7 +103,7 @@ class OpenRegister extends Component {
 		}
 
 		if (this.props.onOpen) {
-			this.props.onOpen(this.employee, this.getTotalAmount());
+			this.props.onOpen(this.employee, this.getCashAmountAsDecimal());
 		}
 	}
 
@@ -159,6 +124,13 @@ class OpenRegister extends Component {
 	}
 
 	/**
+	 * When we blur from the cash amount field, we validate its value
+	 */
+	onCashAmountBlur() {
+		this.validate(['cashAmount']);
+	}
+
+	/**
 	 * Focus the cashAmount field
 	 */
 	focusCashAmount() {
@@ -166,27 +138,16 @@ class OpenRegister extends Component {
 	}
 
 	/**
-	 * Returns the total money amount as represented by the DenominationsInput. Returns it as a
-	 * Decimal object.
+	 * Returns the money amount as a Decimal.
 	 *
 	 * @return {Decimal}
 	 */
-	getTotalAmount() {
-		return Object.entries(this.denominationsValue).reduce(
-			(total, [key, amount]) => amount.mul(this.denominationsQuantity[key]).add(total),
-			new Decimal(0)
-		);
-	}
+	getCashAmountAsDecimal() {
+		if (this.cashAmount === null) {
+			return null;
+		}
 
-	/**
-	 * Returns as a formatted currency string the total money amount as represented by the
-	 * DenominationsInput.
-	 *
-	 * @return {String}
-	 */
-	getFormattedTotalAmount() {
-		const total = this.getTotalAmount();
-		return this.props.localizer.formatCurrency(total.toNumber());
+		return new Decimal(this.cashAmount);
 	}
 
 	/**
@@ -220,7 +181,7 @@ class OpenRegister extends Component {
 		}
 
 		if (fields.indexOf('cashAmount') !== -1) {
-			values.cashAmount = this.getTotalAmount();
+			values.cashAmount = this.getCashAmountAsDecimal();
 		}
 
 		const result = this.props.validate(values);
@@ -247,9 +208,6 @@ class OpenRegister extends Component {
 	}
 
 	render() {
-		const values = this.denominationsInputValues;
-		const total = this.getFormattedTotalAmount();
-
 		return (
 			<Screen>
 				<TopBar
@@ -273,17 +231,19 @@ class OpenRegister extends Component {
 							</View>
 							<View>
 								<Label>{this.t('openRegister.fields.cashAmount')}</Label>
-								<DenominationsInput
-									ref={(node) => { this.nodeRefs.cashAmount = node; }}
-									values={values}
-									localizer={this.props.localizer}
-									onChangeValue={(field, value) => this.onChangeValue(field, value)}
-									total={total}
-									totalLabel={this.t('openRegister.fields.total')}
-									error={this.inputErrors.cashAmount}
-									returnKeyType="done"
-									cols={4}
-								/>
+								<View style={styles.cashAmountInput}>
+									<NumberInput
+										ref={(node) => { this.nodeRefs.cashAmount = node; }}
+										error={this.inputErrors.cashAmount}
+										returnKeyType="done"
+										onChangeValue={(value) => this.onChangeValue(value)}
+										defaultValue={this.cashAmount}
+										type="money"
+										localizer={this.props.localizer}
+										onBlur={() => { this.onCashAmountBlur(); }}
+										selectTextOnFocus
+									/>
+								</View>
 							</View>
 						</Container>
 					</MainContent>
@@ -303,6 +263,12 @@ class OpenRegister extends Component {
 		);
 	}
 }
+
+const styles = {
+	cashAmountInput: {
+		width: 200,
+	},
+};
 
 OpenRegister.propTypes = propTypes;
 OpenRegister.defaultProps = defaultProps;
