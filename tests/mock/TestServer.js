@@ -17,7 +17,7 @@ class TestServer extends Server {
 	 * @see Server
 	 */
 	nextOrders(quantity, from) {
-		const orders = [];
+		let orders = [];
 
 		if (!from) {
 			this.ordersLoadingCount = 0;
