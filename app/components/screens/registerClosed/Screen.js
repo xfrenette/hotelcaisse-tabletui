@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Decimal from 'decimal.js';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Localizer from 'hotelcaisse-app/dist/Localizer';
@@ -46,11 +47,13 @@ class RegisterClosedScreen extends Component {
 	render() {
 		const register = this.props.register;
 
-		const cashFloatText = this.props.localizer.formatCurrency(this.props.cashFloat);
 		const totalCash = register.closingCash;
+		const deposit = Decimal.max(totalCash, 0);
 		const totalCashText = this.props.localizer.formatCurrency(totalCash.toNumber());
-		const postAmountText = this.props.localizer.formatCurrency(register.POSTAmount.toNumber());
-		const total = totalCash.add(register.POSTAmount);
+		const depositText = this.props.localizer.formatCurrency(deposit.toNumber());
+		const postAmount = register.POSTAmount;
+		const postAmountText = this.props.localizer.formatCurrency(postAmount.toNumber());
+		const total = totalCash.add(postAmount);
 		const totalText = this.props.localizer.formatCurrency(total.toNumber());
 		const dateText = this.props.localizer.formatDate(register.closedAt, { skeleton: 'yyyyMMMd' })
 
@@ -64,11 +67,11 @@ class RegisterClosedScreen extends Component {
 					<Container layout="oneColCentered">
 						<View style={layoutStyles.block}>
 							<Title style={layoutStyles.title}>{ this.t('registerClosed.instructions.title') }</Title>
-							<Text>{ this.t('registerClosed.instructions.message', { cashLeft: cashFloatText}) }</Text>
+							<Text>{ this.t('registerClosed.instructions.message') }</Text>
 						</View>
 						<View style={viewStyles.graphic}>
 							<View style={viewStyles.bill}>
-								<Text style={textStyles.amount}>{ totalCashText }</Text>
+								<Text style={textStyles.amount}>{ depositText }</Text>
 							</View>
 							<Icon style={textStyles.icon} name="arrow-down" />
 							<View style={viewStyles.envelope}>
