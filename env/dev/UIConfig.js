@@ -165,7 +165,7 @@ falseRegister.open('Xavier Test', new Decimal(100));
 falseRegister.close(new Decimal(265.36), '8542', new Decimal(968.41));
 
 const registerClosedPath = {
-	pathname: '/register/closed',
+	pathname: '/register/closed', // to work: register must not be opened
 	state: {
 		register: falseRegister,
 	},
@@ -178,7 +178,7 @@ module.exports = {
 	ordersServer: server,
 	// initialRoutes: [loadingPath],
 	// initialRoutes: ['/', orderPath],
-	// initialRoutes: ['/dev/log'],
+	// initialRoutes: ['/register/close'],
 	// initialRoutes: [registerClosedPath],
 	uuidGenerator: new UUIDGenerator(),
 	auth,
