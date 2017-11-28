@@ -65,10 +65,13 @@ class Log extends Component {
 			data = <View style={styles.entryData}><Text>{ dataText }</Text></View>;
 		}
 
+		const dateTime = entry.date;
+		const dateTimeText = `${dateTime.getFullYear()}-${dateTime.getMonth() + 1}-${dateTime.getDate()} ${dateTime.getHours()}:${dateTime.getMinutes()}:${dateTime.getSeconds()}.${dateTime.getMilliseconds()}`;
+
 		return (
 			<View key={index}>
 				<Text>
-					<Text style={styles.entryDate}>[{ entry.date.getTime() / 1000 }]</Text>
+					<Text style={styles.entryDate}>[{ dateTimeText }]</Text>
 					<Text> </Text>
 					<Text style={styles.entryNamespace}>{ entry.namespace }</Text>
 					<Text> </Text>
