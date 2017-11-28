@@ -135,7 +135,6 @@ class Modal extends Component {
 		if (this.props.fullScreen) {
 			const dim = Dimensions.get('window');
 			width = dim.width - 100;
-			height = dim.height - 100;
 		}
 
 		const modalStyle = { width, };
@@ -173,7 +172,7 @@ class Modal extends Component {
 				onShow={this.props.onShow}
 				{...modalProps}
 			>
-				<View style={styles.background}>
+				<View style={styles.container}>
 					<View style={[styles.modal, modalStyle]} elevation={4}>
 						{ title }
 						{ content }
@@ -191,12 +190,13 @@ Modal.defaultProps = defaultProps;
 const modalHorizontalPadding = styleVars.horizontalRhythm;
 
 const styles = {
-	background: {
+	container: {
 		backgroundColor: styleVars.colors.transparentBlack1,
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		flexDirection: 'row',
+		paddingVertical: styleVars.verticalRhythm,
 	},
 
 	modal: {
