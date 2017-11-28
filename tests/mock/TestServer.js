@@ -9,6 +9,7 @@ class TestServer extends Server {
 	// After this amount of loading, we return an empty array. Set to null to disable
 	maxOrderLoads = null;
 	localizer = null; // Used when making dummy orders, to round decimals
+	logger = null;
 
 	/**
 	 * We create [number] dummy Order with random data. If a [from] Order is supplied, the next ones
@@ -54,7 +55,6 @@ class TestServer extends Server {
 	}
 
 	ping() {
-		console.log('testserver ping');
 		return this.resolveInDelay(null);
 	}
 
@@ -66,6 +66,16 @@ class TestServer extends Server {
 				setTimeout(() => resolve(data), this.delay);
 			}
 		});
+	}
+
+	setLogger(logger) {
+		this.logger = logger.getNamespace('servers.test');
+	}
+
+	log(type, message, data) {
+		if (this.logger) {
+			this.logger[type].call(this.logger, message, data);
+		}
 	}
 }
 
